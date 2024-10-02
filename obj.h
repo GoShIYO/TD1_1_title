@@ -18,14 +18,38 @@ struct Triangle {
 	Vector2 a;
 	Vector2 b;
 	Vector2 c;
-} ;
-//プレイヤー初期化関数
+};
+
+/// <summary>
+/// プレイヤー初期化関数
+/// </summary>
+/// <param name="player"></param>
 void InitPlayer(Obj* player);
-//オブジェクト(丸)初期化関数
+
+/// <summary>
+/// オブジェクト(丸)初期化関数
+/// </summary>
+/// <param name="obj"></param>
 void InitObj(Obj obj[]);
-//プレイヤーの更新処理
-void UpdatePlayer(Obj* palyer, Obj obj[],char keys[], char preKeys[]);
-//プレイヤー描画
+
+/// <summary>
+/// プレイヤーの更新処理
+/// </summary>
+/// <param name="palyer"></param>
+/// <param name="obj"></param>
+/// <param name="keys"></param>
+/// <param name="preKeys"></param>
+void UpdatePlayer(Obj* palyer, Obj obj[], char keys[], char preKeys[]);
+
+/// <summary>
+/// プレイヤー描画
+/// </summary>
+/// <param name="player"></param>
 void RenderPlayer(Obj* player);
-//オブジェクト(丸)描画
+
+
+/// <summary>
+/// オブジェクト(丸)描画
+/// </summary>
+/// <param name="obj"></param>
 void RenderObj(Obj obj[]);
