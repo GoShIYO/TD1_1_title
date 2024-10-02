@@ -87,6 +87,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 		if (obj[i].isRotate) {
 			player->pos.x = obj[i].pos.x + r * cosf(angle);
 			player->pos.y = obj[i].pos.y + r * sinf(angle);
+			angle += 0.01f;
 			player->angle += 0.01f;
 
 		}
