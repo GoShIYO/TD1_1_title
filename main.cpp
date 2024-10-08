@@ -18,6 +18,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Obj obj[3];
 	InitObj(obj);
 
+	AllResource texture;
+	initializeResource(&texture);
 
 	// キー入力結果を受け取る箱
 	char keys[256] = {0};
@@ -47,13 +49,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↑更新処理ここまで
 		/// ---------------------------------------------------------------------
 		/// ↓描画処理ここから
-
-
-
-
+		
+		Novice::DrawBox(0, 0, kWindowWidth,kWindowHeight,0,0x002222FF,kFillModeSolid);
 		RenderPlayer(&player);
-		RenderObj(obj);
-
+		//RenderObj(obj);
+		for (int i = 0; i < 3; i++) {
+			showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.booble60_90, 0xFFAAAAFF);
+		}
 
 
 
