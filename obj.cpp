@@ -14,13 +14,12 @@ void InitPlayer(Obj* player) {
 }
 void InitObj(Obj obj[]) {
 	for (int i = 0; i < 3; i++) {
-		obj[i].radius = 50.0f;
+		obj[i].radius = 60.0f;
 		obj[i].isRotate = false;
 	}
 	obj[0].pos = { 200.0f,200.0f };
 	obj[1].pos = { 550.0f,530.0f };
 	obj[2].pos = { 890.0f,450.0f };
-
 }
 
 Triangle TrianglePoint(const Obj* player) {
