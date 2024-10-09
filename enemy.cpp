@@ -37,8 +37,3 @@ void EnemyMove(Enemy& enemy) {
 void RenderEnmey(Enemy& enemy) {
 	Novice::DrawSprite((int)enemy.pos.x, (int)enemy.pos.y, enemy.graphHandle, 1, 1, 0.0f, WHITE);
 }
-
-void EnemyDebug(Enemy& enemy) {
-	Novice::ScreenPrintf(0, 0, "enemy.isMove : %d", enemy.isMove);
-	Novice::ScreenPrintf(0, 20, "enemy.moveTimer : %d", enemy.moveTimer);
-}

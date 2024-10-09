@@ -17,4 +17,3 @@ void InitEnemy(Enemy& enemy);
 void EnemyMove(Enemy& enemy);
 
 void RenderEnmey(Enemy& enemy);
-void EnemyDebug(Enemy& enemy);
