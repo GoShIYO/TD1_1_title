@@ -50,7 +50,7 @@ void InitEnemyHorming(Enemy& enemy) {
 	enemy.velocity.y = 5.0f;
 	enemy.width = 32.0f;
 	enemy.height = 32.0f;
-	enemy.graphHandle = Novice::LoadTexture("./Resources/enemy.png");
+	enemy.graphHandle = Novice::LoadTexture("./Resources/enemy2.png");
 	enemy.direction = 0;
 	enemy.isAlive = true;
 	enemy.isMove = false;
@@ -97,15 +97,15 @@ void EnemyMove(Enemy& enemy) {
 	}
 }
 
-void EnemyMoveHorming(Enemy& enemy, Vector2& playerPos) {
-	float componentsX = enemy.pos.x - playerPos.x;
-	float componentsY = enemy.pos.y - playerPos.y;
-	float magnitude = (float)sqrt(pow(componentsX, 2) + pow(componentsY, 2));
-	float directionX = componentsX / magnitude;
-	float directionY = componentsY / magnitude;
+void EnemyMoveHorming(Enemy& enemy, Obj& player) {
+	enemy.components.x = enemy.pos.x - player.pos.x;
+	enemy.components.y = enemy.pos.y - player.pos.y;
+	enemy.magnitude = (float)sqrt(pow(enemy.components.x, 2) + pow(enemy.components.y, 2));
+	enemy.directions.x = enemy.components.x / enemy.magnitude;
+	enemy.directions.y = enemy.components.y / enemy.magnitude;
 
-	enemy.pos.x = directionX * enemy.velocity.x;
-	enemy.pos.y = directionY * enemy.velocity.y;
+	enemy.pos.x += enemy.directions.x * enemy.velocity.x;
+	enemy.pos.y += enemy.directions.y * enemy.velocity.y;
 }
 
 void EnemyMoveHoming(Enemy& enemy, Obj& player) {
