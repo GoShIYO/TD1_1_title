@@ -1,4 +1,5 @@
 #include <Novice.h>
+#include <time.h>
 #include"obj.h"
 #include"enemy.h"
 
@@ -12,6 +13,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, kWindowWidth, kWindowHeight);
 
+	srand((unsigned)time(NULL));
 
 	Obj player;
 	InitPlayer(&player);
@@ -19,8 +21,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Obj obj[3];
 	InitObj(obj);
 
-	/*Enemy enemy;
-	InitEnemy(enemy);*/
+	Enemy enemy;
+	InitEnemyNormal(enemy);
+	InitEnemyHorming(enemy);
 
 	System system;
 	InitSystem(&system);
@@ -71,6 +74,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		}
 
+		EnemyMove(enemy);
+
+
 		/// ↑更新処理ここまで
 		/// ---------------------------------------------------------------------
 		/// ↓描画処理ここから
@@ -87,6 +93,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		RenderEnmey(enemy);
 		EnemyDebug(enemy);
 		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
+
+		RenderEnemy(enemy, scroll);
 
 		viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
 

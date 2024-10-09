@@ -2,20 +2,32 @@
 #define MOVE_TIME 60
 #define STOP_TIME 120
 #include "enemy.h"
+#include "obj.h"
 #include <math.h>
 #include <Novice.h>
 #include <stdlib.h>
-#include <time.h>
 
-void InitEnemy(Enemy& enemy) {
+void InitEnemyNormal(Enemy& enemy) {
 	enemy.pos.x = 700.0f;
 	enemy.pos.y = 400.0f;
 	enemy.velocity.x = 5.0f;
 	enemy.velocity.y = 5.0f;
 	enemy.width = 32.0f;
 	enemy.height = 32.0f;
-	enemy.angle = (float)(M_PI) / 8.0f;
 	enemy.moveTimer = 0;
+	enemy.graphHandle = Novice::LoadTexture("./Resources/enemy.png");
+	enemy.direction = 0;
+	enemy.isAlive = true;
+	enemy.isMove = false;
+}
+
+void InitEnemyHorming(Enemy& enemy) {
+	enemy.pos.x = 700.0f;
+	enemy.pos.y = 400.0f;
+	enemy.velocity.x = 5.0f;
+	enemy.velocity.y = 5.0f;
+	enemy.width = 32.0f;
+	enemy.height = 32.0f;
 	enemy.graphHandle = Novice::LoadTexture("./Resources/enemy.png");
 	enemy.direction = 0;
 	enemy.isAlive = true;
@@ -25,9 +37,8 @@ void InitEnemy(Enemy& enemy) {
 void EnemyMove(Enemy& enemy) {
 	enemy.moveTimer++;
 
-	if (enemy.moveTimer >= MOVE_TIME) {
+	if (enemy.moveTimer == MOVE_TIME) {
 		enemy.isMove = true;
-		srand((unsigned)time(NULL));
 		enemy.direction = rand() % 3 + 1;
 	}
 	if (enemy.isMove) {
@@ -64,6 +75,17 @@ void EnemyMove(Enemy& enemy) {
 	}
 }
 
-void RenderEnmey(Enemy& enemy) {
-	Novice::DrawSprite((int)enemy.pos.x, (int)enemy.pos.y, enemy.graphHandle, 1, 1, 0.0f, WHITE);
+void EnemyMoveHorming(Enemy& enemy, Vector2& playerPos) {
+	float componentsX = enemy.pos.x - playerPos.x;
+	float componentsY = enemy.pos.y - playerPos.y;
+	float magnitude = (float)sqrt(pow(componentsX, 2) + pow(componentsY, 2));
+	float directionX = componentsX / magnitude;
+	float directionY = componentsY / magnitude;
+
+	enemy.pos.x = directionX * enemy.velocity.x;
+	enemy.pos.y = directionY * enemy.velocity.y;
+}
+
+void RenderEnemy(Enemy& enemy, Vector2& scroll) {
+	Novice::DrawSprite(int(enemy.pos.x - scroll.x), int(enemy.pos.y - scroll.y), enemy.graphHandle, 1, 1, 0.0f, WHITE);
 }

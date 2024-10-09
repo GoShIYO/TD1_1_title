@@ -13,7 +13,6 @@ struct Enemy {
 	Vector2 velocity;
 	float width;
 	float height;
-	float angle;
 	int moveTimer;
 	int graphHandle;
 	int direction;
@@ -21,7 +20,10 @@ struct Enemy {
 	bool isMove;
 };
 
-void InitEnemy(Enemy& enemy);
-void EnemyMove(Enemy& enemy);
+void InitEnemyNormal(Enemy& enemy);
+void InitEnemyHorming(Enemy& enemy);
 
-void RenderEnmey(Enemy& enemy);
+void EnemyMove(Enemy& enemy);
+void EnemyMoveHorming(Enemy& enemy);
+
+void RenderEnemy(Enemy& enemy, Vector2& scroll);
