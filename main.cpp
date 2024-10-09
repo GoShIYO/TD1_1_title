@@ -89,9 +89,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x), -2 * kWindowHeight - int(scroll.y), 5 * kWindowWidth - 100, 5 * kWindowHeight - 100, 0, RED, kFillModeWireFrame);
 
-		//RenderEnmey(enemy);
-		RenderEnmey(enemy);
-		EnemyDebug(enemy);
+		RenderEnemy(enemy, scroll);
 		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
 
 		RenderEnemy(enemy, scroll);
