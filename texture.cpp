@@ -12,12 +12,13 @@ extern void initializeResource(AllResource* texture) {
 
 
 void showCommonColorTexture(float width, float height, int Clock, float posX, float posY,
-	int texture, unsigned int color) {
+	int texture, unsigned int color, Vector2* scroll) {
 
-	Novice::DrawQuad(int(posX - width / 2), int(posY - height / 2),
-		int(posX + width / 2), int(posY - height / 2),
-		int(posX - width / 2), int(posY + height / 2),
-		int(posX + width / 2), int(posY + height / 2),
+	Novice::DrawQuad(
+		int(posX - width / 2 - scroll->x), int(posY - height / 2 -scroll->y),
+		int(posX + width / 2 - scroll->x), int(posY - height / 2 - scroll->y),
+		int(posX - width / 2 - scroll->x), int(posY + height / 2 - scroll->y),
+		int(posX + width / 2 - scroll->x), int(posY + height / 2 - scroll->y),
 		(0 + ((Clock / 5) * (int)width)), 0, int(width), int(height), texture, color);
 }
 

@@ -30,7 +30,7 @@ extern void initializeResource(AllResource* allresource);
 /// <param name="posY"></param>
 /// <param name="Texture"></param>
 /// <param name="Color"></param>
-void showCommonColorTexture(float width, float height, int Clock, float posX, float posY, int texture, unsigned int color);
+void showCommonColorTexture(float width, float height, int Clock, float posX, float posY, int texture, unsigned int color,Vector2* scroll);
 
 /// <summary>
 /// common Radian texture change color

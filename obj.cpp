@@ -1,8 +1,7 @@
-#include<Novice.h>
+﻿#include<Novice.h>
 #include"obj.h"
 
-extern int kWindowWidth;
-extern int kWindowHeight;
+
 
 void InitPlayer(Obj* player) {
 	player->pos.x = 200.0f;
@@ -40,17 +39,21 @@ Triangle TrianglePoint(const Obj* player) {
 
 	return points;
 }
-void RenderPlayer(Obj* player) {
+void RenderPlayer(Obj* player, Vector2* scroll) {
 	Triangle point = TrianglePoint(player);
 	Vector2 a = point.a;
 	Vector2 b = point.b;
 	Vector2 c = point.c;
 
-	Novice::DrawTriangle(int(a.x), int(a.y), int(b.x), int(b.y), int(c.x), int(c.y), RED, kFillModeSolid);
+	Novice::DrawTriangle(
+		int(a.x - scroll->x), int(a.y - scroll->y), 
+		int(b.x - scroll->x), int(b.y - scroll->y),
+		int(c.x - scroll->x), int(c.y - scroll->y),
+		RED, kFillModeSolid);
 }
-void RenderObj(Obj obj[]) {
+void RenderObj(Obj obj[], Vector2* scroll) {
 	for (int i = 0; i < 3; i++) {
-		Novice::DrawEllipse(int(obj[i].pos.x), int(obj[i].pos.y), int(obj[i].radius), int(obj[i].radius), 0.0f, WHITE, kFillModeSolid);
+		Novice::DrawEllipse(int(obj[i].pos.x - scroll->x), int(obj[i].pos.y - scroll->y), int(obj[i].radius), int(obj[i].radius), 0.0f, WHITE, kFillModeSolid);
 	}
 }
 
@@ -99,4 +102,48 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 		}
 	}
 
+}
+void UpdateScroll(Obj* player, Vector2* scroll) {
+	//マップサイズ
+	float mapWidthMax = 3.0f * kWindowWidth;
+	float mapWidthMin = -2.0f * kWindowWidth;
+
+	float mapHeightMax = 3.0f * kWindowHeight;
+	float mapHeightMin = -2.0f * kWindowHeight;
+
+	//スクロール発生ターゲット
+	float rightScrollTrigger = scroll->x + kWindowWidth * 2.0f / 3.0f;
+	float leftScrollTrigger = scroll->x + kWindowWidth * 1.0f / 3.0f;
+
+	float topScrollTrigger = scroll->y + kWindowHeight * 1.0f / 3.0f;
+	float bottomScrollTrigger = scroll->y + kWindowHeight * 2.0f / 3.0f;
+
+	//プレイヤーの方向によってスクロール
+	if (player->pos.x > rightScrollTrigger) {
+		//scroll->x += player->pos.x - rightScrollTrigger;
+	}
+	else if (player->pos.x < leftScrollTrigger) {
+		//scroll->x -= leftScrollTrigger - player->pos.x;
+	}
+
+	if (player->pos.y > bottomScrollTrigger) {
+		//scroll->y += player->pos.y - bottomScrollTrigger;
+	}
+	else if (player->pos.y < topScrollTrigger) {
+		//scroll->y -= topScrollTrigger - player->pos.y;
+	}
+
+	//スクロールの範囲処理
+	if (scroll->x < mapWidthMin - 100) {
+		scroll->x = mapWidthMin - 100;
+	}
+	if (scroll->x > mapWidthMax - kWindowWidth) {
+		scroll->x = mapWidthMax - kWindowWidth;
+	}
+	if (scroll->y < mapHeightMin - 100) {
+		scroll->y = mapHeightMin - 100;
+	}
+	if (scroll->y > mapHeightMax - kWindowHeight -100) {
+		scroll->y = mapHeightMax - kWindowHeight - 100;
+	}
 }
