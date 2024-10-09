@@ -62,7 +62,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		RenderEnmey(enemy);
-		EnemyDebug(enemy);
 
 		/// ↑描画処理ここまで
 		/// ---------------------------------------------------------------------
