@@ -1,5 +1,6 @@
 #include <Novice.h>
 #include"obj.h"
+#include"enemy.h"
 
 const char kWindowTitle[] = "5107_イノウエ_カン_ミハラ_リ";
 const int kWindowWidth = 1280;
@@ -17,6 +18,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Obj obj[3];
 	InitObj(obj);
+
+	Enemy enemy;
+	InitEnemy(enemy);
 
 	AllResource texture;
 	initializeResource(&texture);
@@ -43,7 +47,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 		UpdatePlayer(&player, obj, keys, preKeys);
 
-
+		EnemyMove(enemy);
 
 
 		/// ↑更新処理ここまで
@@ -57,7 +61,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.booble60_90, 0xFFAAAAFF);
 		}
 
-
+		RenderEnmey(enemy);
+		EnemyDebug(enemy);
 
 		/// ↑描画処理ここまで
 		/// ---------------------------------------------------------------------
