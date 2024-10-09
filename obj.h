@@ -4,7 +4,8 @@
 #include<math.h>
 #include"texture.h"
 
-
+extern const int kWindowWidth;
+extern const int kWindowHeight;
 struct Obj
 {
 	Vector2 pos;
@@ -46,11 +47,13 @@ void UpdatePlayer(Obj* palyer, Obj obj[], char keys[], char preKeys[]);
 /// プレイヤー描画
 /// </summary>
 /// <param name="player"></param>
-void RenderPlayer(Obj* player);
+void RenderPlayer(Obj* player,Vector2* scroll);
 
 
 /// <summary>
 /// オブジェクト(丸)描画
 /// </summary>
 /// <param name="obj"></param>
-void RenderObj(Obj obj[]);
+void RenderObj(Obj obj[], Vector2* scroll);
+
+void UpdateScroll(Obj* player, Vector2* scroll);
