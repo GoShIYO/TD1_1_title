@@ -22,8 +22,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	InitObj(obj);
 
 	Enemy enemy;
+	Enemy hormingEnemy;
 	InitEnemyNormal(enemy);
-	InitEnemyHorming(enemy);
+	InitEnemyHorming(hormingEnemy);
 
 	System system;
 	InitSystem(&system);
@@ -75,6 +76,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		EnemyMove(enemy);
+		EnemyMoveHorming(hormingEnemy, player);
 
 		/// ↑更新処理ここまで
 		/// ---------------------------------------------------------------------
@@ -89,6 +91,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x), -2 * kWindowHeight - int(scroll.y), 5 * kWindowWidth - 100, 5 * kWindowHeight - 100, 0, RED, kFillModeWireFrame);
 
 		RenderEnemy(enemy, scroll);
+		RenderEnemy(hormingEnemy, scroll);
+		EnemyDebug(hormingEnemy);
 		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
 
 		viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
