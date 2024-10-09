@@ -22,6 +22,8 @@ struct Enemy {
 	int graphHandle;
 	int direction;
 	int health;
+	int moveTimer;
+	int graphHandle;
 	bool isAlive;
 	bool isMove;
 };
