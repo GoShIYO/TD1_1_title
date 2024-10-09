@@ -2,7 +2,7 @@
 #include"obj.h"
 
 
-
+/////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
 void InitPlayer(Obj* player) {
 	player->pos.x = 200.0f;
 	player->pos.y = 100.0f;
@@ -19,6 +19,43 @@ void InitObj(Obj obj[]) {
 	obj[0].pos = { 200.0f,200.0f };
 	obj[1].pos = { 550.0f,530.0f };
 	obj[2].pos = { 890.0f,450.0f };
+}
+
+void InitSystem(System* system) {
+	system->digFlat = 0;
+}
+
+////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////
+
+void viewDig(int* digFlat,int key1,int preKey1,int key2,int preKey2,int key3,int preKey3) {
+	enum {
+		Switch = 1,
+		Page = 2
+	};
+
+	if (key1 && !preKey1) {
+		*digFlat = *digFlat ^ Switch;
+	}
+	if (key2 && !preKey2) {
+		*digFlat = *digFlat - Page;
+	}
+	if (key3 && !preKey3) {
+		*digFlat = *digFlat + Page;
+	}
+
+	if (*digFlat & Switch) {
+		int sx = 800; int sy = 100;
+		Novice::DrawBox(sx, sy, 300, 5 + 20 * 10, 0, 0x00000033, kFillModeSolid);
+		if (*digFlat == 3) {
+			Novice::ScreenPrintf(sx + 5, sy + 5, "mousePos.x = %8d", 0);
+			Novice::ScreenPrintf(sx + 5, sy + 25, "mousePos.y = %8d", 0);
+		}
+		if (*digFlat == 5) {
+			Novice::ScreenPrintf(sx + 5, sy + 5, "Page2 = %8d", 0);
+			Novice::ScreenPrintf(sx + 5, sy + 25, "mousePos.y = %8d", 0);
+		}
+		Novice::ScreenPrintf(sx + 5, sy + 185, "Page%8d ", (*digFlat - 1) / 2);
+	}
 }
 
 Triangle TrianglePoint(const Obj* player) {
@@ -147,3 +184,4 @@ void UpdateScroll(Obj* player, Vector2* scroll) {
 		scroll->y = mapHeightMax - kWindowHeight - 100;
 	}
 }
+

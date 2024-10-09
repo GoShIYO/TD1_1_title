@@ -10,8 +10,6 @@ struct Timer final {
 };
 
 
-
-
 /// <summary>
 /// 動画運行のタイマー
 /// </summary>
@@ -29,7 +27,7 @@ int TimerToFrame(const Timer Timer);
 
 
 /// <summary>
-/// 
+/// 0に戻るタイマー
 /// </summary>
-/// <param name="Timer"></param>
+/// <param name="Timer">動画タイマーの関数</param>
 void TimerRunZero(Timer* Timer);

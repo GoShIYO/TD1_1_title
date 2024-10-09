@@ -18,11 +18,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Obj obj[3];
 	InitObj(obj);
 
+	System system;
+	InitSystem(&system);
+
 	AllResource texture;
 	initializeResource(&texture);
 
 	Vector2 scroll;
 	scroll = { 0,0 };
+
 	// キー入力結果を受け取る箱
 	char keys[256] = {0};
 	char preKeys[256] = {0};
@@ -37,7 +41,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Novice::GetHitKeyStateAll(keys);
 
 		/// ↓更新処理ここから
-
 
 		if (keys[DIK_R] && !preKeys[DIK_R]) {
 			player.pos = {200.0f,100.0f};
@@ -62,6 +65,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			scroll.x += 10;
 
 		}
+
 		/// ↑更新処理ここまで
 		/// ---------------------------------------------------------------------
 		/// ↓描画処理ここから
@@ -75,6 +79,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x), -2 * kWindowHeight - int(scroll.y), 5 * kWindowWidth - 100, 5 * kWindowHeight - 100, 0, RED, kFillModeWireFrame);
 
 		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
+
+		viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
 
 		/// ↑描画処理ここまで
 		/// ---------------------------------------------------------------------
