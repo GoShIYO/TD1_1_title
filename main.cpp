@@ -92,8 +92,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		RenderEnemy(enemy, scroll);
 		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
 
-		RenderEnemy(enemy, scroll);
-
 		viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
 
 		/// ↑描画処理ここまで
