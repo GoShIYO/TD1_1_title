@@ -28,10 +28,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	System system;
 	InitSystem(&system);
 
-	Enemy enemy;
-	InitEnemyNormal(enemy);
-	InitEnemyHorming(enemy);
-
 	AllResource texture;
 	initializeResource(&texture);
 
@@ -80,10 +76,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		EnemyMove(enemy);
 
-
-
-		EnemyMove(enemy);
-
 		/// ↑更新処理ここまで
 		/// ---------------------------------------------------------------------
 		/// ↓描画処理ここから
@@ -99,11 +91,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		RenderEnemy(enemy, scroll);
 		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
 
-		RenderEnemy(enemy, scroll);
-
 		viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
-
-		RenderEnemy(enemy, scroll);
 
 		/// ↑描画処理ここまで
 		/// ---------------------------------------------------------------------
