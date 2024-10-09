@@ -1,5 +1,6 @@
 #include <Novice.h>
 #include"obj.h"
+#include"enemy.h"
 
 const char kWindowTitle[] = "5107_イノウエ_カン_ミハラ_リ";
 const int kWindowWidth = 1280;
@@ -17,6 +18,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Obj obj[3];
 	InitObj(obj);
+
+	Enemy enemy;
+	InitEnemy(enemy);
 
 	System system;
 	InitSystem(&system);
@@ -49,6 +53,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		UpdatePlayer(&player, obj, keys, preKeys);
 
+		EnemyMove(enemy);
 
 		if (keys[DIK_UP]) {
 			scroll.y -= 10;
@@ -78,6 +83,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x), -2 * kWindowHeight - int(scroll.y), 5 * kWindowWidth - 100, 5 * kWindowHeight - 100, 0, RED, kFillModeWireFrame);
 
+		RenderEnmey(enemy);
+		EnemyDebug(enemy);
 		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
 
 		viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
