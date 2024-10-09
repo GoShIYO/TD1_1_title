@@ -1,5 +1,6 @@
 #include <Novice.h>
 #include"obj.h"
+#include"enemy.h"
 
 const char kWindowTitle[] = "5107_イノウエ_カン_ミハラ_リ";
 const int kWindowWidth = 1280;
@@ -17,6 +18,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Obj obj[3];
 	InitObj(obj);
+
+	/*Enemy enemy;
+	InitEnemy(enemy);*/
 
 	AllResource texture;
 	initializeResource(&texture);
