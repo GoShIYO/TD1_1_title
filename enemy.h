@@ -9,6 +9,13 @@ enum EnemyDirection {
 	LEFT = 3
 };
 
+enum EnemyDirection {
+	UP = 0,
+	DOWN = 1,
+	RIGHT = 2,
+	LEFT = 3
+};
+
 struct Enemy {
 	Vector2 pos;
 	Vector2 velocity;
@@ -24,6 +31,7 @@ struct Enemy {
 	int health;
 	int moveTimer;
 	int graphHandle;
+	int direction;
 	bool isAlive;
 	bool isMove;
 };
