@@ -21,6 +21,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	AllResource texture;
 	initializeResource(&texture);
 
+	Vector2 scroll;
+	scroll = { 0,0 };
 	// キー入力結果を受け取る箱
 	char keys[256] = {0};
 	char preKeys[256] = {0};
@@ -41,23 +43,38 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			player.pos = {200.0f,100.0f};
 			player.angle = (float)(M_PI) / 8.0f;
 		}
+
 		UpdatePlayer(&player, obj, keys, preKeys);
 
 
+		if (keys[DIK_UP]) {
+			scroll.y -= 10;
+		}
+		if (keys[DIK_DOWN]) {
+			scroll.y += 10;
 
+		}
+		if (keys[DIK_LEFT]) {
+			scroll.x -= 10;
 
+		}
+		if (keys[DIK_RIGHT]) {
+			scroll.x += 10;
+
+		}
 		/// ↑更新処理ここまで
 		/// ---------------------------------------------------------------------
 		/// ↓描画処理ここから
-		
+		UpdateScroll(&player, &scroll);
 		Novice::DrawBox(0, 0, kWindowWidth,kWindowHeight,0,0x002222FF,kFillModeSolid);
-		RenderPlayer(&player);
+		RenderPlayer(&player,&scroll);
 		//RenderObj(obj);
 		for (int i = 0; i < 3; i++) {
-			showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.booble60_90, 0xFFAAAAFF);
+			showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.booble60_90, 0xFFAAAAFF,&scroll);
 		}
+		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x), -2 * kWindowHeight - int(scroll.y), 5 * kWindowWidth - 100, 5 * kWindowHeight - 100, 0, RED, kFillModeWireFrame);
 
-
+		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
 
 		/// ↑描画処理ここまで
 		/// ---------------------------------------------------------------------
