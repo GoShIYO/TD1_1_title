@@ -27,7 +27,7 @@ void InitSystem(System* system) {
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////
 
-void viewDig(int* digFlat,int key1,int preKey1,int key2,int preKey2,int key3,int preKey3) {
+void viewDig(int* digFlat, int key1, int preKey1, int key2, int preKey2, int key3, int preKey3) {
 	enum {
 		Switch = 1,
 		Page = 2
@@ -83,7 +83,7 @@ void RenderPlayer(Obj* player, Vector2* scroll) {
 	Vector2 c = point.c;
 
 	Novice::DrawTriangle(
-		int(a.x - scroll->x), int(a.y - scroll->y), 
+		int(a.x - scroll->x), int(a.y - scroll->y),
 		int(b.x - scroll->x), int(b.y - scroll->y),
 		int(c.x - scroll->x), int(c.y - scroll->y),
 		RED, kFillModeSolid);
@@ -95,38 +95,47 @@ void RenderObj(Obj obj[], Vector2* scroll) {
 }
 
 bool CheckPlayerToObj(Obj player, Obj obj) {
-	Vector2 d;
-	d.x = player.pos.x - obj.pos.x;
-	d.y = player.pos.y - obj.pos.y;
-
-	float totalRadius = powf(player.radius + obj.radius + 10.0f, 2) ;
-	float distance = d.x * d.x + d.y * d.y;
-	if (distance <= totalRadius) {
-		return true;
-	}
-	return false;
+	Vector2 d = { player.pos.x - obj.pos.x, player.pos.y - obj.pos.y };
+	float totalRadius = player.radius + obj.radius + 10.0f;
+	float distanceSquared = d.x * d.x + d.y * d.y;
+	return distanceSquared <= totalRadius * totalRadius;
 }
 
+float angle_difference(float a, float b) {
+	float dif = fmodf(b - a + float(M_PI), 2 * float(M_PI)) - float(M_PI);
+	return fmodf(dif + 2 * float(M_PI), 2 * float(M_PI)) - float(M_PI);
+}
 void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
-
 
 	float r = 100.0f;
 
-	for (int i = 0; i < 3; i++) {
+	static float angleTmp = 0;
+	static float angle_dif = 0;
+	float rotateSpeed = float(M_PI) / 180.0f;
+	float lerpFactor = 0.2f;
 
+	for (int i = 0; i < 3; i++) {
 		float dx = player->pos.x - obj[i].pos.x;
 		float dy = player->pos.y - obj[i].pos.y;
 		float angle = atan2f(dy, dx);
 
-		if (CheckPlayerToObj(*player, obj[i]) && !obj[i].isRotate) {	
+
+		if (CheckPlayerToObj(*player, obj[i]) && !obj[i].isRotate) {
 			obj[i].isRotate = true;
+
+			angleTmp = angle;
 			break;
 		}
 
 		if (obj[i].isRotate) {
-			player->pos.x = obj[i].pos.x + r * cosf(angle);
-			player->pos.y = obj[i].pos.y + r * sinf(angle);
-			player->angle += 0.01f;
+
+			Novice::ScreenPrintf(0, 45, "angle_dif = %.10f", angle_dif);
+			angle_dif = angle_difference(angleTmp, player->angle);
+
+			player->pos.x = obj[i].pos.x + r * cosf(angleTmp);
+			player->pos.y = obj[i].pos.y + r * sinf(angleTmp);
+			angleTmp += rotateSpeed;
+			player->angle = player->angle + lerpFactor * (angleTmp - player->angle);
 
 		}
 		else {
@@ -138,6 +147,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 			obj[i].isRotate = false;
 		}
 	}
+	Novice::ScreenPrintf(0, 30 , "player.angle = %.10f  angle = %.10f", player->angle, angleTmp);
 
 }
 void UpdateScroll(Obj* player, Vector2* scroll) {
@@ -180,7 +190,7 @@ void UpdateScroll(Obj* player, Vector2* scroll) {
 	if (scroll->y < mapHeightMin - 100) {
 		scroll->y = mapHeightMin - 100;
 	}
-	if (scroll->y > mapHeightMax - kWindowHeight -100) {
+	if (scroll->y > mapHeightMax - kWindowHeight - 100) {
 		scroll->y = mapHeightMax - kWindowHeight - 100;
 	}
 }
