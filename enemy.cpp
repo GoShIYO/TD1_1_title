@@ -98,8 +98,8 @@ void EnemyMove(Enemy& enemy) {
 }
 
 void EnemyMoveHorming(Enemy& enemy, Obj& player) {
-	enemy.components.x = enemy.pos.x - player.pos.x;
-	enemy.components.y = enemy.pos.y - player.pos.y;
+	enemy.components.x = player.pos.x - enemy.pos.x;
+	enemy.components.y = player.pos.y - enemy.pos.y;
 	enemy.magnitude = (float)sqrt(pow(enemy.components.x, 2) + pow(enemy.components.y, 2));
 	enemy.directions.x = enemy.components.x / enemy.magnitude;
 	enemy.directions.y = enemy.components.y / enemy.magnitude;
