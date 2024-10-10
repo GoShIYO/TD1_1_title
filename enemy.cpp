@@ -22,13 +22,18 @@ void InitEnemyNormal(Enemy& enemy) {
 }
 
 void InitEnemyHorming(Enemy& enemy) {
-	enemy.pos.x = 700.0f;
-	enemy.pos.y = 400.0f;
-	enemy.velocity.x = 5.0f;
-	enemy.velocity.y = 5.0f;
+	enemy.pos.x = 200.0f;
+	enemy.pos.y = 700.0f;
+	enemy.velocity.x = 1.0f;
+	enemy.velocity.y = 1.0f;
+	enemy.components.x = 0.0f;
+	enemy.components.y = 0.0f;
+	enemy.directions.x = 0.0f;
+	enemy.directions.y = 0.0f;
+	enemy.magnitude = 0.0f;
 	enemy.width = 32.0f;
 	enemy.height = 32.0f;
-	enemy.graphHandle = Novice::LoadTexture("./Resources/enemy.png");
+	enemy.graphHandle = Novice::LoadTexture("./Resources/enemy2.png");
 	enemy.direction = 0;
 	enemy.isAlive = true;
 	enemy.isMove = false;
@@ -75,17 +80,22 @@ void EnemyMove(Enemy& enemy) {
 	}
 }
 
-void EnemyMoveHorming(Enemy& enemy, Vector2& playerPos) {
-	float componentsX = enemy.pos.x - playerPos.x;
-	float componentsY = enemy.pos.y - playerPos.y;
-	float magnitude = (float)sqrt(pow(componentsX, 2) + pow(componentsY, 2));
-	float directionX = componentsX / magnitude;
-	float directionY = componentsY / magnitude;
+void EnemyMoveHorming(Enemy& enemy, Obj& player) {
+	enemy.components.x = player.pos.x - enemy.pos.x;
+	enemy.components.y = player.pos.y - enemy.pos.y;
+	enemy.magnitude = (float)sqrt(pow(enemy.components.x, 2) + pow(enemy.components.y, 2));
+	enemy.directions.x = enemy.components.x / enemy.magnitude;
+	enemy.directions.y = enemy.components.y / enemy.magnitude;
 
-	enemy.pos.x = directionX * enemy.velocity.x;
-	enemy.pos.y = directionY * enemy.velocity.y;
+	enemy.pos.x += enemy.directions.x * enemy.velocity.x;
+	enemy.pos.y += enemy.directions.y * enemy.velocity.y;
 }
 
 void RenderEnemy(Enemy& enemy, Vector2& scroll) {
 	Novice::DrawSprite(int(enemy.pos.x - scroll.x), int(enemy.pos.y - scroll.y), enemy.graphHandle, 1, 1, 0.0f, WHITE);
+}
+
+void EnemyDebug(Enemy& enemy) {
+	Novice::ScreenPrintf(0, 20, "hormingEnemy.pos.x : %f", enemy.pos.x);
+	Novice::ScreenPrintf(0, 40, "hormingEnemy.pos.y : %f", enemy.pos.y);
 }
