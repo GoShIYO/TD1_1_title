@@ -81,8 +81,8 @@ void EnemyMove(Enemy& enemy) {
 }
 
 void EnemyMoveHorming(Enemy& enemy, Obj& player) {
-	enemy.components.x = enemy.pos.x - player.pos.x;
-	enemy.components.y = enemy.pos.y - player.pos.y;
+	enemy.components.x = player.pos.x - enemy.pos.x;
+	enemy.components.y = player.pos.y - enemy.pos.y;
 	enemy.magnitude = (float)sqrt(pow(enemy.components.x, 2) + pow(enemy.components.y, 2));
 	enemy.directions.x = enemy.components.x / enemy.magnitude;
 	enemy.directions.y = enemy.components.y / enemy.magnitude;
@@ -97,4 +97,5 @@ void RenderEnemy(Enemy& enemy, Vector2& scroll) {
 
 void EnemyDebug(Enemy& enemy) {
 	Novice::ScreenPrintf(0, 20, "hormingEnemy.pos.x : %f", enemy.pos.x);
+	Novice::ScreenPrintf(0, 40, "hormingEnemy.pos.y : %f", enemy.pos.y);
 }
