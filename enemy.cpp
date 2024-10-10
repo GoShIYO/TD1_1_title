@@ -95,7 +95,7 @@ void RenderEnemy(Enemy& enemy, Vector2& scroll) {
 	Novice::DrawSprite(int(enemy.pos.x - scroll.x), int(enemy.pos.y - scroll.y), enemy.graphHandle, 1, 1, 0.0f, WHITE);
 }
 
-//void EnemyDebug(Enemy& enemy) {
-//	Novice::ScreenPrintf(0, 20, "hormingEnemy.pos.x : %f", enemy.pos.x);
-//	Novice::ScreenPrintf(0, 40, "hormingEnemy.pos.y : %f", enemy.pos.y);
-//}
+void EnemyDebug(Enemy& enemy) {
+	Novice::ScreenPrintf(0, 20, "hormingEnemy.pos.x : %f", enemy.pos.x);
+	Novice::ScreenPrintf(0, 40, "hormingEnemy.pos.y : %f", enemy.pos.y);
+}

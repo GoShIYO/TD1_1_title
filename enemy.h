@@ -32,4 +32,4 @@ void EnemyMoveHorming(Enemy& enemy, Obj& player);
 
 void RenderEnemy(Enemy& enemy, Vector2& scroll);
 
-//void EnemyDebug(Enemy& enemy);
+void EnemyDebug(Enemy& enemy);
