@@ -20,9 +20,6 @@ struct Enemy {
 	int moveTimer;
 	int graphHandle;
 	int direction;
-	int moveTimer;
-	int graphHandle;
-	int direction;
 	bool isAlive;
 	bool isMove;
 };
