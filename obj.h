@@ -6,6 +6,7 @@
 
 extern const int kWindowWidth;
 extern const int kWindowHeight;
+const int objCount = 100;
 struct System {
 	int digFlat;
 };

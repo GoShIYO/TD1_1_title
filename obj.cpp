@@ -1,24 +1,30 @@
 ﻿#include<Novice.h>
 #include"obj.h"
+#include<time.h>
+#include<stdlib.h>
 
 
 /////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
 void InitPlayer(Obj* player) {
 	player->pos.x = 200.0f;
 	player->pos.y = 100.0f;
-	player->velocity.x = 2.0f;
-	player->velocity.y = 2.0f;
+	player->velocity.x = 8.0f;
+	player->velocity.y = 8.0f;
 	player->angle = (float)(M_PI) / 8.0f;
 	player->radius = 30.0f;
+	player->isRotate = false;
 }
 void InitObj(Obj obj[]) {
-	for (int i = 0; i < 3; i++) {
+	srand(static_cast<unsigned int>(time(NULL)));
+	for (int i = 0; i < objCount; i++) {
 		obj[i].radius = 60.0f;
-		obj[i].isRotate = false;
+		obj[i].pos.x = float(rand() % 6400 - 2560);
+		obj[i].pos.y = float(rand() % 6400 - 2560);
+
 	}
-	obj[0].pos = { 200.0f,200.0f };
-	obj[1].pos = { 550.0f,530.0f };
-	obj[2].pos = { 890.0f,450.0f };
+	//obj[0].pos = { 200.0f,200.0f };
+	//obj[1].pos = { 550.0f,530.0f };
+	//obj[2].pos = { 890.0f,450.0f };
 }
 
 void InitSystem(System* system) {
@@ -89,7 +95,7 @@ void RenderPlayer(Obj* player, Vector2* scroll) {
 		RED, kFillModeSolid);
 }
 void RenderObj(Obj obj[], Vector2* scroll) {
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < objCount; i++) {
 		Novice::DrawEllipse(int(obj[i].pos.x - scroll->x), int(obj[i].pos.y - scroll->y), int(obj[i].radius), int(obj[i].radius), 0.0f, WHITE, kFillModeSolid);
 	}
 }
@@ -111,43 +117,64 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 
 	static float angleTmp = 0;
 	static float angle_dif = 0;
+	static float t = 0;
 	float rotateSpeed = float(M_PI) / 180.0f;
-	float lerpFactor = 0.2f;
+	float lerpSpeed = 0.01f;
+	static int rotateDirection = 1;
+	static Vector2 objPosTmp = { 0 };
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < objCount; i++) {
 		float dx = player->pos.x - obj[i].pos.x;
 		float dy = player->pos.y - obj[i].pos.y;
 		float angle = atan2f(dy, dx);
+		float crossProduct = dx * 0 - dy * 1;
 
-
-		if (CheckPlayerToObj(*player, obj[i]) && !obj[i].isRotate) {
-			obj[i].isRotate = true;
-
+		if (CheckPlayerToObj(*player, obj[i]) && !player->isRotate) {
+			player->isRotate = true;
 			angleTmp = angle;
+			t = 0;
+			objPosTmp = obj[i].pos;
+			if (crossProduct > 0) {
+				rotateDirection = 1;  
+			}
+			else if (crossProduct < 0) {
+				rotateDirection = -1; 
+			}
 			break;
+		}	
+	}
+	if (keys[DIK_SPACE] && !preKeys[DIK_SPACE] && player->isRotate) {
+		player->isRotate = false;
+	}
+	if (player->isRotate) {
+
+		Novice::ScreenPrintf(700, 45, "angle_dif = %.10f", angle_dif);
+		angle_dif = angle_difference(angleTmp, player->angle);
+
+		player->pos.x = objPosTmp.x + r * cosf(angleTmp);
+		player->pos.y = objPosTmp.y + r * sinf(angleTmp);
+		angleTmp += rotateSpeed * rotateDirection;
+		if (t < 1.0f) {
+			t += lerpSpeed;
 		}
 
-		if (obj[i].isRotate) {
-
-			Novice::ScreenPrintf(0, 45, "angle_dif = %.10f", angle_dif);
-			angle_dif = angle_difference(angleTmp, player->angle);
-
-			player->pos.x = obj[i].pos.x + r * cosf(angleTmp);
-			player->pos.y = obj[i].pos.y + r * sinf(angleTmp);
-			angleTmp += rotateSpeed;
-			player->angle = player->angle + lerpFactor * (angleTmp - player->angle);
-
+		player->angle = player->angle + t * (angleTmp - player->angle);
+		if (t >= 1.0f) {
+			player->angle = angleTmp;
 		}
-		else {
-			player->pos.x += player->velocity.x * cosf(player->angle);
-			player->pos.y += player->velocity.y * sinf(player->angle);
+		if (angleTmp > M_PI) {
+			angleTmp = -static_cast<float>(M_PI);
 		}
-
-		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE] && obj[i].isRotate) {
-			obj[i].isRotate = false;
+		if (player->angle > M_PI) {
+			player->angle = -static_cast<float>(M_PI);
 		}
 	}
-	Novice::ScreenPrintf(0, 30 , "player.angle = %.10f  angle = %.10f", player->angle, angleTmp);
+	else {
+		player->pos.x += player->velocity.x * cosf(player->angle);
+		player->pos.y += player->velocity.y * sinf(player->angle);
+	}
+
+	Novice::ScreenPrintf(700, 30 , "player.angle = %.10f  angle = %.10f", player->angle, angleTmp);
 
 }
 void UpdateScroll(Obj* player, Vector2* scroll) {
@@ -167,17 +194,17 @@ void UpdateScroll(Obj* player, Vector2* scroll) {
 
 	//プレイヤーの方向によってスクロール
 	if (player->pos.x > rightScrollTrigger) {
-		//scroll->x += player->pos.x - rightScrollTrigger;
+		scroll->x += player->pos.x - rightScrollTrigger;
 	}
 	else if (player->pos.x < leftScrollTrigger) {
-		//scroll->x -= leftScrollTrigger - player->pos.x;
+		scroll->x -= leftScrollTrigger - player->pos.x;
 	}
 
 	if (player->pos.y > bottomScrollTrigger) {
-		//scroll->y += player->pos.y - bottomScrollTrigger;
+		scroll->y += player->pos.y - bottomScrollTrigger;
 	}
 	else if (player->pos.y < topScrollTrigger) {
-		//scroll->y -= topScrollTrigger - player->pos.y;
+		scroll->y -= topScrollTrigger - player->pos.y;
 	}
 
 	//スクロールの範囲処理

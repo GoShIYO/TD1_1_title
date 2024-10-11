@@ -18,7 +18,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Obj player;
 	InitPlayer(&player);
 
-	Obj obj[3];
+	Obj obj[objCount];
 	InitObj(obj);
 
 	Enemy enemy;
@@ -86,7 +86,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Novice::DrawBox(0, 0, kWindowWidth,kWindowHeight,0,0x002222FF,kFillModeSolid);
 		RenderPlayer(&player,&scroll);
 		//RenderObj(obj);
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < objCount; i++) {
 			showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.booble60_90, 0xFFAAAAFF,&scroll);
 		}
 		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x), -2 * kWindowHeight - int(scroll.y), 5 * kWindowWidth - 100, 5 * kWindowHeight - 100, 0, RED, kFillModeWireFrame);
