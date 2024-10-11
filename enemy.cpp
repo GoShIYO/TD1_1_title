@@ -1,6 +1,4 @@
 #define _USE_MATH_DEFINES
-#define MOVE_TIME 60
-#define STOP_TIME 120
 #include "enemy.h"
 #include "obj.h"
 #include <math.h>
@@ -97,7 +95,7 @@ void EnemyMove(Enemy& enemy) {
 	}
 }
 
-void EnemyMoveHorming(Enemy& enemy, Obj& player) {
+void EnemyMoveHorming(Enemy& enemy, Obj player) {
 	enemy.components.x = player.pos.x - enemy.pos.x;
 	enemy.components.y = player.pos.y - enemy.pos.y;
 	enemy.magnitude = (float)sqrt(pow(enemy.components.x, 2) + pow(enemy.components.y, 2));
