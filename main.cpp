@@ -23,8 +23,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Enemy enemy;
 	Enemy hormingEnemy;
+	Enemy enemyShot;
 	InitEnemyNormal(enemy);
 	InitEnemyHorming(hormingEnemy);
+	InitEnemyShot(enemyShot);
+
+	EnemyBullet bullet[BULLET_COUNT];
 
 	System system;
 	InitSystem(&system);
@@ -77,6 +81,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		EnemyMove(enemy);
 		EnemyMoveHorming(hormingEnemy, player);
+		EnemyMoveShot(enemyShot, player, bullet);
 
 		/// ↑更新処理ここまで
 		/// ---------------------------------------------------------------------
