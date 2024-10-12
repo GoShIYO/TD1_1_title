@@ -6,6 +6,7 @@
 
 extern const int kWindowWidth;
 extern const int kWindowHeight;
+const int objCount = 100;
 struct System {
 	int digFlat;
 };
@@ -17,7 +18,9 @@ struct Obj
 	float angle;
 	float radius;
 	bool isRotate;
-	bool isShoot;
+	bool isCollied;
+	int health;
+	int InvincibleTimer;
 };
 
 struct Triangle {
@@ -25,9 +28,6 @@ struct Triangle {
 	Vector2 b;
 	Vector2 c;
 };
-
-
-
 
 /////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
 /// <summary>
@@ -62,7 +62,6 @@ void InitSystem(System* system);
 /// <param name="preKey">次ページキーのpre</param>
 void viewDig(int* digFlat, int key1, int preKey1, int key2, int preKey2, int key3, int preKey3);
 
-
 /// <summary>
 /// プレイヤーの更新処理
 /// </summary>
@@ -73,11 +72,15 @@ void viewDig(int* digFlat, int key1, int preKey1, int key2, int preKey2, int key
 void UpdatePlayer(Obj* palyer, Obj obj[], char keys[], char preKeys[]);
 
 /// <summary>
+/// プレイヤーの移動範囲処理関数
+/// </summary>
+/// <param name="player">player</param>
+void checkPlayerMoveRange(Obj* player);
+/// <summary>
 /// プレイヤー描画
 /// </summary>
 /// <param name="player"></param>
 void RenderPlayer(Obj* player,Vector2* scroll);
-
 
 /// <summary>
 /// オブジェクト(丸)描画
@@ -85,4 +88,9 @@ void RenderPlayer(Obj* player,Vector2* scroll);
 /// <param name="obj"></param>
 void RenderObj(Obj obj[], Vector2* scroll);
 
+/// <summary>
+/// スクロールの更新処理
+/// </summary>
+/// <param name="player">プレイヤー</param>
+/// <param name="scroll">スクロール変数</param>
 void UpdateScroll(Obj* player, Vector2* scroll);

@@ -18,7 +18,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Obj player;
 	InitPlayer(&player);
 
-	Obj obj[3];
+	Obj obj[objCount];
 	InitObj(obj);
 
 	Enemy enemy;
@@ -60,7 +60,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		UpdatePlayer(&player, obj, keys, preKeys);
-
+		checkPlayerMoveRange(&player);
 		//EnemyMove(enemy);
 
 		if (keys[DIK_UP]) {
@@ -81,6 +81,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		EnemyMove(enemy);
 		EnemyMoveHorming(hormingEnemy, player);
+		UpdatePlayerEnemyEvent(enemy, player, keys, preKeys);
+		UpdatePlayerEnemyEvent(hormingEnemy, player, keys, preKeys);
 		EnemyMoveShot(enemyShot, player, bullet);
 
 		/// ↑更新処理ここまで
@@ -90,10 +92,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Novice::DrawBox(0, 0, kWindowWidth,kWindowHeight,0,0x002222FF,kFillModeSolid);
 		RenderPlayer(&player,&scroll);
 		//RenderObj(obj);
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < objCount; i++) {
 			showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.booble60_90, 0xFFAAAAFF,&scroll);
 		}
-		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x), -2 * kWindowHeight - int(scroll.y), 5 * kWindowWidth - 100, 5 * kWindowHeight - 100, 0, RED, kFillModeWireFrame);
+		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x) + 100, -2 * kWindowHeight - int(scroll.y) + 100, 5 * kWindowWidth - 200, 5 * kWindowHeight - 200, 0, RED, kFillModeWireFrame);
 
 		RenderEnemy(enemy, scroll);
 		RenderEnemy(hormingEnemy, scroll);
