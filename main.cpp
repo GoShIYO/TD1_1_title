@@ -56,7 +56,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		UpdatePlayer(&player, obj, keys, preKeys);
-
+		checkPlayerMoveRange(&player);
 		//EnemyMove(enemy);
 
 		if (keys[DIK_UP]) {
@@ -77,7 +77,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		EnemyMove(enemy);
 		EnemyMoveHorming(hormingEnemy, player);
-
+		UpdatePlayerEnemyEvent(enemy, player, keys, preKeys);
+		UpdatePlayerEnemyEvent(hormingEnemy, player, keys, preKeys);
 
 		/// ↑更新処理ここまで
 		/// ---------------------------------------------------------------------
@@ -89,7 +90,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		for (int i = 0; i < objCount; i++) {
 			showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.booble60_90, 0xFFAAAAFF,&scroll);
 		}
-		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x), -2 * kWindowHeight - int(scroll.y), 5 * kWindowWidth - 100, 5 * kWindowHeight - 100, 0, RED, kFillModeWireFrame);
+		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x) + 100, -2 * kWindowHeight - int(scroll.y) + 100, 5 * kWindowWidth - 200, 5 * kWindowHeight - 200, 0, RED, kFillModeWireFrame);
 
 		RenderEnemy(enemy, scroll);
 		RenderEnemy(hormingEnemy, scroll);

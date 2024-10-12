@@ -17,9 +17,11 @@ struct Enemy {
 	float magnitude;
 	float width;
 	float height;
+	float radius;
 	int moveTimer;
 	int graphHandle;
 	int direction;
+	int health;
 	bool isAlive;
 	bool isMove;
 };
@@ -27,9 +29,12 @@ struct Enemy {
 void InitEnemyNormal(Enemy& enemy);
 void InitEnemyHorming(Enemy& enemy);
 
+
 void EnemyMove(Enemy& enemy);
 void EnemyMoveHorming(Enemy& enemy, Obj& player);
 
 void RenderEnemy(Enemy& enemy, Vector2& scroll);
 
 void EnemyDebug(Enemy& enemy);
+
+void UpdatePlayerEnemyEvent(Enemy& enemy, Obj& player, char keys[], char preKeys[]);

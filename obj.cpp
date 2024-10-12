@@ -3,7 +3,6 @@
 #include<time.h>
 #include<stdlib.h>
 
-
 /////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
 void InitPlayer(Obj* player) {
 	player->pos.x = 200.0f;
@@ -13,6 +12,9 @@ void InitPlayer(Obj* player) {
 	player->angle = (float)(M_PI) / 8.0f;
 	player->radius = 30.0f;
 	player->isRotate = false;
+	player->health = 3;
+	player->InvincibleTimer = 60;
+	player->isCollied = false;
 }
 void InitObj(Obj obj[]) {
 	srand(static_cast<unsigned int>(time(NULL)));
@@ -123,6 +125,15 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 	static int rotateDirection = 1;
 	static Vector2 objPosTmp = { 0 };
 
+	if (player->isCollied && player->InvincibleTimer>0) {
+		player->InvincibleTimer--;
+		
+	}
+	else {
+		player->InvincibleTimer = 60;
+		player->isCollied = false;
+	}
+	Novice::ScreenPrintf(0, 200, "player.iTimer = %d", player->InvincibleTimer);
 	for (int i = 0; i < objCount; i++) {
 		float dx = player->pos.x - obj[i].pos.x;
 		float dy = player->pos.y - obj[i].pos.y;
@@ -135,13 +146,13 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 			t = 0;
 			objPosTmp = obj[i].pos;
 			if (crossProduct > 0) {
-				rotateDirection = 1;  
+				rotateDirection = 1;
 			}
 			else if (crossProduct < 0) {
-				rotateDirection = -1; 
+				rotateDirection = -1;
 			}
 			break;
-		}	
+		}
 	}
 	if (keys[DIK_SPACE] && !preKeys[DIK_SPACE] && player->isRotate) {
 		player->isRotate = false;
@@ -174,7 +185,24 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 		player->pos.y += player->velocity.y * sinf(player->angle);
 	}
 
-	Novice::ScreenPrintf(700, 30 , "player.angle = %.10f  angle = %.10f", player->angle, angleTmp);
+	Novice::ScreenPrintf(700, 30, "player.angle = %.10f  angle = %.10f", player->angle, angleTmp);
+
+}
+void checkPlayerMoveRange(Obj* player) {
+	const int rangeWidthMin = -kWindowWidth * 2 + 100;
+	const int rangeWidthMax = kWindowWidth * 3 - 100;
+	const int rangeHeightMin = -kWindowHeight * 2 + 100;
+	const int rangeHeightMax = kWindowHeight * 3 - 100;
+
+	if (player->pos.x + player->radius > rangeWidthMax || player->pos.x - player->radius < rangeWidthMin) {
+		player->angle = float(M_PI) - player->angle;
+	}
+
+	if (player->pos.y + player->radius > rangeHeightMax || player->pos.y - player->radius < rangeHeightMin) {
+		player->angle = -player->angle;
+	}
+
+	Novice::ScreenPrintf(700, 80, "player.pos x = %.2f  y = %.2f", player->pos.x, player->pos.y);
 
 }
 void UpdateScroll(Obj* player, Vector2* scroll) {
@@ -194,31 +222,31 @@ void UpdateScroll(Obj* player, Vector2* scroll) {
 
 	//プレイヤーの方向によってスクロール
 	if (player->pos.x > rightScrollTrigger) {
-		scroll->x += player->pos.x - rightScrollTrigger;
+		scroll->x += 0.1f * (player->pos.x - rightScrollTrigger);
 	}
 	else if (player->pos.x < leftScrollTrigger) {
-		scroll->x -= leftScrollTrigger - player->pos.x;
+		scroll->x -= 0.1f * (leftScrollTrigger - player->pos.x);
 	}
 
 	if (player->pos.y > bottomScrollTrigger) {
-		scroll->y += player->pos.y - bottomScrollTrigger;
+		scroll->y += 0.1f * (player->pos.y - bottomScrollTrigger);
 	}
 	else if (player->pos.y < topScrollTrigger) {
-		scroll->y -= topScrollTrigger - player->pos.y;
+		scroll->y -= 0.1f * (topScrollTrigger - player->pos.y);
 	}
 
 	//スクロールの範囲処理
-	if (scroll->x < mapWidthMin - 100) {
-		scroll->x = mapWidthMin - 100;
+	if (scroll->x < mapWidthMin) {
+		scroll->x = mapWidthMin;
 	}
 	if (scroll->x > mapWidthMax - kWindowWidth) {
 		scroll->x = mapWidthMax - kWindowWidth;
 	}
-	if (scroll->y < mapHeightMin - 100) {
-		scroll->y = mapHeightMin - 100;
+	if (scroll->y < mapHeightMin) {
+		scroll->y = mapHeightMin;
 	}
-	if (scroll->y > mapHeightMax - kWindowHeight - 100) {
-		scroll->y = mapHeightMax - kWindowHeight - 100;
+	if (scroll->y > mapHeightMax - kWindowHeight) {
+		scroll->y = mapHeightMax - kWindowHeight;
 	}
 }
 
