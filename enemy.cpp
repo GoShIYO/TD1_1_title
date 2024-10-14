@@ -14,7 +14,6 @@ void InitEnemyNormal(Enemy& enemy) {
 	enemy.height = 32.0f;
 	enemy.radius = 16.0f;
 	enemy.moveTimer = 0;
-	enemy.graphHandle = Novice::LoadTexture("./Resources/enemy.png");
 	enemy.direction = 0;
 	enemy.isAlive = true;
 	enemy.isMove = false;
@@ -34,7 +33,6 @@ void InitEnemyHorming(Enemy& enemy) {
 	enemy.width = 32.0f;
 	enemy.height = 32.0f;
 	enemy.radius = 16.0f;
-	enemy.graphHandle = Novice::LoadTexture("./Resources/enemy2.png");
 	enemy.direction = 0;
 	enemy.isAlive = true;
 	enemy.isMove = false;
@@ -117,9 +115,15 @@ void EnemyMoveHoming(Enemy& enemy, Obj& player) {
 	enemy.pos.y += enemy.directions.y * enemy.velocity.y;
 }
 
-void RenderEnemy(Enemy& enemy, Vector2& scroll) {
+void RenderEnemy(Enemy enemy, Vector2 scroll, int handle) {
 	if (enemy.isAlive) {
-		Novice::DrawSprite(int(enemy.pos.x - scroll.x), int(enemy.pos.y - scroll.y), enemy.graphHandle, 1, 1, 0.0f, WHITE);
+		Novice::DrawSprite(int(enemy.pos.x - scroll.x), int(enemy.pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
+	}
+}
+
+void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle) {
+	for (int i = 0;i < BULLET_COUNT;i++) {
+		Novice::DrawSprite(int(bullet[i].pos.x - scroll.x), int(bullet[i].pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
 	}
 }
 
@@ -165,4 +169,12 @@ void UpdatePlayerEnemyEvent(Enemy& enemy, Obj& player,char keys[],char preKeys[]
 	 Novice::ScreenPrintf(0, 80, "enemy.health : %d", enemy.health);
 	 Novice::ScreenPrintf(0, 100, "enemy.isAlive : %s", enemy.isAlive ? "alive" : "death");
 
+}
+
+void LoadImages(Handle& handle) {
+	handle.enemy = Novice::LoadTexture("./Resources/enemy.png");
+	handle.enemyHorming = Novice::LoadTexture("./Resources/enemy2.png");
+	handle.enemyShot = Novice::LoadTexture("./Resources/enemy2.png");
+	handle.bullet = Novice::LoadTexture("./Resources/bullet.png");
+	handle.deathEffect = Novice::LoadTexture("./Resources/effect.png");
 }

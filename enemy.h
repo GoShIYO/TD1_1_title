@@ -30,6 +30,7 @@ struct Enemy {
 	float height;
 	float radius;
 	int moveTimer;
+	int shotTimer;
 	int graphHandle;
 	int direction;
 	int health;
@@ -49,21 +50,31 @@ struct EnemyBullet {
 	float magnitude;
 	float width;
 	float height;
-	int shotTimer;
 	int graphHnadle;
 	bool isShot;
+};
+
+struct Handle {
+	int enemy;
+	int enemyHorming;
+	int enemyShot;
+	int bullet;
+	int deathEffect;
 };
 
 void InitEnemyNormal(Enemy& enemy);
 void InitEnemyHorming(Enemy& enemy);
 void InitEnemyShot(Enemy& enemy);
+void InitEnemyBullet(EnemyBullet bullet[]);
 
+void LoadImages(Handle& handle);
 
 void EnemyMove(Enemy& enemy);
 void EnemyMoveHoming(Enemy& enemy, Obj& player);
 
-void RenderEnemy(Enemy& enemy, Vector2& scroll);
+void RenderEnemy(Enemy enemy, Vector2 scroll, int handle);
+void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle);
 
-void EnemyDebug(Enemy& enemy);
+void EnemyDebug(EnemyBullet bullet, Enemy enemy);
 
 void UpdatePlayerEnemyEvent(Enemy& enemy, Obj& player, char keys[], char preKeys[]);
