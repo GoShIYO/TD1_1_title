@@ -22,13 +22,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	InitObj(obj);
 
 	Enemy enemy;
-	Enemy hormingEnemy;
+	Enemy enemyHorming;
 	Enemy enemyShot;
 	InitEnemyNormal(enemy);
-	InitEnemyHorming(hormingEnemy);
+	InitEnemyHorming(enemyHorming);
 	InitEnemyShot(enemyShot);
 
 	EnemyBullet bullet[BULLET_COUNT];
+	InitEnemyBullet(bullet);
+
+	Handle handle;
+	LoadImages(handle);
 
 	System system;
 	InitSystem(&system);
@@ -80,10 +84,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		EnemyMove(enemy);
-		EnemyMoveHorming(hormingEnemy, player);
+		EnemyMoveHorming(enemyHorming, player);
 		UpdatePlayerEnemyEvent(enemy, player, keys, preKeys);
-		UpdatePlayerEnemyEvent(hormingEnemy, player, keys, preKeys);
-		EnemyMoveShot(enemyShot, player, bullet);
+		UpdatePlayerEnemyEvent(enemyHorming, player, keys, preKeys);
+		BulletShot(enemyShot, player, bullet);
 
 		/// ↑更新処理ここまで
 		/// ---------------------------------------------------------------------
@@ -97,9 +101,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x) + 100, -2 * kWindowHeight - int(scroll.y) + 100, 5 * kWindowWidth - 200, 5 * kWindowHeight - 200, 0, RED, kFillModeWireFrame);
 
-		RenderEnemy(enemy, scroll);
-		RenderEnemy(hormingEnemy, scroll);
-		EnemyDebug(hormingEnemy);
+		RenderEnemy(enemy, scroll, handle.enemy);
+		RenderEnemy(enemyHorming, scroll, handle.enemyHorming);
+		RenderEnemy(enemyShot, scroll, handle.enemyShot);
+		RenderBullet(bullet, scroll, handle.bullet);
+		EnemyDebug(bullet[0], enemyShot);
 		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
 
 		viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);

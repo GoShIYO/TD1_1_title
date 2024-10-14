@@ -14,7 +14,6 @@ void InitEnemyNormal(Enemy& enemy) {
 	enemy.height = 32.0f;
 	enemy.radius = 16.0f;
 	enemy.moveTimer = 0;
-	enemy.graphHandle = Novice::LoadTexture("./Resources/enemy.png");
 	enemy.direction = 0;
 	enemy.isAlive = true;
 	enemy.isMove = false;
@@ -34,7 +33,6 @@ void InitEnemyHorming(Enemy& enemy) {
 	enemy.width = 32.0f;
 	enemy.height = 32.0f;
 	enemy.radius = 16.0f;
-	enemy.graphHandle = Novice::LoadTexture("./Resources/enemy2.png");
 	enemy.direction = 0;
 	enemy.isAlive = true;
 	enemy.isMove = false;
@@ -46,7 +44,7 @@ void InitEnemyShot(Enemy& enemy) {
 	enemy.pos.y = 700.0f;
 	enemy.width = 32.0f;
 	enemy.height = 32.0f;
-	enemy.graphHandle = Novice::LoadTexture("./Resources/enemy2.png");
+	enemy.shotTimer = 0;
 	enemy.isAlive = true;
 }
 
@@ -54,6 +52,14 @@ void InitEnemyBullet(EnemyBullet bullet[]) {
 	for (int i = 0;i < BULLET_COUNT;i++) {
 		bullet[i].pos.x = -10000.0f;
 		bullet[i].pos.y = -10000.0f;
+		bullet[i].velocity.x = 5.0f;
+		bullet[i].velocity.y = 5.0f;
+		bullet[i].components.x = 0.0f;
+		bullet[i].components.y = 0.0f;
+		bullet[i].directions.x = 0.0f;
+		bullet[i].directions.y = 0.0f;
+		bullet[i].magnitude = 0.0f;
+		bullet[i].isShot = false;
 	}
 }
 
@@ -109,10 +115,10 @@ void EnemyMoveHorming(Enemy& enemy, Obj player) {
 	enemy.pos.y += enemy.directions.y * enemy.velocity.y;
 }
 
-void EnemyMoveShot(Enemy& enemy, Obj player, EnemyBullet bullet[]) {
+void BulletShot(Enemy& enemy, Obj player, EnemyBullet bullet[]) {
+	enemy.shotTimer++;
 	for (int i = 0;i < BULLET_COUNT;i++) {
-		bullet[i].shotTimer++;
-		if (bullet[i].shotTimer >= SHOT_TIME) {
+		if (enemy.shotTimer >= SHOT_TIME) {
 			bullet[i].isShot = true;
 			bullet[i].pos.x = enemy.pos.x;
 			bullet[i].pos.y = enemy.pos.y;
@@ -121,25 +127,38 @@ void EnemyMoveShot(Enemy& enemy, Obj player, EnemyBullet bullet[]) {
 			bullet[i].magnitude = (float)sqrt(pow(bullet[i].components.x, 2) + pow(bullet[i].components.y, 2));
 			bullet[i].directions.x = bullet[i].components.x / bullet[i].magnitude;
 			bullet[i].directions.y = bullet[i].components.y / bullet[i].magnitude;
-			bullet[i].shotTimer = 0;
+			enemy.shotTimer = 0;
 			break;
 		}
 		if (bullet[i].isShot) {
 			bullet[i].pos.x += bullet[i].directions.x * bullet[i].velocity.x;
 			bullet[i].pos.y += bullet[i].directions.y * bullet[i].velocity.y;
 		}
+		if (bullet[i].pos.x >= kWindowWidth * 3 || bullet[i].pos.x <= -kWindowWidth * 2 || bullet[i].pos.y >= kWindowHeight * 3 || bullet[i].pos.y <= -kWindowHeight * 2) {
+			bullet[i].pos.x = -10000.0f;
+			bullet[i].pos.y = -10000.0f;
+			bullet[i].isShot = false;
+		}
 	}
 }
 
-void RenderEnemy(Enemy& enemy, Vector2& scroll) {
+void RenderEnemy(Enemy enemy, Vector2 scroll, int handle) {
 	if (enemy.isAlive) {
-		Novice::DrawSprite(int(enemy.pos.x - scroll.x), int(enemy.pos.y - scroll.y), enemy.graphHandle, 1, 1, 0.0f, WHITE);
+		Novice::DrawSprite(int(enemy.pos.x - scroll.x), int(enemy.pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
 	}
 }
 
-void EnemyDebug(Enemy& enemy) {
-	Novice::ScreenPrintf(0, 20, "hormingEnemy.pos.x : %f", enemy.pos.x);
-	Novice::ScreenPrintf(0, 40, "hormingEnemy.pos.y : %f", enemy.pos.y);
+void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle) {
+	for (int i = 0;i < BULLET_COUNT;i++) {
+		Novice::DrawSprite(int(bullet[i].pos.x - scroll.x), int(bullet[i].pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
+	}
+}
+
+void EnemyDebug(EnemyBullet bullet, Enemy enemy) {
+	Novice::ScreenPrintf(0, 20, "bullet.pos.x : %f", bullet.pos.x);
+	Novice::ScreenPrintf(0, 40, "bullet.pos.y : %f", bullet.pos.y);
+	Novice::ScreenPrintf(0, 120, "enemy.pos.x : %f", enemy.pos.x);
+	Novice::ScreenPrintf(0, 140, "enemy.pos.y : %f", enemy.pos.y);
 }
 
 bool CheckCircleCollision(Vector2& a, Vector2& b,const float& radiusA,const float& radiusB) {
@@ -179,4 +198,12 @@ void UpdatePlayerEnemyEvent(Enemy& enemy, Obj& player,char keys[],char preKeys[]
 	 Novice::ScreenPrintf(0, 80, "enemy.health : %d", enemy.health);
 	 Novice::ScreenPrintf(0, 100, "enemy.isAlive : %s", enemy.isAlive ? "alive" : "death");
 
+}
+
+void LoadImages(Handle& handle) {
+	handle.enemy = Novice::LoadTexture("./Resources/enemy.png");
+	handle.enemyHorming = Novice::LoadTexture("./Resources/enemy2.png");
+	handle.enemyShot = Novice::LoadTexture("./Resources/enemy2.png");
+	handle.bullet = Novice::LoadTexture("./Resources/bullet.png");
+	handle.deathEffect = Novice::LoadTexture("./Resources/effect.png");
 }
