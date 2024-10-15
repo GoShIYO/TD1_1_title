@@ -84,7 +84,7 @@ void EnemyMove(Enemy& enemy) {
 	}
 }
 
-void EnemyMoveHorming(Enemy& enemy, Obj& player) {
+void EnemyMoveHoming(Enemy& enemy, Obj& player) {
 	enemy.components.x = player.pos.x - enemy.pos.x;
 	enemy.components.y = player.pos.y - enemy.pos.y;
 	enemy.magnitude = (float)sqrt(pow(enemy.components.x, 2) + pow(enemy.components.y, 2));
@@ -102,16 +102,16 @@ void RenderEnemy(Enemy& enemy, Vector2& scroll) {
 }
 
 void EnemyDebug(Enemy& enemy) {
-	Novice::ScreenPrintf(0, 20, "hormingEnemy.pos.x : %f", enemy.pos.x);
-	Novice::ScreenPrintf(0, 40, "hormingEnemy.pos.y : %f", enemy.pos.y);
+	Novice::ScreenPrintf(0, 20, "homingEnemy.pos.x : %f", enemy.pos.x);
+	Novice::ScreenPrintf(0, 40, "homingEnemy.pos.y : %f", enemy.pos.y);
 }
 
 bool CheckCircleCollision(Vector2& a, Vector2& b,const float& radiusA,const float& radiusB) {
 	float x = a.x - b.x;
 	float y = a.y - b.y;
-	float distence = x * x + y * y;
+	float distance = x * x + y * y;
 	float radius = radiusA + radiusB;
-	if (distence <= radius * radius) {
+	if (distance <= radius * radius) {
 		return true;
 	}
 	return false;

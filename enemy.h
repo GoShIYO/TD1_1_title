@@ -31,7 +31,7 @@ void InitEnemyHorming(Enemy& enemy);
 
 
 void EnemyMove(Enemy& enemy);
-void EnemyMoveHorming(Enemy& enemy, Obj& player);
+void EnemyMoveHoming(Enemy& enemy, Obj& player);
 
 void RenderEnemy(Enemy& enemy, Vector2& scroll);
 

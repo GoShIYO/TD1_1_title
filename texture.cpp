@@ -4,7 +4,7 @@
 /////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
 extern void initializeResource(AllResource* texture) {
 	///Title
-	texture->booble60_90 = Novice::LoadTexture("./Resources/booble60-90.png");
+	texture->bubble60_90 = Novice::LoadTexture("./Resources/booble60-90.png");
 
 }
 
