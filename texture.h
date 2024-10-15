@@ -11,7 +11,7 @@ struct Resource final {
 };
 
 struct AllResource final {
-	int booble60_90;
+	int bubble60_90;
 };
 
 

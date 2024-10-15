@@ -65,11 +65,11 @@ void viewDig(int* digFlat, int key1, int preKey1, int key2, int preKey2, int key
 /// <summary>
 /// プレイヤーの更新処理
 /// </summary>
-/// <param name="palyer"></param>
+/// <param name="player"></param>
 /// <param name="obj"></param>
 /// <param name="keys"></param>
 /// <param name="preKeys"></param>
-void UpdatePlayer(Obj* palyer, Obj obj[], char keys[], char preKeys[]);
+void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]);
 
 /// <summary>
 /// プレイヤーの移動範囲処理関数
