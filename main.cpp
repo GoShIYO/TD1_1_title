@@ -91,6 +91,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		UpdatePlayerEnemyEvent(enemyHorming, player, keys, preKeys);
 		BulletShot(enemyShot, player, bullet);
 
+		// ギミックオブジェクトの更新
+		UpdateGimmickObjs(gimmickObjs, player);
+
 		/// ↑更新処理ここまで
 		/// ---------------------------------------------------------------------
 		/// ↓描画処理ここから
@@ -103,12 +106,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x) + 100, -2 * kWindowHeight - int(scroll.y) + 100, 5 * kWindowWidth - 200, 5 * kWindowHeight - 200, 0, RED, kFillModeWireFrame);
 
+		// ギミックオブジェクトの描画
+		RenderGimmickObjs(gimmickObjs, &scroll);
+
 		RenderEnemy(enemy, scroll, handle.enemy);
 		RenderEnemy(enemyHorming, scroll, handle.enemyHorming);
 		RenderEnemy(enemyShot, scroll, handle.enemyShot);
 		RenderBullet(bullet, scroll, handle.bullet);
 		EnemyDebug(bullet[0], enemyShot);
 		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
+
 
         // デバッグ表示
         viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
