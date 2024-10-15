@@ -76,6 +76,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]);
 /// </summary>
 /// <param name="player">player</param>
 void checkPlayerMoveRange(Obj* player);
+
 /// <summary>
 /// プレイヤー描画
 /// </summary>
