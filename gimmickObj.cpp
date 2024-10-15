@@ -65,25 +65,24 @@ void NormalizeVector(Vector2& vector) {
 }
 
 void ReflectPlayer(Obj& player, Vector2& normal) {
-    if (!player.isRotate) {
-        Vector2 velocity = { cosf(player.angle) * player.velocity.x, sinf(player.angle) * player.velocity.y };
+  
+    Vector2 velocity = { cosf(player.angle) * player.velocity.x, sinf(player.angle) * player.velocity.y };
 
+    
+    NormalizeVector(normal);
 
-        NormalizeVector(normal);
+    
+    float dotProduct = velocity.x * normal.x + velocity.y * normal.y;
 
+    
+    velocity.x -= 2 * dotProduct * normal.x;
+    velocity.y -= 2 * dotProduct * normal.y;
 
-        float dotProduct = velocity.x * normal.x + velocity.y * normal.y;
+    
+    player.angle = atan2f(velocity.y, velocity.x);
 
-
-        velocity.x -= 2 * dotProduct * normal.x;
-        velocity.y -= 2 * dotProduct * normal.y;
-
-
-        player.angle = atan2f(velocity.y, velocity.x);
-
-
-        player.pos.x += velocity.x;
-        player.pos.y += velocity.y;
-  }   
+    
+    player.pos.x += velocity.x;
+    player.pos.y += velocity.y;
 }
 
