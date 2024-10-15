@@ -59,7 +59,7 @@ void InitEnemyBullet(EnemyBullet bullet[]);
 void LoadImages(Handle& handle);
 
 void EnemyMove(Enemy& enemy);
-void EnemyMoveHorming(Enemy& enemy, Obj player);
+void EnemyMoveHorming(Enemy& enemy, Obj& player);
 void BulletShot(Enemy& enemy, Obj player, EnemyBullet bullet[]);
 
 void RenderEnemy(Enemy enemy, Vector2 scroll, int handle);

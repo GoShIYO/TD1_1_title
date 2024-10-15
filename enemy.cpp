@@ -1,4 +1,5 @@
 #define _USE_MATH_DEFINES
+#define ENEMY_TO_PLAYER 500.0f
 #include "enemy.h"
 #include "obj.h"
 #include <math.h>
@@ -23,8 +24,8 @@ void InitEnemyNormal(Enemy& enemy) {
 void InitEnemyHorming(Enemy& enemy) {
 	enemy.pos.x = 200.0f;
 	enemy.pos.y = 700.0f;
-	enemy.velocity.x = 1.0f;
-	enemy.velocity.y = 1.0f;
+	enemy.velocity.x = 2.0f;
+	enemy.velocity.y = 2.0f;
 	enemy.components.x = 0.0f;
 	enemy.components.y = 0.0f;
 	enemy.directions.x = 0.0f;
@@ -104,15 +105,21 @@ void EnemyMove(Enemy& enemy) {
 	}
 }
 
-void EnemyMoveHorming(Enemy& enemy, Obj player) {
+void EnemyMoveHorming(Enemy& enemy, Obj& player) {
 	enemy.components.x = player.pos.x - enemy.pos.x;
 	enemy.components.y = player.pos.y - enemy.pos.y;
 	enemy.magnitude = (float)sqrt(pow(enemy.components.x, 2) + pow(enemy.components.y, 2));
 	enemy.directions.x = enemy.components.x / enemy.magnitude;
 	enemy.directions.y = enemy.components.y / enemy.magnitude;
 
-	enemy.pos.x += enemy.directions.x * enemy.velocity.x;
-	enemy.pos.y += enemy.directions.y * enemy.velocity.y;
+	float distanceX = enemy.pos.x - player.pos.x;
+	float distanceY = enemy.pos.y - player.pos.y;
+	float distance = sqrtf(float(pow(distanceX, 2)) + float(pow(distanceY, 2)));
+
+	if (distance <= ENEMY_TO_PLAYER) {
+		enemy.pos.x += enemy.directions.x * enemy.velocity.x;
+		enemy.pos.y += enemy.directions.y * enemy.velocity.y;
+	}
 }
 
 void BulletShot(Enemy& enemy, Obj player, EnemyBullet bullet[]) {
