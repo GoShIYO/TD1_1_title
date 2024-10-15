@@ -13,13 +13,6 @@ enum EnemyDirection {
 	LEFT = 3
 };
 
-enum EnemyDirection {
-	UP = 0,
-	DOWN = 1,
-	RIGHT = 2,
-	LEFT = 3
-};
-
 struct Enemy {
 	Vector2 pos;
 	Vector2 velocity;
@@ -31,10 +24,6 @@ struct Enemy {
 	float radius;
 	int moveTimer;
 	int shotTimer;
-	int graphHandle;
-	int direction;
-	int health;
-	int moveTimer;
 	int graphHandle;
 	int direction;
 	int health;
@@ -70,7 +59,8 @@ void InitEnemyBullet(EnemyBullet bullet[]);
 void LoadImages(Handle& handle);
 
 void EnemyMove(Enemy& enemy);
-void EnemyMoveHoming(Enemy& enemy, Obj& player);
+void EnemyMoveHorming(Enemy& enemy, Obj player);
+void BulletShot(Enemy& enemy, Obj player, EnemyBullet bullet[]);
 
 void RenderEnemy(Enemy enemy, Vector2 scroll, int handle);
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle);

@@ -18,16 +18,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     Obj player;
     InitPlayer(&player);
 
-    Obj obj[objCount];
-    InitObj(obj);
+	Obj obj[objCount];
+	InitObj(obj);
 
-    Enemy enemy;
-    Enemy homingEnemy;
-    InitEnemyNormal(enemy);
-    InitEnemyHorming(homingEnemy);
+	Enemy enemy;
+	Enemy enemyHorming;
+	Enemy enemyShot;
+	InitEnemyNormal(enemy);
+	InitEnemyHorming(enemyHorming);
+	InitEnemyShot(enemyShot);
 
-    System system;
-    InitSystem(&system);
+	EnemyBullet bullet[BULLET_COUNT];
+	InitEnemyBullet(bullet);
+
+	Handle handle;
+	LoadImages(handle);
+
+	System system;
+	InitSystem(&system);
 
     AllResource texture;
     initializeResource(&texture);
@@ -57,55 +65,50 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             player.angle = (float)(M_PI) / 8.0f;
         }
 
-        UpdatePlayer(&player, obj, keys, preKeys);
-        checkPlayerMoveRange(&player);
+		UpdatePlayer(&player, obj, keys, preKeys);
+		checkPlayerMoveRange(&player);
+		//EnemyMove(enemy);
 
-        if (keys[DIK_UP]) {
-            scroll.y -= 10;
-        }
-        if (keys[DIK_DOWN]) {
-            scroll.y += 10;
-        }
-        if (keys[DIK_LEFT]) {
-            scroll.x -= 10;
-        }
-        if (keys[DIK_RIGHT]) {
-            scroll.x += 10;
-        }
+		if (keys[DIK_UP]) {
+			scroll.y -= 10;
+		}
+		if (keys[DIK_DOWN]) {
+			scroll.y += 10;
 
-        // 敵の移動
-        EnemyMove(enemy);
-        EnemyMoveHoming(homingEnemy, player);
-        UpdatePlayerEnemyEvent(enemy, player, keys, preKeys);
-        UpdatePlayerEnemyEvent(homingEnemy, player, keys, preKeys);
+		}
+		if (keys[DIK_LEFT]) {
+			scroll.x -= 10;
 
-        // ギミックオブジェクトの更新
-        UpdateGimmickObjs(gimmickObjs, player);
+		}
+		if (keys[DIK_RIGHT]) {
+			scroll.x += 10;
 
-        /// ↑更新処理ここまで
-        /// ---------------------------------------------------------------------
-        /// ↓描画処理ここから
+		}
 
-        UpdateScroll(&player, &scroll);
-        Novice::DrawBox(0, 0, kWindowWidth, kWindowHeight, 0, 0x002222FF, kFillModeSolid);
-        RenderPlayer(&player, &scroll);
+		EnemyMove(enemy);
+		EnemyMoveHorming(enemyHorming, player);
+		UpdatePlayerEnemyEvent(enemy, player, keys, preKeys);
+		UpdatePlayerEnemyEvent(enemyHorming, player, keys, preKeys);
+		BulletShot(enemyShot, player, bullet);
 
-        // ギミックオブジェクトの描画
-        RenderGimmickObjs(gimmickObjs, &scroll);
+		/// ↑更新処理ここまで
+		/// ---------------------------------------------------------------------
+		/// ↓描画処理ここから
+		UpdateScroll(&player, &scroll);
+		Novice::DrawBox(0, 0, kWindowWidth,kWindowHeight,0,0x002222FF,kFillModeSolid);
+		RenderPlayer(&player,&scroll);
+		//RenderObj(obj);
+		for (int i = 0; i < objCount; i++) {
+			showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.bubble60_90, 0xFFAAAAFF,&scroll);
+		}
+		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x) + 100, -2 * kWindowHeight - int(scroll.y) + 100, 5 * kWindowWidth - 200, 5 * kWindowHeight - 200, 0, RED, kFillModeWireFrame);
 
-        // オブジェクトの描画
-        for (int i = 0; i < objCount; i++) {
-            showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.bubble60_90, 0xFFAAAAFF, &scroll);
-        }
-
-        Novice::DrawBox(-2 * kWindowWidth - int(scroll.x) + 100, -2 * kWindowHeight - int(scroll.y) + 100,
-            5 * kWindowWidth - 200, 5 * kWindowHeight - 200, 0, RED, kFillModeWireFrame);
-
-        // 敵の描画
-        RenderEnemy(enemy, scroll);
-        RenderEnemy(homingEnemy, scroll);
-        EnemyDebug(homingEnemy);
-        Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
+		RenderEnemy(enemy, scroll, handle.enemy);
+		RenderEnemy(enemyHorming, scroll, handle.enemyHorming);
+		RenderEnemy(enemyShot, scroll, handle.enemyShot);
+		RenderBullet(bullet, scroll, handle.bullet);
+		EnemyDebug(bullet[0], enemyShot);
+		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
 
         // デバッグ表示
         viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
