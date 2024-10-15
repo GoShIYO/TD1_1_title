@@ -7,8 +7,8 @@
 void InitPlayer(Obj* player) {
 	player->pos.x = 200.0f;
 	player->pos.y = 100.0f;
-	player->velocity.x = 8.0f;
-	player->velocity.y = 8.0f;
+	player->velocity.x = 10.0f;
+	player->velocity.y = 10.0f;
 	player->angle = (float)(M_PI) / 8.0f;
 	player->radius = 30.0f;
 	player->isRotate = false;
@@ -120,7 +120,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 	static float angleTmp = 0;
 	static float angle_dif = 0;
 	static float t = 0;
-	float rotateSpeed = float(M_PI) / 180.0f;
+	float rotateSpeed = float(M_PI) / 90.0f;
 	float lerpSpeed = 0.01f;
 	static int rotateDirection = 1;
 	static Vector2 objPosTmp = { 0 };
@@ -214,8 +214,8 @@ void UpdateScroll(Obj* player, Vector2* scroll) {
 	float mapHeightMin = -2.0f * kWindowHeight;
 
 	//スクロール発生ターゲット
-	float rightScrollTrigger = scroll->x + kWindowWidth * 2.0f / 3.0f;
-	float leftScrollTrigger = scroll->x + kWindowWidth * 1.0f / 3.0f;
+	float rightScrollTrigger = scroll->x + kWindowWidth * 3.0f / 4.0f;
+	float leftScrollTrigger = scroll->x + kWindowWidth * 1.0f / 4.0f;
 
 	float topScrollTrigger = scroll->y + kWindowHeight * 1.0f / 3.0f;
 	float bottomScrollTrigger = scroll->y + kWindowHeight * 2.0f / 3.0f;
