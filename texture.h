@@ -12,6 +12,16 @@ struct Resource final {
 
 struct AllResource final {
 	int bubble60_90;
+	int earthStar100_130;
+	int electricStar65_160;
+	int fireStar100_130;
+	int gasStar150_203;
+	int iceStar100_130;
+	int waterStar80_106;
+	int meteorStar60_65;
+	int posionStar150_203;
+	int sandStar100_130;
+	int sun65_160;
 };
 
 
