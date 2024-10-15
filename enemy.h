@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #define MOVE_TIME 60
 #define STOP_TIME 120
 #define SHOT_TIME 60
