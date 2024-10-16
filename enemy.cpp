@@ -1,24 +1,52 @@
 #define _USE_MATH_DEFINES
-#define ENEMY_TO_PLAYER 500.0f
 #include "enemy.h"
 #include "obj.h"
 #include <math.h>
 #include <Novice.h>
 #include <stdlib.h>
 
-void InitEnemyNormal(Enemy& enemy) {
-	enemy.pos.x = 700.0f;
-	enemy.pos.y = 400.0f;
-	enemy.velocity.x = 5.0f;
-	enemy.velocity.y = 5.0f;
-	enemy.width = 32.0f;
-	enemy.height = 32.0f;
-	enemy.radius = 16.0f;
-	enemy.moveTimer = 0;
-	enemy.direction = 0;
-	enemy.isAlive = true;
-	enemy.isMove = false;
-	enemy.health = 1;
+void InitEnemyNormal(Enemy enemy[]) {
+	enemy[0].pos = { -2500.0f, -1400.0f };
+	enemy[1].pos = { -2400.0f, -1300.0f };
+	enemy[2].pos = { -2300.0f, -1200.0f };
+	enemy[3].pos = { -2200.0f, -1100.0f };
+	enemy[4].pos = { -2100.0f, -1000.0f };
+	enemy[5].pos = { -2000.0f, -900.0f };
+	enemy[6].pos = { -1900.0f, -800.0f };
+	enemy[7].pos = { -1800.0f, -700.0f };
+	enemy[8].pos = { -1700.0f, -600.0f };
+	enemy[9].pos = { -1600.0f, -500.0f };
+	enemy[10].pos = { -1500.0f, -400.0f };
+	enemy[11].pos = { -1400.0f, -300.0f };
+	enemy[12].pos = { -1300.0f, -200.0f };
+	enemy[13].pos = { -1200.0f, -100.0f };
+	enemy[14].pos = { -1100.0f, 0.0f };
+	enemy[15].pos = { -1000.0f, 100.0f };
+	enemy[16].pos = { -900.0f, 200.0f };
+	enemy[17].pos = { -800.0f, 300.0f };
+	enemy[18].pos = { -700.0f, 400.0f };
+	enemy[19].pos = { -600.0f, 500.0f };
+	enemy[20].pos = { -500.0f, 600.0f };
+	enemy[21].pos = { -400.0f, 700.0f };
+	enemy[22].pos = { -300.0f, 800.0f };
+	enemy[23].pos = { -200.0f, 900.0f };
+	enemy[24].pos = { -100.0f, 1000.0f };
+	enemy[25].pos = { 0.0f, 1100.0f };
+	enemy[26].pos = { 100.0f, 1200.0f };
+	enemy[27].pos = { 200.0f, 1300.0f };
+	enemy[28].pos = { 300.0f, 1400.0f };
+	for (int i = 0;i < ENEMY_COUNT;i++) {
+		enemy[i].velocity.x = 5.0f;
+		enemy[i].velocity.y = 5.0f;
+		enemy[i].width = 32.0f;
+		enemy[i].height = 32.0f;
+		enemy[i].radius = 16.0f;
+		enemy[i].moveTimer = 0;
+		enemy[i].direction = 0;
+		enemy[i].isAlive = true;
+		enemy[i].isMove = false;
+		enemy[i].health = 1;
+	}
 }
 
 void InitEnemyHorming(Enemy& enemy) {
@@ -64,43 +92,45 @@ void InitEnemyBullet(EnemyBullet bullet[]) {
 	}
 }
 
-void EnemyMove(Enemy& enemy) {
-	enemy.moveTimer++;
+void EnemyMove(Enemy enemy[]) {
+	for (int i = 0;i < ENEMY_COUNT;i++) {
+		enemy[i].moveTimer++;
 
-	if (enemy.moveTimer == MOVE_TIME) {
-		enemy.isMove = true;
-		enemy.direction = rand() % 3 + 1;
-	}
-	if (enemy.isMove) {
-		switch (enemy.direction) {
-		case UP:
-			enemy.pos.y -= enemy.velocity.y;
-			if (enemy.moveTimer >= STOP_TIME) {
-				enemy.moveTimer = 0;
-				enemy.isMove = false;
+		if (enemy[i].moveTimer == MOVE_TIME) {
+			enemy[i].isMove = true;
+			enemy[i].direction = rand() % 3 + 1;
+		}
+		if (enemy[i].isMove) {
+			switch (enemy[i].direction) {
+			case UP:
+				enemy[i].pos.y -= enemy[i].velocity.y;
+				if (enemy[i].moveTimer >= STOP_TIME) {
+					enemy[i].moveTimer = 0;
+					enemy[i].isMove = false;
+				}
+				break;
+			case DOWN:
+				enemy[i].pos.y += enemy[i].velocity.y;
+				if (enemy[i].moveTimer >= STOP_TIME) {
+					enemy[i].moveTimer = 0;
+					enemy[i].isMove = false;
+				}
+				break;
+			case RIGHT:
+				enemy[i].pos.x += enemy[i].velocity.x;
+				if (enemy[i].moveTimer >= STOP_TIME) {
+					enemy[i].moveTimer = 0;
+					enemy[i].isMove = false;
+				}
+				break;
+			case LEFT:
+				enemy[i].pos.x -= enemy[i].velocity.x;
+				if (enemy[i].moveTimer >= STOP_TIME) {
+					enemy[i].moveTimer = 0;
+					enemy[i].isMove = false;
+				}
+				break;
 			}
-			break;
-		case DOWN:
-			enemy.pos.y += enemy.velocity.y;
-			if (enemy.moveTimer >= STOP_TIME) {
-				enemy.moveTimer = 0;
-				enemy.isMove = false;
-			}
-			break;
-		case RIGHT:
-			enemy.pos.x += enemy.velocity.x;
-			if (enemy.moveTimer >= STOP_TIME) {
-				enemy.moveTimer = 0;
-				enemy.isMove = false;
-			}
-			break;
-		case LEFT:
-			enemy.pos.x -= enemy.velocity.x;
-			if (enemy.moveTimer >= STOP_TIME) {
-				enemy.moveTimer = 0;
-				enemy.isMove = false;
-			}
-			break;
 		}
 	}
 }
@@ -149,9 +179,11 @@ void BulletShot(Enemy& enemy, Obj player, EnemyBullet bullet[]) {
 	}
 }
 
-void RenderEnemy(Enemy enemy, Vector2 scroll, int handle) {
-	if (enemy.isAlive) {
-		Novice::DrawSprite(int(enemy.pos.x - scroll.x), int(enemy.pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
+void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle) {
+	for (int i = 0;i < ENEMY_COUNT;i++) {
+		if (enemy[i].isAlive) {
+			Novice::DrawSprite(int(enemy[i].pos.x - scroll.x), int(enemy[i].pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
+		}
 	}
 }
 
@@ -178,32 +210,35 @@ bool CheckCircleCollision(Vector2& a, Vector2& b,const float& radiusA,const floa
 	}
 	return false;
 }
-void UpdatePlayerEnemyEvent(Enemy& enemy, Obj& player,char keys[],char preKeys[]) {
+void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, char keys[], char preKeys[]) {
 	 const float r = 50.0f;
-	 if (enemy.isAlive) {
-		 if (CheckCircleCollision(enemy.pos, player.pos, enemy.radius + r, player.radius)) {
+	 for (int i = 0;i < ENEMY_COUNT;i++) {
+		 if (enemy[i].isAlive) {
+			 if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius + r, player.radius)) {
 
-			 if (CheckCircleCollision(enemy.pos, player.pos, enemy.radius, player.radius) && !player.isCollied) {
-				 player.isCollied = true;
-				 player.health--;				
-			 }
-			 if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
-				 if (!player.isRotate) {
-					 float dx = player.pos.x - enemy.pos.x;
-					 float dy = player.pos.y - enemy.pos.y;
-					 float angle = atan2f(dy, dx);
-					 player.angle += angle;
+				 if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius, player.radius) && !player.isCollied) {
+					 player.isCollied = true;
+					 player.health--;
 				 }
-				 enemy.health--;
+				 if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+					 if (!player.isRotate) {
+						 float dx = player.pos.x - enemy[i].pos.x;
+						 float dy = player.pos.y - enemy[i].pos.y;
+						 float angle = atan2f(dy, dx);
+						 player.angle += angle;
+					 }
+					 enemy[i].health--;
+				 }
 			 }
 		 }
-	 }	
-	 if (enemy.health <= 0) {
-		 enemy.isAlive = false;
+
+		 if (enemy[i].health <= 0) {
+			 enemy[i].isAlive = false;
+		 }
+		 Novice::ScreenPrintf(0, 60, "player.health : %d", player.health);
+		 Novice::ScreenPrintf(0, 80, "enemy.health : %d", enemy[i].health);
+		 Novice::ScreenPrintf(0, 100, "enemy.isAlive : %s", enemy[i].isAlive ? "alive" : "death");
 	 }
-	 Novice::ScreenPrintf(0, 60, "player.health : %d", player.health);
-	 Novice::ScreenPrintf(0, 80, "enemy.health : %d", enemy.health);
-	 Novice::ScreenPrintf(0, 100, "enemy.isAlive : %s", enemy.isAlive ? "alive" : "death");
 
 }
 
