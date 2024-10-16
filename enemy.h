@@ -3,6 +3,8 @@
 #define STOP_TIME 120
 #define SHOT_TIME 60
 #define BULLET_COUNT 20
+#define ENEMY_TO_PLAYER 500.0f
+#define ENEMY_COUNT 29
 #include <Vector2.h>
 #include "obj.h"
 
@@ -51,20 +53,20 @@ struct Handle {
 	int deathEffect;
 };
 
-void InitEnemyNormal(Enemy& enemy);
+void InitEnemyNormal(Enemy enemy[]);
 void InitEnemyHorming(Enemy& enemy);
 void InitEnemyShot(Enemy& enemy);
 void InitEnemyBullet(EnemyBullet bullet[]);
 
 void LoadImages(Handle& handle);
 
-void EnemyMove(Enemy& enemy);
+void EnemyMove(Enemy enemy[]);
 void EnemyMoveHorming(Enemy& enemy, Obj& player);
 void BulletShot(Enemy& enemy, Obj player, EnemyBullet bullet[]);
 
-void RenderEnemy(Enemy enemy, Vector2 scroll, int handle);
+void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle);
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle);
 
 void EnemyDebug(EnemyBullet bullet, Enemy enemy);
 
-void UpdatePlayerEnemyEvent(Enemy& enemy, Obj& player, char keys[], char preKeys[]);
+void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, char keys[], char preKeys[]);
