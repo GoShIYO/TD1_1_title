@@ -111,7 +111,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// ギミックオブジェクトの描画
 		RenderGimmickObjs(gimmickObjs, &scroll);
 
-		RenderEnemy(enemy, scroll, handle.enemy);
+		RenderEnemy(enemy, scroll, handle.enemy, player.pos.x, player.pos.y);
 		//RenderEnemy(enemyHorming, scroll, handle.enemyHorming);
 		//RenderEnemy(enemyShot, scroll, handle.enemyShot);
 		RenderBullet(bullet, scroll, handle.bullet);

@@ -6,35 +6,35 @@
 #include <stdlib.h>
 
 void InitEnemyNormal(Enemy enemy[]) {
-	enemy[0].pos = { -2500.0f, -1400.0f };
-	enemy[1].pos = { -2400.0f, -1300.0f };
-	enemy[2].pos = { -2300.0f, -1200.0f };
-	enemy[3].pos = { -2200.0f, -1100.0f };
-	enemy[4].pos = { -2100.0f, -1000.0f };
-	enemy[5].pos = { -2000.0f, -900.0f };
-	enemy[6].pos = { -1900.0f, -800.0f };
-	enemy[7].pos = { -1800.0f, -700.0f };
-	enemy[8].pos = { -1700.0f, -600.0f };
-	enemy[9].pos = { -1600.0f, -500.0f };
-	enemy[10].pos = { -1500.0f, -400.0f };
-	enemy[11].pos = { -1400.0f, -300.0f };
-	enemy[12].pos = { -1300.0f, -200.0f };
+	enemy[0].pos = { -3800.0f, -1400.0f };
+	enemy[1].pos = { -3600.0f, -1300.0f };
+	enemy[2].pos = { -3400.0f, -1200.0f };
+	enemy[3].pos = { -3200.0f, -1100.0f };
+	enemy[4].pos = { -3000.0f, -1000.0f };
+	enemy[5].pos = { -2800.0f, -900.0f };
+	enemy[6].pos = { -2600.0f, -800.0f };
+	enemy[7].pos = { -2400.0f, -700.0f };
+	enemy[8].pos = { -2200.0f, -600.0f };
+	enemy[9].pos = { -2000.0f, -500.0f };
+	enemy[10].pos = { -1800.0f, -400.0f };
+	enemy[11].pos = { -1600.0f, -300.0f };
+	enemy[12].pos = { -1400.0f, -200.0f };
 	enemy[13].pos = { -1200.0f, -100.0f };
-	enemy[14].pos = { -1100.0f, 0.0f };
-	enemy[15].pos = { -1000.0f, 100.0f };
-	enemy[16].pos = { -900.0f, 200.0f };
-	enemy[17].pos = { -800.0f, 300.0f };
-	enemy[18].pos = { -700.0f, 400.0f };
-	enemy[19].pos = { -600.0f, 500.0f };
-	enemy[20].pos = { -500.0f, 600.0f };
-	enemy[21].pos = { -400.0f, 700.0f };
-	enemy[22].pos = { -300.0f, 800.0f };
-	enemy[23].pos = { -200.0f, 900.0f };
-	enemy[24].pos = { -100.0f, 1000.0f };
-	enemy[25].pos = { 0.0f, 1100.0f };
-	enemy[26].pos = { 100.0f, 1200.0f };
-	enemy[27].pos = { 200.0f, 1300.0f };
-	enemy[28].pos = { 300.0f, 1400.0f };
+	enemy[14].pos = { -1000.0f, 0.0f };
+	enemy[15].pos = { -800.0f, 100.0f };
+	enemy[16].pos = { -600.0f, 200.0f };
+	enemy[17].pos = { -400.0f, 300.0f };
+	enemy[18].pos = { -200.0f, 400.0f };
+	enemy[19].pos = { 0.0f, 500.0f };
+	enemy[20].pos = { 200.0f, 600.0f };
+	enemy[21].pos = { 400.0f, 700.0f };
+	enemy[22].pos = { 600.0f, 800.0f };
+	enemy[23].pos = { 800.0f, 900.0f };
+	enemy[24].pos = { 1000.0f, 1000.0f };
+	enemy[25].pos = { 1200.0f, 1100.0f };
+	enemy[26].pos = { 1400.0f, 1200.0f };
+	enemy[27].pos = { 1600.0f, 1300.0f };
+	enemy[28].pos = { 1800.0f, 1400.0f };
 	for (int i = 0;i < ENEMY_COUNT;i++) {
 		enemy[i].velocity.x = 5.0f;
 		enemy[i].velocity.y = 5.0f;
@@ -179,10 +179,16 @@ void BulletShot(Enemy& enemy, Obj player, EnemyBullet bullet[]) {
 	}
 }
 
-void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle) {
+void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle, float px, float py) {
 	for (int i = 0;i < ENEMY_COUNT;i++) {
-		if (enemy[i].isAlive) {
-			Novice::DrawSprite(int(enemy[i].pos.x - scroll.x), int(enemy[i].pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
+		float distanceX = enemy[i].pos.x - px;
+		float distanceY = enemy[i].pos.y - py;
+		float distance = sqrtf(static_cast<float>(pow(distanceX, 2)) + static_cast<float>(pow(distanceY, 2)));
+
+		if (distance <= kWindowWidth) {
+			if (enemy[i].isAlive) {
+				Novice::DrawSprite(int(enemy[i].pos.x - scroll.x), int(enemy[i].pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
+			}
 		}
 	}
 }
