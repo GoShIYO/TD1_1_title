@@ -87,7 +87,7 @@ void RenderPlayer(Obj* player,Vector2* scroll);
 /// オブジェクト(丸)描画
 /// </summary>
 /// <param name="obj"></param>
-void RenderObj(Obj obj[], Vector2* scroll, Obj* player);
+void RenderMiniMap(Obj obj[], Vector2* scroll, Obj* player);
 
 /// <summary>
 /// スクロールの更新処理

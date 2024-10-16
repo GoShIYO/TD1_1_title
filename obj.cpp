@@ -158,7 +158,7 @@ void RenderPlayer(Obj* player, Vector2* scroll) {
 		int(c.x - scroll->x), int(c.y - scroll->y),
 		RED, kFillModeSolid);
 }
-void RenderObj(Obj obj[], Vector2* scroll,Obj* player) {
+void RenderMiniMap(Obj obj[], Vector2* scroll,Obj* player) {
 	for (int i = 0; i < objCount; i++) {
 		Novice::ScreenPrintf(int(obj[i].pos.x - scroll->x), int(obj[i].pos.y - scroll->y), "%d",i);
 		Novice::DrawEllipse(
