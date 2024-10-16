@@ -20,13 +20,110 @@ void InitObj(Obj obj[]) {
 	srand(static_cast<unsigned int>(time(NULL)));
 	for (int i = 0; i < objCount; i++) {
 		obj[i].radius = 60.0f;
-		obj[i].pos.x = float(rand() % 6400 - 2560);
-		obj[i].pos.y = float(rand() % 6400 - 2560);
-
+		/*obj[i].pos.x = float(rand() % 6400 - 2560);
+		obj[i].pos.y = float(rand() % 6400 - 2560);*/
 	}
-	//obj[0].pos = { 200.0f,200.0f };
-	//obj[1].pos = { 550.0f,530.0f };
-	//obj[2].pos = { 890.0f,450.0f };
+	obj[0].pos = { 2909.5f, 920.3f };
+	obj[1].pos = { -1299.6f, 651.0f };
+	obj[2].pos = { 3236.3f, -924.0f };
+	obj[3].pos = { -213.9f, -951.3f };
+	obj[4].pos = { -2088.6f, 809.0f };
+	obj[5].pos = { 2079.6f, 1356.8f };
+	obj[6].pos = { 3382.8f, 890.3f };
+	obj[7].pos = { 2278.3f, 387.2f };
+	obj[8].pos = { -1847.1f, 1576.2f };
+	obj[9].pos = { 1320.1f, -301.3f };
+	obj[10].pos = { 1053.0f, 1107.4f };
+	obj[11].pos = { 2582.3f, 1385.2f };
+	obj[12].pos = { -681.5f, -762.7f };
+	obj[13].pos = { -56.2f, 638.7f };
+	obj[14].pos = { -1079.4f, -554.7f };
+	obj[15].pos = { -1796.6f, -708.9f };
+	obj[16].pos = { -902.2f, -59.7f };
+	obj[17].pos = { 1779.6f, 617.0f };
+	obj[18].pos = { 3262.7f, 1448.7f };
+	obj[19].pos = { 2328.7f, -671.1f };
+	obj[20].pos = { 223.0f, -240.6f };
+	obj[21].pos = { 2881.8f, -170.4f };
+	obj[22].pos = { 1985.3f, 1000.2f };
+	obj[23].pos = { 2435.6f, 878.2f };
+	obj[24].pos = { -611.9f, 109.1f };
+	obj[25].pos = { 2683.0f, -642.8f };
+	obj[26].pos = { 903.1f, -842.9f };
+	obj[27].pos = { -123.8f, 962.1f };
+	obj[28].pos = { 1110.4f, 416.6f };
+	obj[29].pos = { -656.7f, 964.2f };
+	obj[30].pos = { 1344.3f, 1472.5f };
+	obj[31].pos = { 1508.9f, -916.3f };
+	obj[32].pos = { 114.5f, 1668.6f };
+	obj[33].pos = { 1554.1f, 1252.7f };
+	obj[34].pos = { -1718.3f, 532.5f };
+	obj[35].pos = { 20.9f, 315.2f };
+	obj[36].pos = { 157.4f, -662.4f };
+	obj[37].pos = { -229.9f, 1681.7f };
+	obj[38].pos = { 2675.4f, 683.9f };
+	obj[39].pos = { 625.0f, -613.3f };
+	obj[40].pos = { -864.3f, 384.8f };
+	obj[41].pos = { -1207.5f, 1664.8f };
+	obj[42].pos = { -541.5f, 1551.2f };
+	obj[43].pos = { -1506.2f, -477.8f };
+	obj[44].pos = { 710.8f, 1303.3f };
+	obj[45].pos = { 258.9f, 1171.1f };
+	obj[46].pos = { 2159.9f, -925.0f };
+	obj[47].pos = { -2071.0f, 1143.5f };
+	obj[48].pos = { 1808.6f, -864.6f };
+	obj[49].pos = { 3062.1f, 124.8f };
+	obj[50].pos = { -1765.2f, 1054.5f };
+	obj[51].pos = { -763.7f, -376.5f };
+	obj[52].pos = { 460.9f, 223.9f };
+	obj[53].pos = { -1969.4f, -215.7f };
+	obj[54].pos = { -268.7f, -414.9f };
+	obj[55].pos = { 1929.9f, 188.2f };
+	obj[56].pos = { 1508.9f, 779.4f };
+	obj[57].pos = { -946.6f, 1123.8f };
+	obj[58].pos = { 757.9f, 718.4f };
+	obj[59].pos = { 1442.2f, 18.8f };
+	obj[60].pos = { 1706.3f, -421.5f };
+	obj[61].pos = { 3142.2f, -344.5f };
+	obj[62].pos = { 877.2f, 80.4f };
+	obj[63].pos = { 2390.9f, -110.1f };
+	obj[64].pos = { -429.2f, 712.6f };
+	obj[65].pos = { -484.5f, -205.8f };
+	obj[66].pos = { 2236.3f, 1624.0f };
+	obj[67].pos = { 437.4f, 1540.5f };
+	obj[68].pos = { -205.5f, -89.6f };
+	obj[69].pos = { 1031.8f, -488.2f };
+	obj[70].pos = { -345.3f, 378.1f };
+	obj[71].pos = { 267.0f, 543.5f };
+	obj[72].pos = { -1626.8f, -974.1f };
+	obj[73].pos = { -1390.7f, 1007.0f };
+	obj[74].pos = { 1015.7f, 1415.2f };
+	obj[75].pos = { -1482.3f, 1372.6f };
+	obj[76].pos = { -157.6f, 1349.5f };
+	obj[77].pos = { -1298.4f, 289.7f };
+	obj[78].pos = { 2712.0f, 327.0f };
+	obj[79].pos = { 1757.6f, 1703.2f };
+	obj[80].pos = { -1631.1f, 230.6f };
+	obj[81].pos = { -1900.2f, 95.9f };
+	obj[82].pos = { -1308.4f, -843.2f };
+	obj[83].pos = { 789.3f, 1653.2f };
+	obj[84].pos = { -1644.1f, -108.2f };
+	obj[85].pos = { 3019.5f, 1639.6f };
+	obj[86].pos = { 468.8f, 863.5f };
+	obj[87].pos = { -1055.6f, 843.8f };
+	obj[88].pos = { 2113.9f, -238.5f };
+	obj[89].pos = { 3181.4f, 487.2f };
+	obj[90].pos = { 1601.0f, 331.0f };
+	obj[91].pos = { 2108.5f, 676.3f };
+	obj[92].pos = { -973.4f, -858.4f };
+	obj[93].pos = { 3357.4f, -586.2f };
+	obj[94].pos = { 1776.2f, -85.8f };
+	obj[95].pos = { 3358.8f, 169.1f };
+	obj[96].pos = { 294.5f, -932.9f };
+	obj[97].pos = { 3014.1f, -636.1f };
+	obj[98].pos = { 2867.5f, -960.3f };
+	obj[99].pos = { 750.4f, -324.9f };
+
 }
 
 void InitSystem(System* system) {
@@ -125,9 +222,9 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 	static int rotateDirection = 1;
 	static Vector2 objPosTmp = { 0 };
 
-	if (player->isCollied && player->InvincibleTimer>0) {
+	if (player->isCollied && player->InvincibleTimer > 0) {
 		player->InvincibleTimer--;
-		
+
 	}
 	else {
 		player->InvincibleTimer = 60;
@@ -222,17 +319,17 @@ void UpdateScroll(Obj* player, Vector2* scroll) {
 
 	//プレイヤーの方向によってスクロール
 	if (player->pos.x > rightScrollTrigger) {
-		scroll->x += 0.1f * (player->pos.x - rightScrollTrigger);
+		//scroll->x += 0.1f * (player->pos.x - rightScrollTrigger);
 	}
 	else if (player->pos.x < leftScrollTrigger) {
-		scroll->x -= 0.1f * (leftScrollTrigger - player->pos.x);
+		//scroll->x -= 0.1f * (leftScrollTrigger - player->pos.x);
 	}
 
 	if (player->pos.y > bottomScrollTrigger) {
-		scroll->y += 0.1f * (player->pos.y - bottomScrollTrigger);
+		//scroll->y += 0.1f * (player->pos.y - bottomScrollTrigger);
 	}
 	else if (player->pos.y < topScrollTrigger) {
-		scroll->y -= 0.1f * (topScrollTrigger - player->pos.y);
+		//scroll->y -= 0.1f * (topScrollTrigger - player->pos.y);
 	}
 
 	//スクロールの範囲処理
