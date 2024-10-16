@@ -21,7 +21,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Obj obj[objCount];
 	InitObj(obj);
 
-	Enemy enemy[29];
+	Enemy enemy[ENEMY_COUNT];
 	Enemy enemyHorming;
 	Enemy enemyShot;
 	InitEnemyNormal(enemy);
