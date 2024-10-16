@@ -15,6 +15,7 @@ extern void initializeResource(AllResource* texture) {
 	texture->posionStar150_203 = Novice::LoadTexture("./Resources/Star/poisonStar150x203.png");
 	texture->sandStar100_130 = Novice::LoadTexture("./Resources/Star/sandStar100x130.png");
 	texture->sun65_160 = Novice::LoadTexture("./Resources/Star/sun65x160.png");
+	texture->player30_32 = Novice::LoadTexture("./Resources/player30_32.png");
 }
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////

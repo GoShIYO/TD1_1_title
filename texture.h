@@ -22,6 +22,7 @@ struct AllResource final {
 	int posionStar150_203;
 	int sandStar100_130;
 	int sun65_160;
+	int player30_32;
 };
 
 
