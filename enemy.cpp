@@ -35,7 +35,7 @@ void InitEnemyNormal(Enemy enemy[]) {
 	enemy[26].pos = { 100.0f, 1200.0f };
 	enemy[27].pos = { 200.0f, 1300.0f };
 	enemy[28].pos = { 300.0f, 1400.0f };
-	for (int i = 0;i < 30;i++) {
+	for (int i = 0;i < ENEMY_COUNT;i++) {
 		enemy[i].velocity.x = 5.0f;
 		enemy[i].velocity.y = 5.0f;
 		enemy[i].width = 32.0f;
