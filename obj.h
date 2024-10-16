@@ -6,7 +6,7 @@
 
 extern const int kWindowWidth;
 extern const int kWindowHeight;
-const int objCount = 100;
+const int objCount = 65;
 struct System {
 	int digFlat;
 };
@@ -87,7 +87,7 @@ void RenderPlayer(Obj* player,Vector2* scroll);
 /// オブジェクト(丸)描画
 /// </summary>
 /// <param name="obj"></param>
-void RenderObj(Obj obj[], Vector2* scroll);
+void RenderObj(Obj obj[], Vector2* scroll, Obj* player);
 
 /// <summary>
 /// スクロールの更新処理
