@@ -13,7 +13,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ライブラリの初期化
     Novice::Initialize(kWindowTitle, kWindowWidth, kWindowHeight);
 
-    srand((unsigned)time(NULL));
+    srand(static_cast<unsigned>(time(NULL)));
 
     Obj player;
     InitPlayer(&player);
@@ -22,8 +22,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	InitObj(obj);
 
 	Enemy enemy[ENEMY_COUNT];
-	Enemy enemyHorming;
-	Enemy enemyShot;
+	Enemy enemyHorming[ENEMY_COUNT];
+	Enemy enemyShot[ENEMY_COUNT];
 	InitEnemyNormal(enemy);
 	InitEnemyHorming(enemyHorming);
 	InitEnemyShot(enemyShot);
@@ -67,7 +67,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		UpdatePlayer(&player, obj, keys, preKeys);
 		checkPlayerMoveRange(&player);
-		//EnemyMove(enemy);
 
 		if (keys[DIK_UP]) {
 			scroll.y -= 10;
@@ -88,7 +87,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		EnemyMove(enemy);
 		EnemyMoveHorming(enemyHorming, player);
 		UpdatePlayerEnemyEvent(enemy, player, keys, preKeys);
-		//UpdatePlayerEnemyEvent(enemyHorming, player, keys, preKeys);
+		UpdatePlayerEnemyEvent(enemyHorming, player, keys, preKeys);
 		BulletShot(enemyShot, player, bullet);
 
 		// ギミックオブジェクトの更新
@@ -112,10 +111,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		RenderGimmickObjs(gimmickObjs, &scroll);
 
 		RenderEnemy(enemy, scroll, handle.enemy, player.pos.x, player.pos.y);
-		//RenderEnemy(enemyHorming, scroll, handle.enemyHorming);
-		//RenderEnemy(enemyShot, scroll, handle.enemyShot);
+		RenderEnemy(enemyHorming, scroll, handle.enemyHorming, player.pos.x, player.pos.y);
+		RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y);
 		RenderBullet(bullet, scroll, handle.bullet);
-		EnemyDebug(bullet[0], enemyShot);
 		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
 
 
