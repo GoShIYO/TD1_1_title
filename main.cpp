@@ -99,7 +99,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		UpdateScroll(&player, &scroll);
 		Novice::DrawBox(0, 0, kWindowWidth,kWindowHeight,0,0x002222FF,kFillModeSolid);
 		RenderPlayer(&player,&scroll);
-		//RenderObj(obj);
+		RenderMiniMap(obj,&scroll,&player);
 		for (int i = 0; i < objCount; i++) {
 			showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.bubble60_90, 0xFFAAAAFF,&scroll);
 		}
