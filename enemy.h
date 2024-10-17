@@ -68,5 +68,6 @@ void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle, float px, float py);
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle);
 
 void EnemyDebug(EnemyBullet bullet[]);
+void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]);
 
 void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, char keys[], char preKeys[]);

@@ -52,10 +52,10 @@ void InitEnemyHorming(Enemy enemy[]) {
 	enemy[4].pos = { 960.0f, -840.0f };
 	enemy[5].pos = { 1200.0f, -840.0f };
 
-	enemy[6].pos = { 1700.0f, 0.0f };
-	enemy[7].pos = { 1700.0f, 240.0f };
-	enemy[8].pos = { 1700.0f, 480.0f };
-	enemy[9].pos = { 1700.0f, 720.0f };
+	enemy[6].pos = { 2400.0f, 0.0f };
+	enemy[7].pos = { 2400.0f, 240.0f };
+	enemy[8].pos = { 2400.0f, 480.0f };
+	enemy[9].pos = { 2400.0f, 720.0f };
 
 	enemy[10].pos = { 0.0f, 1560.0f };
 	enemy[11].pos = { 240.0f, 1560.0f };
@@ -88,13 +88,13 @@ void InitEnemyHorming(Enemy enemy[]) {
 }
 
 void InitEnemyShot(Enemy enemy[]) {
-	enemy[0].pos = { 0.0f, -840.0f };
-	enemy[1].pos = { 240.0f, -840.0f };
-	enemy[2].pos = { 480.0f, -840.0f };
-	enemy[3].pos = { 720.0f, -840.0f };
-	enemy[4].pos = { 960.0f, -840.0f };
-	enemy[5].pos = { 1200.0f, -840.0f };
+	enemy[0].pos = { -1950.0f, -900.0f };
+	enemy[1].pos = { -2000.0f, -500.0f };
+	enemy[2].pos = { -1700.0f, -900.0f };
+	enemy[3].pos = { -1650.0f, -500.0f };
+	enemy[4].pos = { -1660.0f, -40.0f };
 
+	enemy[5].pos = { 1200.0f, -840.0f };
 	enemy[6].pos = { 1700.0f, 0.0f };
 	enemy[7].pos = { 1700.0f, 240.0f };
 	enemy[8].pos = { 1700.0f, 480.0f };
@@ -105,18 +105,17 @@ void InitEnemyShot(Enemy enemy[]) {
 	enemy[12].pos = { 480.0f, 1560.0f };
 	enemy[13].pos = { 720.0f, 1560.0f };
 	enemy[14].pos = { 960.0f, 1560.0f };
-	enemy[15].pos = { 1200.0f, 1560.0f };
 
-	enemy[16].pos = { -1300.0f, 0.0f };
-	enemy[17].pos = { -1300.0f, 240.0f };
-	enemy[18].pos = { -1300.0f, 480.0f };
-	enemy[19].pos = { -1300.0f, 720.0f };
+	enemy[15].pos = { -1300.0f, 0.0f };
+	enemy[16].pos = { -1600.0f, 220.0f };
+	enemy[17].pos = { -1300.0f, 480.0f };
+	enemy[18].pos = { -1600.0f, 720.0f };
+	enemy[19].pos = { -1300.0f, 940.0f };
 
 	for (int i = 0;i < ENEMY_COUNT;i++) {
-		enemy[i].pos.x = 200.0f;
-		enemy[i].pos.y = 700.0f;
 		enemy[i].width = 32.0f;
 		enemy[i].height = 32.0f;
+		enemy[i].radius = 16.0f;
 		enemy[i].shotTimer = 0;
 		enemy[i].isAlive = true;
 	}
@@ -143,7 +142,7 @@ void EnemyMove(Enemy enemy[]) {
 
 		if (enemy[i].moveTimer == MOVE_TIME) {
 			enemy[i].isMove = true;
-			enemy[i].direction = rand() % 3 + 1;
+			enemy[i].direction = rand() % 4;
 		}
 		if (enemy[i].isMove) {
 			switch (enemy[i].direction) {
@@ -295,6 +294,27 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, char keys[], char preKey
 		Novice::ScreenPrintf(0, 100, "enemy.isAlive : %s", enemy[i].isAlive ? "alive" : "death");
 	}
 
+}
+
+void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
+		Novice::DrawEllipse(
+			int(enemy[i].pos.x / 20 + kWindowWidth * 5 / 6.0f), int(enemy[i].pos.y / 20 + kWindowHeight / 8.0f),
+			int(enemy[i].radius / 8), int(enemy[i].radius / 8),
+			0.0f, 0xFFFF55FF, kFillModeSolid);
+	}
+	for (int i = 0; i < ENEMY_COUNT; i++) {
+		Novice::DrawEllipse(
+			int(enemy1[i].pos.x / 20 + kWindowWidth * 5 / 6.0f), int(enemy1[i].pos.y / 20 + kWindowHeight / 8.0f),
+			int(enemy1[i].radius / 8), int(enemy1[i].radius / 8),
+			0.0f, 0x5555FFFF, kFillModeSolid);
+	}
+	for (int i = 0; i < ENEMY_COUNT; i++) {
+		Novice::DrawEllipse(
+			int(enemy2[i].pos.x / 20 + kWindowWidth * 5 / 6.0f), int(enemy2[i].pos.y / 20 + kWindowHeight / 8.0f),
+			int(enemy2[i].radius / 8), int(enemy2[i].radius / 8),
+			0.0f, 0x55FF55FF, kFillModeSolid);
+	}
 }
 
 void LoadImages(Handle& handle) {
