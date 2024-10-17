@@ -4,7 +4,7 @@
 #define SHOT_TIME 60
 #define BULLET_COUNT 20
 #define ENEMY_TO_PLAYER 500.0f
-#define ENEMY_COUNT 29
+#define ENEMY_COUNT 20
 #include <Vector2.h>
 #include "obj.h"
 
@@ -54,19 +54,22 @@ struct Handle {
 };
 
 void InitEnemyNormal(Enemy enemy[]);
-void InitEnemyHorming(Enemy& enemy);
-void InitEnemyShot(Enemy& enemy);
+void InitEnemyHorming(Enemy enemy[]);
+void InitEnemyShot(Enemy enemy[]);
 void InitEnemyBullet(EnemyBullet bullet[]);
 
 void LoadImages(Handle& handle);
 
 void EnemyMove(Enemy enemy[]);
-void EnemyMoveHorming(Enemy& enemy, Obj& player);
-void BulletShot(Enemy& enemy, Obj player, EnemyBullet bullet[]);
+void EnemyMoveHorming(Enemy enemy[], Obj& player);
+void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]);
+
+void EnemyRange(Enemy enemy[], Enemy enemy1[]);
 
 void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle, float px, float py);
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle);
 
-void EnemyDebug(EnemyBullet bullet, Enemy enemy);
+void EnemyDebug(EnemyBullet bullet[]);
+void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]);
 
 void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, char keys[], char preKeys[]);

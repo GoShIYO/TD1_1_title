@@ -13,7 +13,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ライブラリの初期化
     Novice::Initialize(kWindowTitle, kWindowWidth, kWindowHeight);
 
-    srand((unsigned)time(NULL));
+    srand(static_cast<unsigned>(time(NULL)));
 
     Obj player;
     InitPlayer(&player);
@@ -22,8 +22,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	InitObj(obj);
 
 	Enemy enemy[ENEMY_COUNT];
-	Enemy enemyHorming;
-	Enemy enemyShot;
+	Enemy enemyHorming[ENEMY_COUNT];
+	Enemy enemyShot[ENEMY_COUNT];
 	InitEnemyNormal(enemy);
 	InitEnemyHorming(enemyHorming);
 	InitEnemyShot(enemyShot);
@@ -67,7 +67,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		UpdatePlayer(&player, obj, keys, preKeys);
 		checkPlayerMoveRange(&player);
-		//EnemyMove(enemy);
 
 		if (keys[DIK_UP]) {
 			scroll.y -= 10;
@@ -85,11 +84,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		}
 
+		//敵の移動処理
 		EnemyMove(enemy);
 		EnemyMoveHorming(enemyHorming, player);
-		UpdatePlayerEnemyEvent(enemy, player, keys, preKeys);
-		//UpdatePlayerEnemyEvent(enemyHorming, player, keys, preKeys);
 		BulletShot(enemyShot, player, bullet);
+
+		//敵の移動制限
+		EnemyRange(enemy, enemyHorming);
+
+		//敵の当たり判定
+		UpdatePlayerEnemyEvent(enemy, player, keys, preKeys);
+		UpdatePlayerEnemyEvent(enemyHorming, player, keys, preKeys);
 
 		// ギミックオブジェクトの更新
 		UpdateGimmickObjs(gimmickObjs, player);
@@ -105,6 +110,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//for (int i = 0; i < objCount; i++) {
 		//	showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.bubble60_90, 0xFFAAAAFF,&scroll);
 		//}
+		RenderMiniMapEnemy(enemy, enemyHorming,enemyShot);
+		for (int i = 0; i < objCount; i++) {
+			showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.bubble60_90, 0xFFAAAAFF,&scroll);
+		}
 		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x) + 100, -2 * kWindowHeight - int(scroll.y) + 100, 5 * kWindowWidth - 200, 5 * kWindowHeight - 200, 0, RED, kFillModeWireFrame);
 		//showCommonColorTexture(130, 130, 0, 500, 500, texture.earthStar100_130, 0xFFFFFFFF, &scroll);
 
@@ -113,10 +122,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		RenderGimmickObjs(gimmickObjs, &scroll);
 
 		RenderEnemy(enemy, scroll, handle.enemy, player.pos.x, player.pos.y);
-		//RenderEnemy(enemyHorming, scroll, handle.enemyHorming);
-		//RenderEnemy(enemyShot, scroll, handle.enemyShot);
+		RenderEnemy(enemyHorming, scroll, handle.enemyHorming, player.pos.x, player.pos.y);
+		RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y);
 		RenderBullet(bullet, scroll, handle.bullet);
-		EnemyDebug(bullet[0], enemyShot);
 		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
 
 
