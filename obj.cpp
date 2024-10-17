@@ -131,7 +131,7 @@ void InitObj(Obj obj[]) {
 	obj[60].pos = { 3357.4f, -586.2f };  // 区域 (5, 1)
 	obj[61].pos = { 3358.8f, 169.1f };   // 区域 (5, 2)
 	obj[62].pos = { 3382.8f, 890.3f };   // 区域 (5, 4)
-	obj[63].pos = { 3358.8f, 169.1f };   // 区域 (5, 2)
+	obj[63].pos = { 3258.8f, -69.1f };   // 区域 (5, 2)
 	obj[64].pos = { 3434.0f, 1253.5f };  // 区域 (5, 5)
 }
 
@@ -289,7 +289,57 @@ void RenderObj(Obj obj[], Vector2* scroll,AllResource& texture) {
 		);
 	}
 }
-void RenderMiniMap(Obj obj[], Vector2* scroll,Obj* player) {
+float SetRotedSpeed(int* const objType) {
+	static float speed = 0;
+	for (int i = 0; i < objCount; i++) {
+		switch (*objType)
+		{
+		case ELECTRIC:
+			speed = float(M_PI) / 60.0f;
+			break;
+		case FIRE:
+			speed = float(M_PI) / 90.0f;
+
+			break;
+		case GAS:
+			speed = float(M_PI) / 180.0f;
+
+			break;
+		case ICE:
+			speed = float(M_PI) / 90.0f;
+
+			break;
+		case METEOR:
+			speed = float(M_PI) / 75.0f;
+
+			break;
+		case POISON:
+			speed = float(M_PI) / 180.0f;
+
+			break;
+		case SAND:
+			speed = float(M_PI) / 90.0f;
+
+			break;
+		case SUN:
+			speed = float(M_PI) / 60.0f;
+
+			break;
+		case WATER:
+			speed = float(M_PI) / 75.0f;
+
+			break;
+		case EARTH:
+			speed = float(M_PI) / 90.0f;
+
+			break;
+		default:
+			break;
+		}
+	}
+	return speed;
+}
+void RenderMiniMap(Obj* obj, Vector2* scroll,Obj* player) {
 	for (int i = 0; i < objCount; i++) {
 		Novice::ScreenPrintf(int(obj[i].pos.x - scroll->x), int(obj[i].pos.y - scroll->y), "%d",i);
 		Novice::DrawEllipse(
@@ -320,7 +370,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 	static float angleTmp = 0;
 	static float angle_dif = 0;
 	static float t = 0;
-	float rotateSpeed = float(M_PI) / 90.0f;
+	static float rotateSpeed = 0;
 	float lerpSpeed = 0.01f;
 	static int rotateDirection = 1;
 	static Vector2 objPosTmp = { 0 };
@@ -347,6 +397,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 
 			radiusTmp = sqrtf(dx * dx + dy * dy);
 			angleTmp = angle;
+			rotateSpeed = SetRotedSpeed(&obj[i].type);
 			t = 0;
 			objPosTmp = obj[i].pos;
 			if (crossProduct > 0) {
