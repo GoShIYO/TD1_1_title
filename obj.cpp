@@ -5,12 +5,14 @@
 
 /////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
 void InitPlayer(Obj* player) {
-	player->pos.x = 200.0f;
-	player->pos.y = 100.0f;
+	player->pos.x = 640.0f;
+	player->pos.y = 220.0f;
 	player->velocity.x = 10.0f;
 	player->velocity.y = 10.0f;
 	player->angle = (float)(M_PI) / 8.0f;
 	player->radius = 30.0f;
+	player->width = 32.0f;
+	player->height = 30.0f;
 	player->isRotate = false;
 	player->health = 3;
 	player->InvincibleTimer = 60;
@@ -19,12 +21,54 @@ void InitPlayer(Obj* player) {
 void InitObj(Obj obj[]) {
 	srand(static_cast<unsigned int>(time(NULL)));
 	for (int i = 0; i < objCount; i++) {
-		obj[i].radius = 45.0f;
+		int randNum = rand() % 9;
+		switch (randNum)
+		{
+		case ELECTRIC:
+			obj[i].type = ELECTRIC;
+			obj[i].radius = 40.0f;
+			break;
+		case FIRE:
+			obj[i].type = FIRE;
+			obj[i].radius = 65.0f;
+			break;
+		case GAS:
+			obj[i].type = GAS;
+			obj[i].radius = 101.5f;
+			break;
+		case ICE:
+			obj[i].type = ICE;
+			obj[i].radius = 65.0f;
+			break;
+		case METEOR:
+			obj[i].type = METEOR;
+			obj[i].radius = 32.5;
+			break;
+		case POISON:
+			obj[i].type = POISON;
+			obj[i].radius = 101.5f;
+			break;
+		case SAND:
+			obj[i].type = SAND;
+			obj[i].radius = 65.0f;
+			break;
+		case SUN:
+			obj[i].type = SUN;
+			obj[i].radius = 40.0f;
+		case WATER:
+			obj[i].type = WATER;
+			obj[i].radius = 58.0f;
+			break;
+		default:
+			break;
+		}
+		//obj[i].radius = 45.0f;
 		//obj[i].pos.x = /*float(rand() % 6400 - 2560)*/0;
 		//obj[i].pos.y = /*float(rand() % 6400 - 2560)*/0;
 	}
-	
-	obj[0].pos = { -2071.0f, 1143.5f };  // 区域 (1, 4)
+	obj[0].type = EARTH;
+	obj[0].radius = 65.0f;
+	obj[0].pos = { 640.0f, 320.0f };  // 区域 (1, 4)
 	obj[1].pos = { -2088.6f, 809.0f };   // 区域 (1, 3)
 	obj[2].pos = { -1900.2f, 95.9f };    // 区域 (1, 2)
 	obj[3].pos = { -1847.1f, 1576.2f };  // 区域 (1, 5)
@@ -54,7 +98,7 @@ void InitObj(Obj obj[]) {
 	obj[27].pos = { 258.9f, 1171.1f };   // 区域 (3, 4)
 	obj[28].pos = { 294.5f, -932.9f };   // 区域 (3, 1)
 	obj[29].pos = { 437.4f, 1540.5f };   // 区域 (3, 5)
-	obj[30].pos = { 460.9f, 223.9f };    // 区域 (3, 2)
+	obj[30].pos = { 160.9f, 223.9f };    // 区域 (3, 2)
 	obj[31].pos = { 750.4f, -324.9f };   // 区域 (3, 2)
 	obj[32].pos = { 757.9f, 718.4f };    // 区域 (3, 3)
 	obj[33].pos = { 789.3f, 1653.2f };   // 区域 (3, 5)
@@ -127,13 +171,12 @@ void viewDig(int* digFlat, int key1, int preKey1, int key2, int preKey2, int key
 		Novice::ScreenPrintf(sx + 5, sy + 185, "Page%8d ", (*digFlat - 1) / 2);
 	}
 }
-
-Triangle TrianglePoint(const Obj* player) {
-	Triangle points;
-
-	const Vector2 ap = { player->radius , 0 };
-	const Vector2 bp = { -1 * player->radius / 3 , -1 * player->radius / 2 };
-	const Vector2 cp = { -1 * player->radius / 3, player->radius / 2 };
+Rect RectRotedPoint(const Obj* player) {
+	Rect points;
+	const Vector2 ap = {  - player->width / 2.0f , - player->height / 2.0f };
+	const Vector2 bp = {  player->width / 2.0f , - player->height / 2.0f };
+	const Vector2 cp = {  - player->width / 2.0f , player->height / 2.0f };
+	const Vector2 dp = { player->width / 2.0f ,  player->height / 2.0f };
 
 	points.a.x = ap.x * cosf(player->angle) - ap.y * sinf(player->angle) + player->pos.x;
 	points.a.y = ap.y * cosf(player->angle) + ap.x * sinf(player->angle) + player->pos.y;
@@ -144,10 +187,31 @@ Triangle TrianglePoint(const Obj* player) {
 	points.c.x = cp.x * cosf(player->angle) - cp.y * sinf(player->angle) + player->pos.x;
 	points.c.y = cp.y * cosf(player->angle) + cp.x * sinf(player->angle) + player->pos.y;
 
+	points.d.x = dp.x * cosf(player->angle) - dp.y * sinf(player->angle) + player->pos.x;
+	points.d.y = dp.y * cosf(player->angle) + dp.x * sinf(player->angle) + player->pos.y;
+
 	return points;
 }
-void RenderPlayer(Obj* player, Vector2* scroll) {
-	Triangle point = TrianglePoint(player);
+//Triangle TrianglePoint(const Obj* player) {
+//	Triangle points;
+//
+//	const Vector2 ap = { player->radius , 0 };
+//	const Vector2 bp = { -1 * player->radius / 3 , -1 * player->radius / 2 };
+//	const Vector2 cp = { -1 * player->radius / 3, player->radius / 2 };
+//
+//	points.a.x = ap.x * cosf(player->angle) - ap.y * sinf(player->angle) + player->pos.x;
+//	points.a.y = ap.y * cosf(player->angle) + ap.x * sinf(player->angle) + player->pos.y;
+//
+//	points.b.x = bp.x * cosf(player->angle) - bp.y * sinf(player->angle) + player->pos.x;
+//	points.b.y = bp.y * cosf(player->angle) + bp.x * sinf(player->angle) + player->pos.y;
+//
+//	points.c.x = cp.x * cosf(player->angle) - cp.y * sinf(player->angle) + player->pos.x;
+//	points.c.y = cp.y * cosf(player->angle) + cp.x * sinf(player->angle) + player->pos.y;
+//
+//	return points;
+//}
+void RenderPlayer(Obj* player, Vector2* scroll,int* handle) {
+	/*Triangle point = TrianglePoint(player);
 	Vector2 a = point.a;
 	Vector2 b = point.b;
 	Vector2 c = point.c;
@@ -156,7 +220,74 @@ void RenderPlayer(Obj* player, Vector2* scroll) {
 		int(a.x - scroll->x), int(a.y - scroll->y),
 		int(b.x - scroll->x), int(b.y - scroll->y),
 		int(c.x - scroll->x), int(c.y - scroll->y),
-		RED, kFillModeSolid);
+		RED, kFillModeSolid);*/
+	Rect points = RectRotedPoint(player);
+	Vector2 a = points.a;
+	Vector2 b = points.b;
+	Vector2 c = points.c;
+	Vector2 d = points.d;
+
+	Novice::DrawQuad(
+		int(a.x - scroll->x), int(a.y - scroll->y),
+		int(b.x - scroll->x), int(b.y - scroll->y),
+		int(c.x - scroll->x), int(c.y - scroll->y),
+		int(d.x - scroll->x), int(d.y - scroll->y),
+		0,0,int(player->width),int(player->height),
+		*handle,WHITE
+	);
+}
+void RenderObj(Obj obj[], Vector2* scroll,AllResource& texture) {
+	
+	for (int i = 0; i < objCount; i++) {
+		static int handle;
+		switch (obj[i].type)
+		{
+		case ELECTRIC:
+			handle = texture.electricStar65_160;
+			break;
+		case FIRE:
+			handle = texture.fireStar100_130;
+
+			break;
+		case GAS:
+			handle = texture.gasStar150_203;
+
+			break;
+		case ICE:
+			handle = texture.iceStar100_130;
+			break;
+		case METEOR:
+			handle = texture.meteorStar60_65;
+
+			break;
+		case POISON:
+			handle = texture.posionStar150_203;
+
+			break;
+		case SAND:
+			handle = texture.sandStar100_130;
+
+			break;
+		case SUN:
+			handle = texture.sun65_160;
+
+			break;
+		case WATER:
+			handle = texture.waterStar80_106;
+			
+			break;
+		case EARTH:
+			handle = texture.earthStar100_130;
+			break;
+		default:
+			break;
+		}
+		Novice::DrawSprite(
+			int(obj[i].pos.x - obj[i].radius - scroll->x),
+			int(obj[i].pos.y - obj[i].radius - scroll->y),
+			handle, 1, 1, 0, WHITE
+		);
+	}
 }
 void RenderMiniMap(Obj obj[], Vector2* scroll,Obj* player) {
 	for (int i = 0; i < objCount; i++) {
@@ -174,7 +305,7 @@ void RenderMiniMap(Obj obj[], Vector2* scroll,Obj* player) {
 
 bool CheckPlayerToObj(Obj player, Obj obj) {
 	Vector2 d = { player.pos.x - obj.pos.x, player.pos.y - obj.pos.y };
-	float totalRadius = player.radius + obj.radius + 10.0f;
+	float totalRadius = player.radius + obj.radius;
 	float distanceSquared = d.x * d.x + d.y * d.y;
 	return distanceSquared <= totalRadius * totalRadius;
 }
@@ -185,7 +316,6 @@ float angle_difference(float a, float b) {
 }
 void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 
-	float r = 100.0f;
 
 	static float angleTmp = 0;
 	static float angle_dif = 0;
@@ -194,6 +324,8 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 	float lerpSpeed = 0.01f;
 	static int rotateDirection = 1;
 	static Vector2 objPosTmp = { 0 };
+	static float radiusTmp = 0.0f;
+
 
 	if (player->isCollied && player->InvincibleTimer > 0) {
 		player->InvincibleTimer--;
@@ -212,6 +344,8 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 
 		if (CheckPlayerToObj(*player, obj[i]) && !player->isRotate) {
 			player->isRotate = true;
+
+			radiusTmp = sqrtf(dx * dx + dy * dy);
 			angleTmp = angle;
 			t = 0;
 			objPosTmp = obj[i].pos;
@@ -232,8 +366,8 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 		Novice::ScreenPrintf(700, 45, "angle_dif = %.10f", angle_dif);
 		angle_dif = angle_difference(angleTmp, player->angle);
 
-		player->pos.x = objPosTmp.x + r * cosf(angleTmp);
-		player->pos.y = objPosTmp.y + r * sinf(angleTmp);
+		player->pos.x = objPosTmp.x + radiusTmp * cosf(angleTmp);
+		player->pos.y = objPosTmp.y + radiusTmp * sinf(angleTmp);
 		angleTmp += rotateSpeed * rotateDirection;
 		if (t < 1.0f) {
 			t += lerpSpeed;
@@ -270,16 +404,17 @@ void checkPlayerMoveRange(Obj* player) {
 	const int rangeHeightMin = -kWindowHeight * 2 + 100;
 	const int rangeHeightMax = kWindowHeight * 3 - 100;
 
-	if (player->pos.x + player->radius > rangeWidthMax || player->pos.x - player->radius < rangeWidthMin) {
+	if (player->pos.x + player->radius > rangeWidthMax ||
+		player->pos.x - player->radius < rangeWidthMin) {
 		player->angle = float(M_PI) - player->angle;
 	}
 
-	if (player->pos.y + player->radius > rangeHeightMax || player->pos.y - player->radius < rangeHeightMin) {
+	if (player->pos.y + player->radius > rangeHeightMax || 
+		player->pos.y - player->radius < rangeHeightMin) {
 		player->angle = -player->angle;
 	}
 
 	Novice::ScreenPrintf(700, 80, "player.pos x = %.2f  y = %.2f", player->pos.x, player->pos.y);
-
 }
 void UpdateScroll(Obj* player, Vector2* scroll) {
 	//マップサイズ

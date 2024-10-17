@@ -99,13 +99,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		UpdateScroll(&player, &scroll);
 		Novice::DrawBox(0, 0, kWindowWidth,kWindowHeight,0,0x002222FF,kFillModeSolid);
-		RenderPlayer(&player,&scroll);
+		RenderPlayer(&player,&scroll,&texture.player30_32);
 		RenderMiniMap(obj,&scroll,&player);
-		for (int i = 0; i < objCount; i++) {
-			showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.bubble60_90, 0xFFAAAAFF,&scroll);
-		}
+		RenderObj(obj, &scroll, texture);
+		//for (int i = 0; i < objCount; i++) {
+		//	showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.bubble60_90, 0xFFAAAAFF,&scroll);
+		//}
 		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x) + 100, -2 * kWindowHeight - int(scroll.y) + 100, 5 * kWindowWidth - 200, 5 * kWindowHeight - 200, 0, RED, kFillModeWireFrame);
-		showCommonColorTexture(130, 130, 0, 500, 500, texture.earthStar100_130, 0xFFFFFFFF, &scroll);
+		//showCommonColorTexture(130, 130, 0, 500, 500, texture.earthStar100_130, 0xFFFFFFFF, &scroll);
 
 
 		// ギミックオブジェクトの描画

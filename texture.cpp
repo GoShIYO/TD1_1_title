@@ -2,7 +2,7 @@
 #include "math.h"
 
 /////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
-extern void initializeResource(AllResource* texture) {
+ void initializeResource(AllResource* texture) {
 	///Title
 	texture->bubble60_90 = Novice::LoadTexture("./Resources/booble60-90.png");
 	texture->earthStar100_130 = Novice::LoadTexture("./Resources/Star/earthStar100x130.png");
