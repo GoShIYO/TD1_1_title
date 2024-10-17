@@ -64,6 +64,8 @@ void EnemyMove(Enemy enemy[]);
 void EnemyMoveHorming(Enemy enemy[], Obj& player);
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]);
 
+void EnemyRange(Enemy enemy[], Enemy enemy1[]);
+
 void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle, float px, float py);
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle);
 

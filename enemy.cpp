@@ -6,28 +6,28 @@
 #include <stdlib.h>
 
 void InitEnemyNormal(Enemy enemy[]) {
-	enemy[0].pos = { 0.0f, -12.0f };
-	enemy[1].pos = { 240.0f, -120.0f };
+	enemy[0].pos = { 0.0f, -120.0f };
+	enemy[1].pos = { 240.0f, -220.0f };
 	enemy[2].pos = { 480.0f, -120.0f };
-	enemy[3].pos = { 720.0f, -120.0f };
+	enemy[3].pos = { 720.0f, -220.0f };
 	enemy[4].pos = { 960.0f, -120.0f };
-	enemy[5].pos = { 1200.0f, -120.0f };
+	enemy[5].pos = { 1200.0f, -220.0f };
 
-	enemy[6].pos = { 1320.0f, 0.0f };
+	enemy[6].pos = { 1520.0f, 0.0f };
 	enemy[7].pos = { 1320.0f, 240.0f };
-	enemy[8].pos = { 1320.0f, 480.0f };
+	enemy[8].pos = { 1520.0f, 480.0f };
 	enemy[9].pos = { 1320.0f, 720.0f };
 
-	enemy[10].pos = { 0.0f, 840.0f };
+	enemy[10].pos = { 0.0f, 1040.0f };
 	enemy[11].pos = { 240.0f, 840.0f };
-	enemy[12].pos = { 480.0f, 840.0f };
+	enemy[12].pos = { 480.0f, 1040.0f };
 	enemy[13].pos = { 720.0f, 840.0f };
-	enemy[14].pos = { 960.0f, 840.0f };
+	enemy[14].pos = { 960.0f, 1040.0f };
 	enemy[15].pos = { 1200.0f, 840.0f };
 
-	enemy[16].pos = { -120.0f, 0.0f };
+	enemy[16].pos = { -320.0f, 0.0f };
 	enemy[17].pos = { -120.0f, 240.0f };
-	enemy[18].pos = { -120.0f, 480.0f };
+	enemy[18].pos = { -320.0f, 480.0f };
 	enemy[19].pos = { -120.0f, 720.0f };
 
 	for (int i = 0;i < ENEMY_COUNT;i++) {
@@ -314,6 +314,35 @@ void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {
 			int(enemy2[i].pos.x / 20 + kWindowWidth * 5 / 6.0f), int(enemy2[i].pos.y / 20 + kWindowHeight / 8.0f),
 			int(enemy2[i].radius / 8), int(enemy2[i].radius / 8),
 			0.0f, 0x55FF55FF, kFillModeSolid);
+	}
+}
+
+void EnemyRange(Enemy enemy[],Enemy enemy1[]) {
+	for (int i = 0;i < ENEMY_COUNT;i++) {
+		if (enemy[i].pos.x >= kWindowWidth * 3 - enemy[i].radius) {
+			enemy[i].pos.x = kWindowWidth * 3 - enemy[i].radius;
+		}
+		if (enemy1[i].pos.x >= kWindowWidth * 3 - enemy1[i].radius) {
+			enemy1[i].pos.x = kWindowWidth * 3 - enemy1[i].radius;
+		}
+		if (enemy[i].pos.x <= -kWindowWidth * 2 + enemy[i].radius) {
+			enemy[i].pos.x = -kWindowWidth * 2 + enemy[i].radius;
+		}
+		if (enemy1[i].pos.x <= -kWindowWidth * 2 + enemy1[i].radius) {
+			enemy1[i].pos.x = -kWindowWidth * 2 + enemy1[i].radius;
+		}
+		if (enemy[i].pos.y >= kWindowHeight * 3 - enemy[i].radius) {
+			enemy[i].pos.y = kWindowHeight * 3 - enemy[i].radius;
+		}
+		if (enemy1[i].pos.y >= kWindowHeight * 3 - enemy1[i].radius) {
+			enemy1[i].pos.y = kWindowHeight * 3 - enemy1[i].radius;
+		}
+		if (enemy[i].pos.y <= -kWindowHeight * 2 + enemy[i].radius) {
+			enemy[i].pos.y = -kWindowHeight * 2 + enemy[i].radius;
+		}
+		if (enemy1[i].pos.y <= -kWindowHeight * 2 + enemy1[i].radius) {
+			enemy1[i].pos.y = -kWindowHeight * 2 + enemy1[i].radius;
+		}
 	}
 }
 

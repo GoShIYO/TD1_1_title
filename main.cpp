@@ -84,11 +84,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		}
 
+		//敵の移動処理
 		EnemyMove(enemy);
 		EnemyMoveHorming(enemyHorming, player);
+		BulletShot(enemyShot, player, bullet);
+
+		//敵の移動制限
+		EnemyRange(enemy, enemyHorming);
+
+		//敵の当たり判定
 		UpdatePlayerEnemyEvent(enemy, player, keys, preKeys);
 		UpdatePlayerEnemyEvent(enemyHorming, player, keys, preKeys);
-		BulletShot(enemyShot, player, bullet);
 
 		// ギミックオブジェクトの更新
 		UpdateGimmickObjs(gimmickObjs, player);
