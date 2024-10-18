@@ -2,10 +2,20 @@
 #include "math.h"
 
 /////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
-extern void initializeResource(AllResource* texture) {
+ void initializeResource(AllResource* texture) {
 	///Title
 	texture->bubble60_90 = Novice::LoadTexture("./Resources/booble60-90.png");
-
+	texture->earthStar100_130 = Novice::LoadTexture("./Resources/Star/earthStar100x130.png");
+	texture->electricStar65_160 = Novice::LoadTexture("./Resources/Star/electricStar65x160.png");
+	texture->fireStar100_130 = Novice::LoadTexture("./Resources/Star/fireStar100x130.png");
+	texture->gasStar150_203 = Novice::LoadTexture("./Resources/Star/gasStar150x203.png");
+	texture->iceStar100_130 = Novice::LoadTexture("./Resources/Star/iceStar100x130.png");
+	texture->waterStar80_106 = Novice::LoadTexture("./Resources/Star/waterStar80x106.png");
+	texture->meteorStar60_65 = Novice::LoadTexture("./Resources/Star/meteorStar60x65.png");
+	texture->posionStar150_203 = Novice::LoadTexture("./Resources/Star/poisonStar150x203.png");
+	texture->sandStar100_130 = Novice::LoadTexture("./Resources/Star/sandStar100x130.png");
+	texture->sun65_160 = Novice::LoadTexture("./Resources/Star/sun65x160.png");
+	texture->player30_32 = Novice::LoadTexture("./Resources/player30_32.png");
 }
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////
@@ -15,7 +25,7 @@ void showCommonColorTexture(float width, float height, int Clock, float posX, fl
 	int texture, unsigned int color, Vector2* scroll) {
 
 	Novice::DrawQuad(
-		int(posX - width / 2 - scroll->x), int(posY - height / 2 -scroll->y),
+		int(posX - width / 2 - scroll->x), int(posY - height / 2 - scroll->y),
 		int(posX + width / 2 - scroll->x), int(posY - height / 2 - scroll->y),
 		int(posX - width / 2 - scroll->x), int(posY + height / 2 - scroll->y),
 		int(posX + width / 2 - scroll->x), int(posY + height / 2 - scroll->y),

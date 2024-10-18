@@ -13,7 +13,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ライブラリの初期化
     Novice::Initialize(kWindowTitle, kWindowWidth, kWindowHeight);
 
-    srand((unsigned)time(NULL));
+    srand(static_cast<unsigned>(time(NULL)));
 
     Obj player;
     InitPlayer(&player);
@@ -21,13 +21,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     Obj obj[objCount];
     InitObj(obj);
 
-    Enemy enemy;
-    Enemy homingEnemy;
-    InitEnemyNormal(enemy);
-    InitEnemyHorming(homingEnemy);
+	Enemy enemy[ENEMY_COUNT];
+	Enemy enemyHorming[ENEMY_COUNT];
+	Enemy enemyShot[ENEMY_COUNT];
+	InitEnemyNormal(enemy);
+	InitEnemyHorming(enemyHorming);
+	InitEnemyShot(enemyShot);
 
-    System system;
-    InitSystem(&system);
+	EnemyBullet bullet[BULLET_COUNT];
+	InitEnemyBullet(bullet);
+
+	Handle handle;
+	LoadImages(handle);
+
+	System system;
+	InitSystem(&system);
 
     AllResource texture;
     initializeResource(&texture);
@@ -57,8 +65,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             player.angle = (float)(M_PI) / 8.0f;
         }
 
-        UpdatePlayer(&player, obj, keys, preKeys);
-        checkPlayerMoveRange(&player);
+		UpdatePlayer(&player, obj, keys, preKeys);
+		checkPlayerMoveRange(&player);
 
         if (keys[DIK_UP]) {
             scroll.y -= 10;
@@ -73,39 +81,46 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             scroll.x += 10;
         }
 
-        // 敵の移動
-        EnemyMove(enemy);
-        EnemyMoveHoming(homingEnemy, player);
-        UpdatePlayerEnemyEvent(enemy, player, keys, preKeys);
-        UpdatePlayerEnemyEvent(homingEnemy, player, keys, preKeys);
+		//敵の移動処理
+		EnemyMove(enemy);
+		EnemyMoveHorming(enemyHorming, player);
+		BulletShot(enemyShot, player, bullet);
 
-        // ギミックオブジェクトの更新
-        UpdateGimmickObjs(gimmickObjs, player);
+		//敵の移動制限
+		EnemyRange(enemy, enemyHorming);
 
-        /// ↑更新処理ここまで
-        /// ---------------------------------------------------------------------
-        /// ↓描画処理ここから
+		//敵の当たり判定
+		UpdatePlayerEnemyEvent(enemy, player, keys, preKeys);
+		UpdatePlayerEnemyEvent(enemyHorming, player, keys, preKeys);
 
-        UpdateScroll(&player, &scroll);
-        Novice::DrawBox(0, 0, kWindowWidth, kWindowHeight, 0, 0x002222FF, kFillModeSolid);
-        RenderPlayer(&player, &scroll);
+		// ギミックオブジェクトの更新
+		UpdateGimmickObjs(gimmickObjs, player);
 
-        // ギミックオブジェクトの描画
-        RenderGimmickObjs(gimmickObjs, &scroll);
+		/// ↑更新処理ここまで
+		/// ---------------------------------------------------------------------
+		/// ↓描画処理ここから
+		UpdateScroll(&player, &scroll);
+		Novice::DrawBox(0, 0, kWindowWidth,kWindowHeight,0,0x002222FF,kFillModeSolid);
+		RenderPlayer(&player,&scroll,&texture.player30_32);
+		RenderMiniMap(obj,&scroll,&player);
+		RenderObj(obj, &scroll, texture);
+		//for (int i = 0; i < objCount; i++) {
+		//	showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.bubble60_90, 0xFFAAAAFF,&scroll);
+		//}
+		RenderMiniMapEnemy(enemy, enemyHorming,enemyShot);
+		Novice::DrawBox(-2 * kWindowWidth - int(scroll.x) + 100, -2 * kWindowHeight - int(scroll.y) + 100, 5 * kWindowWidth - 200, 5 * kWindowHeight - 200, 0, RED, kFillModeWireFrame);
+		//showCommonColorTexture(130, 130, 0, 500, 500, texture.earthStar100_130, 0xFFFFFFFF, &scroll);
 
-        // オブジェクトの描画
-        for (int i = 0; i < objCount; i++) {
-            showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.bubble60_90, 0xFFAAAAFF, &scroll);
-        }
 
-        Novice::DrawBox(-2 * kWindowWidth - int(scroll.x) + 100, -2 * kWindowHeight - int(scroll.y) + 100,
-            5 * kWindowWidth - 200, 5 * kWindowHeight - 200, 0, RED, kFillModeWireFrame);
+		// ギミックオブジェクトの描画
+		RenderGimmickObjs(gimmickObjs, &scroll);
 
-        // 敵の描画
-        RenderEnemy(enemy, scroll);
-        RenderEnemy(homingEnemy, scroll);
-        EnemyDebug(homingEnemy);
-        Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
+		RenderEnemy(enemy, scroll, handle.enemy, player.pos.x, player.pos.y);
+		RenderEnemy(enemyHorming, scroll, handle.enemyHorming, player.pos.x, player.pos.y);
+		RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y);
+		RenderBullet(bullet, scroll, handle.bullet);
+		Novice::ScreenPrintf(0, 0, "scroll x : %.2f y : %.2f", scroll.x, scroll.y);
+
 
         // デバッグ表示
         viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);

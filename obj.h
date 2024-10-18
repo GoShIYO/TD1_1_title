@@ -6,28 +6,50 @@
 
 extern const int kWindowWidth;
 extern const int kWindowHeight;
-const int objCount = 100;
+const int objCount = 65;
 struct System {
 	int digFlat;
 };
 
+enum StarType
+{
+	ELECTRIC = 0,
+	FIRE = 1,
+	GAS = 2,
+	ICE = 3,
+	METEOR = 4,
+	POISON = 5,
+	SAND = 6,
+	SUN = 7,
+	WATER = 8,
+	EARTH = 9
+};
 struct Obj
 {
 	Vector2 pos;
 	Vector2 velocity;
 	float angle;
 	float radius;
+	float width;
+	float height;
 	bool isRotate;
 	bool isCollied;
 	int health;
 	int InvincibleTimer;
+	int type;
 };
-
-struct Triangle {
+struct Rect
+{
 	Vector2 a;
 	Vector2 b;
 	Vector2 c;
+	Vector2 d;
 };
+//struct Triangle {
+//	Vector2 a;
+//	Vector2 b;
+//	Vector2 c;
+//};
 
 /////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
 /// <summary>
@@ -76,18 +98,25 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]);
 /// </summary>
 /// <param name="player">player</param>
 void checkPlayerMoveRange(Obj* player);
+
 /// <summary>
 /// プレイヤー描画
 /// </summary>
 /// <param name="player"></param>
-void RenderPlayer(Obj* player,Vector2* scroll);
+void RenderPlayer(Obj* player,Vector2* scroll,int* handle);
 
 /// <summary>
-/// オブジェクト(丸)描画
+/// MINI MAP 描画
 /// </summary>
 /// <param name="obj"></param>
-void RenderObj(Obj obj[], Vector2* scroll);
-
+void RenderMiniMap(Obj obj[], Vector2* scroll, Obj* player);
+/// <summary>
+/// 星描画
+/// </summary>
+/// <param name="obj">星</param>
+/// <param name="scroll">スクロール</param>
+/// <param name="texture">テクスチャ</param>
+void RenderObj(Obj obj[], Vector2* scroll, AllResource& texture);
 /// <summary>
 /// スクロールの更新処理
 /// </summary>
