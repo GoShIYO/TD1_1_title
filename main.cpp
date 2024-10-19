@@ -95,6 +95,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//敵の当たり判定
 		UpdatePlayerEnemyEvent(enemy, player, keys, preKeys);
 		UpdatePlayerEnemyEvent(enemyHorming, player, keys, preKeys);
+		UpdatePlayerEnemyEvent(enemyShot, player, keys, preKeys);
+
 
 		// ギミックオブジェクトの更新
 		UpdateGimmickObjs(gimmickObjs, player);
