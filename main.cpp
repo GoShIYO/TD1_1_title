@@ -131,10 +131,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			}
 
-			//敵の移動処理
-			EnemyMove(enemy);
-			EnemyMoveHorming(enemyHorming, player);
-			BulletShot(enemyShot, player, bullet);
+		//敵の移動処理
+		EnemyMove(enemy);
+		EnemyMoveHorming(enemyHorming, player);
+		//BulletShot(enemyShot, player, bullet);
 
 			//敵の移動制限
 			EnemyRange(enemy, enemyHorming);
@@ -146,6 +146,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			// ギミックオブジェクトの更新
 			UpdateGimmickObjs(gimmickObjs, player);
+
+			//鍵の更新
+			UpdateKeys(bossKeys, enemyShot);
+			UpdatePlayerKeyEvent(player, bossKeys);
 
 			if (player.health <= 0) {
 				scene = GAME_OVER;
@@ -174,6 +178,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderEnemy(enemyHorming, scroll, handle.enemyHorming, player.pos.x, player.pos.y);
 			RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y);
 			RenderBullet(bullet, scroll, handle.bullet);
+			RenderKeys(bossKeys, scroll);
+			Novice::ScreenPrintf(100, 100, "keyCount : %d", remainingKeys);
 
 			// デバッグ表示
 			viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
