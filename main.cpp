@@ -28,6 +28,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Obj obj[objCount];
 
+	BossKeys bossKeys[keyCount];
+	InitBossKeys(bossKeys);
+
 	Enemy enemy[ENEMY_COUNT];
 	Enemy enemyHorming[ENEMY_COUNT];
 	Enemy enemyShot[ENEMY_COUNT];

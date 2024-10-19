@@ -8,6 +8,7 @@
 extern const int kWindowWidth;
 extern const int kWindowHeight;
 const int objCount = 65;
+const int keyCount = 4;
 
 struct System {
 	int digFlat;
@@ -62,6 +63,16 @@ struct Particle {
 //	Vector2 b;
 //	Vector2 c;
 //};
+struct BossKeys 
+{
+	Vector2 pos;
+	float width;
+	float height;
+	float radius;
+	int remaining;
+	bool isHit;
+	bool isPosSet;
+};
 
 /////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
 /// <summary>
@@ -81,6 +92,12 @@ void InitObj(Obj obj[]);
 /// </summary>
 /// <param name="system"></param>
 void InitSystem(System* system);
+
+/// <summary>
+/// 鍵の初期化関数
+/// </summary>
+/// <param name="keys"></param>
+void InitBossKeys(BossKeys keys[]);
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////
 
