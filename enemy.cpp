@@ -119,6 +119,7 @@ void InitEnemyShot(Enemy enemy[]) {
 		enemy[i].radius = 16.0f;
 		enemy[i].shotTimer = 0;
 		enemy[i].isAlive = true;
+		enemy[i].health = 1;
 	}
 }
 
@@ -305,16 +306,12 @@ void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {
 				int(enemy[i].radius / 8), int(enemy[i].radius / 8),
 				0.0f, 0xFFFF55FF, kFillModeSolid);
 		}
-	}
-	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy1[i].isAlive) {
 			Novice::DrawEllipse(
 				int(enemy1[i].pos.x / 20 + kWindowWidth * 5 / 6.0f), int(enemy1[i].pos.y / 20 + kWindowHeight / 8.0f),
 				int(enemy1[i].radius / 8), int(enemy1[i].radius / 8),
 				0.0f, 0x5555FFFF, kFillModeSolid);
 		}
-	}
-	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy2[i].isAlive) {
 			Novice::DrawEllipse(
 				int(enemy2[i].pos.x / 20 + kWindowWidth * 5 / 6.0f), int(enemy2[i].pos.y / 20 + kWindowHeight / 8.0f),
