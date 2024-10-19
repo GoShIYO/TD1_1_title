@@ -134,7 +134,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//敵の移動処理
 		EnemyMove(enemy);
 		EnemyMoveHorming(enemyHorming, player);
-		//BulletShot(enemyShot, player, bullet);
+		BulletShot(enemyShot, player, bullet);
 
 			//敵の移動制限
 			EnemyRange(enemy, enemyHorming);
