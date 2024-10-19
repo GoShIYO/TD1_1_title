@@ -276,8 +276,10 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, char keys[], char preKey
 					player.isCollied = true;
 					player.health--;
 				}
-				if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
-					player.attack = true;
+				if (player.attack) {
+					if (keys && !preKeys) {
+
+					}
 					if (!player.isRotate) {
 						float dx = player.pos.x - enemy[i].pos.x;
 						float dy = player.pos.y - enemy[i].pos.y;

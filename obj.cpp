@@ -5,7 +5,9 @@
 
 
 
-
+float Lerp(float start, float end, float t);
+float EaseOutLerp(float start, float end, float t);
+float EaseOutCubic(float start, float end, float t);
 /////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
 void InitPlayer(Obj* player) {
 	player->pos.x = 640.0f;
@@ -20,6 +22,8 @@ void InitPlayer(Obj* player) {
 	player->health = 3;
 	player->InvincibleTimer = 60;
 	player->isCollied = false;
+	player->atTimer = 60;
+	player->isAdapt = false;
 }
 void InitObj(Obj obj[]) {
 	srand(static_cast<unsigned int>(time(NULL)));
@@ -214,6 +218,14 @@ void RenderPlayer(Obj* player, Vector2* scroll, int* handle,int* handle2) {
 	Vector2 c = points.c;
 	Vector2 d = points.d;
 
+	float t = 1-(player->atTimer / 60.0f);
+	static unsigned int color = WHITE;
+
+	unsigned int red = (unsigned int)Lerp(0xFF, 0xFF, t);
+	unsigned int green = (unsigned int)Lerp(0xFF, 0xFF, t);
+	unsigned int blue = (unsigned int)Lerp(0xFF, 0xFF, t);
+	unsigned int alpha = (unsigned int)(Lerp(0xFF, 0x00, t));
+	color = ((red << 24) | (green << 16) | (blue << 8) | alpha);
 	if (!player->isCollied) {
 		Novice::DrawQuad(
 			int(a.x - scroll->x), int(a.y - scroll->y),
@@ -230,7 +242,7 @@ void RenderPlayer(Obj* player, Vector2* scroll, int* handle,int* handle2) {
 				int(c.x - scroll->x), int(c.y - scroll->y),
 				int(d.x - scroll->x), int(d.y - scroll->y),
 				0, 0, 40, 38,
-				*handle2, WHITE
+				*handle2, color
 			);
 		}
 	}
@@ -461,21 +473,28 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 	static int rotateDirection = 1;
 	static Vector2 objPosTmp = { 0 };
 	static float radiusTmp = 0.0f;
-	static int atTimer = 60;
+	//無敵時間処理
 	if (player->isCollied && player->InvincibleTimer > 0) {
 		player->InvincibleTimer--;
 	}
 	else {
 		player->InvincibleTimer = 60;
 		player->isCollied = false;
+	}	
+	//攻撃処理
+	if (!player->isRotate) {
+		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+			player->attack = true;			
+		}
 	}
-	if (player->attack && atTimer>0) {
-		atTimer--;
+	if (player->attack && player->atTimer > 0) {
+		player->atTimer--;
 	}
 	else {
-		atTimer = 60;
+		player->atTimer = 60;
 		player->attack = false;
 	}
+	
 	Novice::ScreenPrintf(0, 200, "player.iTimer = %d", player->InvincibleTimer);
 
 	for (int i = 0; i < objCount; i++) {
@@ -492,6 +511,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 			rotateSpeed = SetRotedSpeed(&obj[i].type);
 			t = 0;
 			objPosTmp = obj[i].pos;
+			player->isAdapt = true;
 			if (crossProduct > 0) {
 				rotateDirection = 1;
 			}
@@ -502,7 +522,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 		}
 	}
 
-	if (keys[DIK_SPACE] && !preKeys[DIK_SPACE] && player->isRotate) {
+	if (keys[DIK_SPACE] && !preKeys[DIK_SPACE] && player->isRotate && !player->isAdapt) {
 		player->isRotate = false;
 	}
 
@@ -518,10 +538,11 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 			t += lerpSpeed;
 		}
 
-		player->angle = player->angle + t * (angleTmp - player->angle);
+		player->angle = Lerp(player->angle, angleTmp,t);
 
 		if (t >= 1.0f) {
 			player->angle = angleTmp;
+			player->isAdapt = false;
 		}
 
 		if (angleTmp > M_PI) {

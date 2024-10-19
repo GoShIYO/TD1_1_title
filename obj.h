@@ -38,9 +38,11 @@ struct Obj
 	bool isRotate;
 	bool isCollied;
 	bool attack;
+	bool isAdapt;
 	int health;
 	int InvincibleTimer;
 	int type;
+	int atTimer;
 };
 struct Rect
 {
