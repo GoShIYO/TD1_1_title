@@ -8,6 +8,8 @@
 #include <Vector2.h>
 #include "obj.h"
 
+extern int remainingKeys;
+
 enum EnemyDirection {
 	UP = 0,
 	DOWN = 1,
@@ -31,6 +33,7 @@ struct Enemy {
 	int health;
 	bool isAlive;
 	bool isMove;
+	bool isActive;
 };
 
 struct EnemyBullet {
@@ -42,7 +45,7 @@ struct EnemyBullet {
 	float width;
 	float height;
 	int graphHnadle;
-	bool isShot;
+	bool isActive;
 };
 
 struct Handle {
@@ -63,6 +66,10 @@ void LoadImages(Handle& handle);
 void EnemyMove(Enemy enemy[]);
 void EnemyMoveHorming(Enemy enemy[], Obj& player);
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]);
+
+void UpdateKeys(BossKeys keys[], Enemy enemy[]);
+void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[]);
+void RenderKeys(BossKeys keys[], Vector2 scroll);
 
 void EnemyRange(Enemy enemy[], Enemy enemy1[]);
 

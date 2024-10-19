@@ -3,10 +3,13 @@
 #include<Vector2.h>
 #include<math.h>
 #include"texture.h"
+#define MAX_PARTICLES 1000
 
 extern const int kWindowWidth;
 extern const int kWindowHeight;
 const int objCount = 65;
+const int keyCount = 4;
+
 struct System {
 	int digFlat;
 };
@@ -34,9 +37,12 @@ struct Obj
 	float height;
 	bool isRotate;
 	bool isCollied;
+	bool attack;
+	bool isAdapt;
 	int health;
 	int InvincibleTimer;
 	int type;
+	int atTimer;
 };
 struct Rect
 {
@@ -45,11 +51,31 @@ struct Rect
 	Vector2 c;
 	Vector2 d;
 };
+struct Particle {
+	Vector2 pos;
+	Vector2 velocity;
+	float life;
+	float size;
+	bool isActive;
+	int color;
+};
+
+
 //struct Triangle {
 //	Vector2 a;
 //	Vector2 b;
 //	Vector2 c;
 //};
+struct BossKeys 
+{
+	Vector2 pos;
+	float width;
+	float height;
+	float radius;
+	int remaining;
+	bool isHit;
+	bool isPosSet;
+};
 
 /////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
 /// <summary>
@@ -69,6 +95,12 @@ void InitObj(Obj obj[]);
 /// </summary>
 /// <param name="system"></param>
 void InitSystem(System* system);
+
+/// <summary>
+/// 鍵の初期化関数
+/// </summary>
+/// <param name="keys"></param>
+void InitBossKeys(BossKeys keys[]);
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////
 
@@ -103,13 +135,30 @@ void checkPlayerMoveRange(Obj* player);
 /// プレイヤー描画
 /// </summary>
 /// <param name="player"></param>
-void RenderPlayer(Obj* player,Vector2* scroll,int* handle);
+void RenderPlayer(Obj* player,Vector2* scroll,int* handle, int* handle2);
+
+/// <summary>
+/// パーティクル更新処理
+/// </summary>
+/// <param name="particles"></param>
+void UpdateParticle(Particle* particles);
+
+/// <summary>
+/// パーティクル描画
+/// </summary>
+/// <param name="particles"></param>
+/// <param name="scroll"></param>
+void RenderParticle(Particle particles[],Vector2* scroll);
+
+//パーティクル初期処理
+void EmitParticle(Particle particles[], Obj* player);
 
 /// <summary>
 /// MINI MAP 描画
 /// </summary>
 /// <param name="obj"></param>
 void RenderMiniMap(Obj obj[], Vector2* scroll, Obj* player);
+
 /// <summary>
 /// 星描画
 /// </summary>
@@ -117,6 +166,7 @@ void RenderMiniMap(Obj obj[], Vector2* scroll, Obj* player);
 /// <param name="scroll">スクロール</param>
 /// <param name="texture">テクスチャ</param>
 void RenderObj(Obj obj[], Vector2* scroll, AllResource& texture);
+
 /// <summary>
 /// スクロールの更新処理
 /// </summary>

@@ -16,6 +16,7 @@
 	texture->sandStar100_130 = Novice::LoadTexture("./Resources/Star/sandStar100x130.png");
 	texture->sun65_160 = Novice::LoadTexture("./Resources/Star/sun65x160.png");
 	texture->player30_32 = Novice::LoadTexture("./Resources/player30_32.png");
+	texture->attackShield40x38 = Novice::LoadTexture("./Resources/Effect/attackShield40x38.png");
 }
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////

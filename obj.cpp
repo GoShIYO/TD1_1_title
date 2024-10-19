@@ -3,6 +3,11 @@
 #include<time.h>
 #include<stdlib.h>
 
+
+
+float Lerp(float start, float end, float t);
+float EaseOutLerp(float start, float end, float t);
+float EaseOutCubic(float start, float end, float t);
 /////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
 void InitPlayer(Obj* player) {
 	player->pos.x = 640.0f;
@@ -17,6 +22,8 @@ void InitPlayer(Obj* player) {
 	player->health = 3;
 	player->InvincibleTimer = 60;
 	player->isCollied = false;
+	player->atTimer = 60;
+	player->isAdapt = false;
 }
 void InitObj(Obj obj[]) {
 	srand(static_cast<unsigned int>(time(NULL)));
@@ -139,6 +146,18 @@ void InitSystem(System* system) {
 	system->digFlat = 0;
 }
 
+void InitBossKeys(BossKeys keys[]) {
+	for (int i = 0;i < keyCount;i++) {
+		keys[i].pos.x = -10000.0f;
+		keys[i].pos.y = -10000.0f;
+		keys[i].width = 16.0f;
+		keys[i].height = 16.0f;
+		keys[i].radius = 8.0f;
+		keys[i].isHit = false;
+		keys[i].isPosSet = false;
+	}
+}
+
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////
 
 void viewDig(int* digFlat, int key1, int preKey1, int key2, int preKey2, int key3, int preKey3) {
@@ -173,9 +192,9 @@ void viewDig(int* digFlat, int key1, int preKey1, int key2, int preKey2, int key
 }
 Rect RectRotedPoint(const Obj* player) {
 	Rect points;
-	const Vector2 ap = {  - player->width / 2.0f , - player->height / 2.0f };
-	const Vector2 bp = {  player->width / 2.0f , - player->height / 2.0f };
-	const Vector2 cp = {  - player->width / 2.0f , player->height / 2.0f };
+	const Vector2 ap = { -player->width / 2.0f , -player->height / 2.0f };
+	const Vector2 bp = { player->width / 2.0f , -player->height / 2.0f };
+	const Vector2 cp = { -player->width / 2.0f , player->height / 2.0f };
 	const Vector2 dp = { player->width / 2.0f ,  player->height / 2.0f };
 
 	points.a.x = ap.x * cosf(player->angle) - ap.y * sinf(player->angle) + player->pos.x;
@@ -192,52 +211,56 @@ Rect RectRotedPoint(const Obj* player) {
 
 	return points;
 }
-//Triangle TrianglePoint(const Obj* player) {
-//	Triangle points;
-//
-//	const Vector2 ap = { player->radius , 0 };
-//	const Vector2 bp = { -1 * player->radius / 3 , -1 * player->radius / 2 };
-//	const Vector2 cp = { -1 * player->radius / 3, player->radius / 2 };
-//
-//	points.a.x = ap.x * cosf(player->angle) - ap.y * sinf(player->angle) + player->pos.x;
-//	points.a.y = ap.y * cosf(player->angle) + ap.x * sinf(player->angle) + player->pos.y;
-//
-//	points.b.x = bp.x * cosf(player->angle) - bp.y * sinf(player->angle) + player->pos.x;
-//	points.b.y = bp.y * cosf(player->angle) + bp.x * sinf(player->angle) + player->pos.y;
-//
-//	points.c.x = cp.x * cosf(player->angle) - cp.y * sinf(player->angle) + player->pos.x;
-//	points.c.y = cp.y * cosf(player->angle) + cp.x * sinf(player->angle) + player->pos.y;
-//
-//	return points;
-//}
-void RenderPlayer(Obj* player, Vector2* scroll,int* handle) {
-	/*Triangle point = TrianglePoint(player);
-	Vector2 a = point.a;
-	Vector2 b = point.b;
-	Vector2 c = point.c;
-
-	Novice::DrawTriangle(
-		int(a.x - scroll->x), int(a.y - scroll->y),
-		int(b.x - scroll->x), int(b.y - scroll->y),
-		int(c.x - scroll->x), int(c.y - scroll->y),
-		RED, kFillModeSolid);*/
+void RenderPlayer(Obj* player, Vector2* scroll, int* handle,int* handle2) {
 	Rect points = RectRotedPoint(player);
 	Vector2 a = points.a;
 	Vector2 b = points.b;
 	Vector2 c = points.c;
 	Vector2 d = points.d;
 
-	Novice::DrawQuad(
-		int(a.x - scroll->x), int(a.y - scroll->y),
-		int(b.x - scroll->x), int(b.y - scroll->y),
-		int(c.x - scroll->x), int(c.y - scroll->y),
-		int(d.x - scroll->x), int(d.y - scroll->y),
-		0,0,int(player->width),int(player->height),
-		*handle,WHITE
-	);
-}
-void RenderObj(Obj obj[], Vector2* scroll,AllResource& texture) {
+	float t = 1-(player->atTimer / 60.0f);
+	static unsigned int color = WHITE;
+
+	unsigned int red = (unsigned int)Lerp(0xFF, 0xFF, t);
+	unsigned int green = (unsigned int)Lerp(0xFF, 0xFF, t);
+	unsigned int blue = (unsigned int)Lerp(0xFF, 0xFF, t);
+	unsigned int alpha = (unsigned int)(Lerp(0xFF, 0x00, t));
+	color = ((red << 24) | (green << 16) | (blue << 8) | alpha);
+	if (!player->isCollied) {
+		Novice::DrawQuad(
+			int(a.x - scroll->x), int(a.y - scroll->y),
+			int(b.x - scroll->x), int(b.y - scroll->y),
+			int(c.x - scroll->x), int(c.y - scroll->y),
+			int(d.x - scroll->x), int(d.y - scroll->y),
+			0, 0, int(player->width), int(player->height),
+			*handle, WHITE
+		);
+		if (player->attack) {
+			Novice::DrawQuad(
+				int(a.x - scroll->x), int(a.y - scroll->y),
+				int(b.x - scroll->x), int(b.y - scroll->y),
+				int(c.x - scroll->x), int(c.y - scroll->y),
+				int(d.x - scroll->x), int(d.y - scroll->y),
+				0, 0, 40, 38,
+				*handle2, color
+			);
+		}
+	}
+	if (player->InvincibleTimer % 5 == 0 && player->isCollied) {
+		Novice::DrawQuad(
+			int(a.x - scroll->x), int(a.y - scroll->y),
+			int(b.x - scroll->x), int(b.y - scroll->y),
+			int(c.x - scroll->x), int(c.y - scroll->y),
+			int(d.x - scroll->x), int(d.y - scroll->y),
+			0, 0, int(player->width), int(player->height),
+			*handle, WHITE
+		);
+	}
 	
+
+}
+void RenderObj(Obj obj[], Vector2* scroll, AllResource& texture) {
+
 	for (int i = 0; i < objCount; i++) {
 		static int handle;
 		switch (obj[i].type)
@@ -274,7 +297,7 @@ void RenderObj(Obj obj[], Vector2* scroll,AllResource& texture) {
 			break;
 		case WATER:
 			handle = texture.waterStar80_106;
-			
+
 			break;
 		case EARTH:
 			handle = texture.earthStar100_130;
@@ -339,11 +362,11 @@ float SetRotedSpeed(int* const objType) {
 	}
 	return speed;
 }
-void RenderMiniMap(Obj* obj, Vector2* scroll,Obj* player) {
+void RenderMiniMap(Obj obj[], Vector2* scroll, Obj* player) {
 	for (int i = 0; i < objCount; i++) {
-		Novice::ScreenPrintf(int(obj[i].pos.x - scroll->x), int(obj[i].pos.y - scroll->y), "%d",i);
+		Novice::ScreenPrintf(int(obj[i].pos.x - scroll->x), int(obj[i].pos.y - scroll->y), "%d", i);
 		Novice::DrawEllipse(
-			int(obj[i].pos.x / 20 + kWindowWidth * 5 / 6.0f), int(obj[i].pos.y / 20 + kWindowHeight/8.0f), 
+			int(obj[i].pos.x / 20 + kWindowWidth * 5 / 6.0f), int(obj[i].pos.y / 20 + kWindowHeight / 8.0f),
 			int(obj[i].radius / 20), int(obj[i].radius / 20),
 			0.0f, WHITE, kFillModeSolid);
 	}
@@ -364,8 +387,83 @@ float angle_difference(float a, float b) {
 	float dif = fmodf(b - a + float(M_PI), 2 * float(M_PI)) - float(M_PI);
 	return fmodf(dif + 2 * float(M_PI), 2 * float(M_PI)) - float(M_PI);
 }
-void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 
+void InitParticle(Particle* p, float x, float y, float direction) {
+	p->pos.x = x;
+	p->pos.y = y;
+
+	float angle = direction + ((rand() % 30 - 20) * (float(M_PI) / 45.0f));
+	float speed = (rand() % 5) / 10.0f + 2.0f;
+
+	p->velocity.x = cosf(angle) * speed;
+	p->velocity.y = sinf(angle) * speed;
+	p->life = 1.0f;
+	p->size = (rand() % 5) + 1.0f;
+	p->isActive = true;
+}
+//パーティクル出す初期処理
+void EmitParticle(Particle particles[], Obj* player) {
+
+	for (int i = 0; i < MAX_PARTICLES; i++) {
+		if (!particles[i].isActive && !player->isRotate) {
+
+			InitParticle(
+				&particles[i],
+				player->pos.x - player->width / 2.0f * cosf(player->angle),
+				player->pos.y - player->height / 2.0f * sinf(player->angle),
+				player->angle - float(M_PI));
+			break;
+		}
+	}
+}
+//線形補間
+float Lerp(float start, float end, float t) {
+	return start + t * (end - start);
+}
+float EaseOutLerp(float start, float end, float t) {
+	t = 1.0f - (1.0f - t) * (1.0f - t);
+	return start + t * (end - start);
+}
+float EaseOutCubic(float start, float end, float t) {
+	t = 1.0f - powf(1.0f - t, 3);
+	return start + t * (end - start);
+}
+//パーティクル更新処理
+void UpdateParticle(Particle* particles) {
+
+	if (particles->isActive) {
+
+		particles->pos.x += particles->velocity.x;
+		particles->pos.y += particles->velocity.y;
+
+		particles->life -= 0.01f;
+		float t = 1.0f - particles->life;	
+
+		
+		unsigned int r = (unsigned int)EaseOutCubic(0xf4, 0x27, t);
+		unsigned int g = (unsigned int)EaseOutCubic(0xbb, 0x69, t);
+		unsigned int b = (unsigned int)EaseOutCubic(0xf2, 0xcd, t);
+		unsigned int a = (unsigned int)(EaseOutLerp(0xFF, 0x00, t));
+
+		particles->color = ( (r << 24) | (g << 16) | (b<<8) | a);
+		if (particles->life <= 0) {
+			particles->isActive = false;
+		}
+
+	}
+}
+void RenderParticle(Particle particles[], Vector2* scroll) {
+	for (int i = 0; i < MAX_PARTICLES; i++) {
+		if (particles[i].isActive) {
+			Novice::DrawEllipse(
+				int(particles[i].pos.x - scroll->x), int(particles[i].pos.y - scroll->y),
+				int(particles[i].size), int(particles[i].size),
+				0, particles[i].color, kFillModeSolid);
+		}
+	}
+}
+
+void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 
 	static float angleTmp = 0;
 	static float angle_dif = 0;
@@ -375,17 +473,30 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 	static int rotateDirection = 1;
 	static Vector2 objPosTmp = { 0 };
 	static float radiusTmp = 0.0f;
-
-
+	//無敵時間処理
 	if (player->isCollied && player->InvincibleTimer > 0) {
 		player->InvincibleTimer--;
-
 	}
 	else {
 		player->InvincibleTimer = 60;
 		player->isCollied = false;
+	}	
+	//攻撃処理
+	if (!player->isRotate) {
+		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+			player->attack = true;			
+		}
 	}
+	if (player->attack && player->atTimer > 0) {
+		player->atTimer--;
+	}
+	else {
+		player->atTimer = 60;
+		player->attack = false;
+	}
+	
 	Novice::ScreenPrintf(0, 200, "player.iTimer = %d", player->InvincibleTimer);
+
 	for (int i = 0; i < objCount; i++) {
 		float dx = player->pos.x - obj[i].pos.x;
 		float dy = player->pos.y - obj[i].pos.y;
@@ -400,6 +511,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 			rotateSpeed = SetRotedSpeed(&obj[i].type);
 			t = 0;
 			objPosTmp = obj[i].pos;
+			player->isAdapt = true;
 			if (crossProduct > 0) {
 				rotateDirection = 1;
 			}
@@ -409,31 +521,39 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 			break;
 		}
 	}
-	if (keys[DIK_SPACE] && !preKeys[DIK_SPACE] && player->isRotate) {
+
+	if (keys[DIK_SPACE] && !preKeys[DIK_SPACE] && player->isRotate && !player->isAdapt) {
 		player->isRotate = false;
 	}
-	if (player->isRotate) {
 
+	if (player->isRotate) {
 		Novice::ScreenPrintf(700, 45, "angle_dif = %.10f", angle_dif);
 		angle_dif = angle_difference(angleTmp, player->angle);
 
 		player->pos.x = objPosTmp.x + radiusTmp * cosf(angleTmp);
 		player->pos.y = objPosTmp.y + radiusTmp * sinf(angleTmp);
 		angleTmp += rotateSpeed * rotateDirection;
+
 		if (t < 1.0f) {
 			t += lerpSpeed;
 		}
 
-		player->angle = player->angle + t * (angleTmp - player->angle);
+		player->angle = Lerp(player->angle, angleTmp,t);
+
+		if (t > 0.5f) {
+			player->isAdapt = false;
+		}
 		if (t >= 1.0f) {
 			player->angle = angleTmp;
 		}
+
 		if (angleTmp > M_PI) {
 			angleTmp = -static_cast<float>(M_PI);
 		}
 		else if (angleTmp < -M_PI) {
 			angleTmp = static_cast<float>(M_PI);
 		}
+
 		if (player->angle > M_PI) {
 			player->angle = -static_cast<float>(M_PI);
 		}
@@ -447,8 +567,8 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 	}
 
 	Novice::ScreenPrintf(700, 30, "player.angle = %.10f  angle = %.10f", player->angle, angleTmp);
-
 }
+
 void checkPlayerMoveRange(Obj* player) {
 	const int rangeWidthMin = -kWindowWidth * 2 + 100;
 	const int rangeWidthMax = kWindowWidth * 3 - 100;
@@ -460,7 +580,7 @@ void checkPlayerMoveRange(Obj* player) {
 		player->angle = float(M_PI) - player->angle;
 	}
 
-	if (player->pos.y + player->radius > rangeHeightMax || 
+	if (player->pos.y + player->radius > rangeHeightMax ||
 		player->pos.y - player->radius < rangeHeightMin) {
 		player->angle = -player->angle;
 	}
@@ -468,6 +588,7 @@ void checkPlayerMoveRange(Obj* player) {
 	Novice::ScreenPrintf(700, 80, "player.pos x = %.2f  y = %.2f", player->pos.x, player->pos.y);
 }
 void UpdateScroll(Obj* player, Vector2* scroll) {
+
 	//マップサイズ
 	float mapWidthMax = 3.0f * kWindowWidth;
 	float mapWidthMin = -2.0f * kWindowWidth;
@@ -511,4 +632,3 @@ void UpdateScroll(Obj* player, Vector2* scroll) {
 		scroll->y = mapHeightMax - kWindowHeight;
 	}
 }
-
