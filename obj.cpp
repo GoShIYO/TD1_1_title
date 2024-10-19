@@ -370,7 +370,7 @@ void InitParticle(Particle* p, float x, float y, float direction) {
 void EmitParticle(Particle particles[], Obj* player) {
 
 	for (int i = 0; i < MAX_PARTICLES; i++) {
-		if (!particles[i].isActive) {
+		if (!particles[i].isActive && !player->isRotate) {
 
 			InitParticle(
 				&particles[i],
