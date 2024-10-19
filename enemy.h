@@ -8,6 +8,8 @@
 #include <Vector2.h>
 #include "obj.h"
 
+extern int remainingKeys;
+
 enum EnemyDirection {
 	UP = 0,
 	DOWN = 1,
@@ -63,6 +65,10 @@ void LoadImages(Handle& handle);
 void EnemyMove(Enemy enemy[]);
 void EnemyMoveHorming(Enemy enemy[], Obj& player);
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]);
+
+void UpdateKeys(BossKeys keys[], Enemy enemy[]);
+void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[]);
+void RenderKeys(BossKeys keys[], Vector2 scroll);
 
 void EnemyRange(Enemy enemy[], Enemy enemy1[]);
 

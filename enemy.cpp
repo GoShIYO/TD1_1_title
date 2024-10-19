@@ -1,9 +1,10 @@
 #define _USE_MATH_DEFINES
 #include "enemy.h"
-#include "obj.h"
 #include <math.h>
 #include <Novice.h>
 #include <stdlib.h>
+
+int remainingKeys = 4;
 
 void InitEnemyNormal(Enemy enemy[]) {
 	enemy[0].pos = { 0.0f, -120.0f };
@@ -45,29 +46,29 @@ void InitEnemyNormal(Enemy enemy[]) {
 }
 
 void InitEnemyHorming(Enemy enemy[]) {
-	enemy[0].pos = { 0.0f, -840.0f };
-	enemy[1].pos = { 240.0f, -840.0f };
-	enemy[2].pos = { 480.0f, -840.0f };
-	enemy[3].pos = { 720.0f, -840.0f };
-	enemy[4].pos = { 960.0f, -840.0f };
-	enemy[5].pos = { 1200.0f, -840.0f };
+	enemy[0].pos = { 0.0f, -900.0f };
+	enemy[1].pos = { 240.0f, -700.0f };
+	enemy[2].pos = { 480.0f, -900.0f };
+	enemy[3].pos = { 720.0f, -700.0f };
+	enemy[4].pos = { 960.0f, -900.0f };
+	enemy[5].pos = { 1200.0f, -700.0f };
 
-	enemy[6].pos = { 2400.0f, 0.0f };
-	enemy[7].pos = { 2400.0f, 240.0f };
-	enemy[8].pos = { 2400.0f, 480.0f };
-	enemy[9].pos = { 2400.0f, 720.0f };
+	enemy[6].pos = { 2900.0f, 0.0f };
+	enemy[7].pos = { 3100.0f, 240.0f };
+	enemy[8].pos = { 2900.0f, 480.0f };
+	enemy[9].pos = { 3100.0f, 720.0f };
 
-	enemy[10].pos = { 0.0f, 1560.0f };
-	enemy[11].pos = { 240.0f, 1560.0f };
-	enemy[12].pos = { 480.0f, 1560.0f };
-	enemy[13].pos = { 720.0f, 1560.0f };
-	enemy[14].pos = { 960.0f, 1560.0f };
-	enemy[15].pos = { 1200.0f, 1560.0f };
+	enemy[10].pos = { 0.0f, 1700.0f };
+	enemy[11].pos = { 240.0f, 1400.0f };
+	enemy[12].pos = { 480.0f, 1700.0f };
+	enemy[13].pos = { 720.0f, 1400.0f };
+	enemy[14].pos = { 960.0f, 1700.0f };
+	enemy[15].pos = { 1200.0f, 1400.0f };
 
-	enemy[16].pos = { -1300.0f, 0.0f };
-	enemy[17].pos = { -1300.0f, 240.0f };
-	enemy[18].pos = { -1300.0f, 480.0f };
-	enemy[19].pos = { -1300.0f, 720.0f };
+	enemy[16].pos = { -2000.0f, 0.0f };
+	enemy[17].pos = { -1500.0f, 240.0f };
+	enemy[18].pos = { -2000.0f, 480.0f };
+	enemy[19].pos = { -1500.0f, 720.0f };
 
 	for (int i = 0;i < ENEMY_COUNT;i++) {
 		enemy[i].velocity.x = 2.0f;
@@ -77,8 +78,8 @@ void InitEnemyHorming(Enemy enemy[]) {
 		enemy[i].directions.x = 0.0f;
 		enemy[i].directions.y = 0.0f;
 		enemy[i].magnitude = 0.0f;
-		enemy[i].width = 32.0f;
-		enemy[i].height = 32.0f;
+		enemy[i].width = 30.0f;
+		enemy[i].height = 30.0f;
 		enemy[i].radius = 16.0f;
 		enemy[i].direction = 0;
 		enemy[i].isAlive = true;
@@ -92,29 +93,29 @@ void InitEnemyShot(Enemy enemy[]) {
 	enemy[1].pos = { -2000.0f, -500.0f };
 	enemy[2].pos = { -1700.0f, -900.0f };
 	enemy[3].pos = { -1650.0f, -500.0f };
-	enemy[4].pos = { -1660.0f, -40.0f };
+	enemy[4].pos = { -1660.0f, -900.0f };
 
-	enemy[5].pos = { 1200.0f, -840.0f };
-	enemy[6].pos = { 1700.0f, 0.0f };
-	enemy[7].pos = { 1700.0f, 240.0f };
-	enemy[8].pos = { 1700.0f, 480.0f };
-	enemy[9].pos = { 1700.0f, 720.0f };
+	enemy[5].pos = { 3700.0f, 1700.0f };
+	enemy[6].pos = { 3500.0f, 1100.0f };
+	enemy[7].pos = { 3300.0f, 1700.0f };
+	enemy[8].pos = { 3100.0f, 1200.0f };
+	enemy[9].pos = { 2800.0f, 1700.0f };
 
-	enemy[10].pos = { 0.0f, 1560.0f };
-	enemy[11].pos = { 240.0f, 1560.0f };
-	enemy[12].pos = { 480.0f, 1560.0f };
-	enemy[13].pos = { 720.0f, 1560.0f };
-	enemy[14].pos = { 960.0f, 1560.0f };
+	enemy[10].pos = { 3700.0f, -900.0f };
+	enemy[11].pos = { 3500.0f, -500.0f };
+	enemy[12].pos = { 3300.0f, -700.0f };
+	enemy[13].pos = { 3100.0f, -500.0f };
+	enemy[14].pos = { 2900.0f, -700.0f };
 
-	enemy[15].pos = { -1300.0f, 0.0f };
-	enemy[16].pos = { -1600.0f, 220.0f };
-	enemy[17].pos = { -1300.0f, 480.0f };
-	enemy[18].pos = { -1600.0f, 720.0f };
-	enemy[19].pos = { -1300.0f, 940.0f };
+	enemy[15].pos = { -2200.0f, 1700.0f };
+	enemy[16].pos = { -2000.0f, 1200.0f };
+	enemy[17].pos = { -1800.0f, 1700.0f };
+	enemy[18].pos = { -1600.0f, 1200.0f };
+	enemy[19].pos = { -1500.0f, 1700.0f };
 
 	for (int i = 0;i < ENEMY_COUNT;i++) {
-		enemy[i].width = 32.0f;
-		enemy[i].height = 32.0f;
+		enemy[i].width = 30.0f;
+		enemy[i].height = 30.0f;
 		enemy[i].radius = 16.0f;
 		enemy[i].shotTimer = 0;
 		enemy[i].isAlive = true;
@@ -243,16 +244,16 @@ void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle, float px, float py) 
 
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle) {
 	for (int i = 0;i < BULLET_COUNT;i++) {
-		Novice::DrawSprite(int(bullet[i].pos.x - scroll.x), int(bullet[i].pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
+		Novice::DrawSprite(int(bullet[i].pos.x - scroll.x), int(bullet[i].pos.y - scroll.y), handle, 1, 1, 0.0f, 0xFFFFFF99);
 	}
 }
 
-void EnemyDebug(EnemyBullet bullet[]) {
-	for (int i = 0;i < 5;i++) {
-		Novice::ScreenPrintf(0, 100 * i, "bullet.pos.x : %f", bullet[i].pos.x);
-		Novice::ScreenPrintf(100, 100 * i, "bullet.pos.y : %f", bullet[i].pos.y);
-	}
-}
+//void EnemyDebug(EnemyBullet bullet[]) {
+//	for (int i = 0;i < 5;i++) {
+//		Novice::ScreenPrintf(0, 100 * i, "bullet.pos.x : %f", bullet[i].pos.x);
+//		Novice::ScreenPrintf(100, 100 * i, "bullet.pos.y : %f", bullet[i].pos.y);
+//	}
+//}
 
 bool CheckCircleCollision(Vector2& a, Vector2& b, const float& radiusA, const float& radiusB) {
 	float x = a.x - b.x;
@@ -304,7 +305,6 @@ void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {
 				int(enemy[i].radius / 8), int(enemy[i].radius / 8),
 				0.0f, 0xFFFF55FF, kFillModeSolid);
 		}
-		
 	}
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy1[i].isAlive) {
@@ -312,7 +312,7 @@ void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {
 				int(enemy1[i].pos.x / 20 + kWindowWidth * 5 / 6.0f), int(enemy1[i].pos.y / 20 + kWindowHeight / 8.0f),
 				int(enemy1[i].radius / 8), int(enemy1[i].radius / 8),
 				0.0f, 0x5555FFFF, kFillModeSolid);
-		}		
+		}
 	}
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy2[i].isAlive) {
@@ -320,11 +320,11 @@ void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {
 				int(enemy2[i].pos.x / 20 + kWindowWidth * 5 / 6.0f), int(enemy2[i].pos.y / 20 + kWindowHeight / 8.0f),
 				int(enemy2[i].radius / 8), int(enemy2[i].radius / 8),
 				0.0f, 0x55FF55FF, kFillModeSolid);
-		}		
+		}
 	}
 }
 
-void EnemyRange(Enemy enemy[],Enemy enemy1[]) {
+void EnemyRange(Enemy enemy[], Enemy enemy1[]) {
 	for (int i = 0;i < ENEMY_COUNT;i++) {
 		if (enemy[i].pos.x >= kWindowWidth * 3 - enemy[i].radius) {
 			enemy[i].pos.x = kWindowWidth * 3 - enemy[i].radius;
@@ -353,10 +353,55 @@ void EnemyRange(Enemy enemy[],Enemy enemy1[]) {
 	}
 }
 
+void UpdateKeys(BossKeys keys[], Enemy enemy[]) {
+	if (!keys[0].isHit) {
+		keys[0].pos.x = enemy[0].pos.x;
+		keys[0].pos.y = enemy[0].pos.y;
+	}
+	if (!keys[1].isHit) {
+		keys[1].pos.x = enemy[9].pos.x;
+		keys[1].pos.y = enemy[9].pos.y;
+	}
+	if (!keys[2].isHit) {
+		keys[2].pos.x = enemy[15].pos.x;
+		keys[2].pos.y = enemy[15].pos.y;
+	}
+	if (!keys[3].isHit) {
+		keys[3].pos.x = enemy[19].pos.x;
+		keys[3].pos.y = enemy[19].pos.y;
+	}
+}
+
+void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[]) {
+	for (int i = 0;i < keyCount;i++) {
+		float distanceX = player.pos.x - keys[i].pos.x;
+		float distanceY = player.pos.y - keys[i].pos.y;
+		float distance = sqrtf(static_cast<float>(pow(distanceX, 2)) + static_cast<float>(pow(distanceY, 2)));
+
+		if (distance <= player.radius + keys[i].radius) {
+			keys[i].isHit = true;
+			keys[i].pos.x = -10000.0f;
+			keys[i].pos.y = -10000.0f;
+			remainingKeys--;
+		}
+		/*if (keys[i].isHit) {
+			keys[i].pos.x = -10000.0f;
+			keys[i].pos.y = -10000.0f;
+			remainingKeys--;
+		}*/
+	}
+}
+
+void RenderKeys(BossKeys keys[], Vector2 scroll) {
+	for (int i = 0;i < keyCount;i++) {
+		Novice::DrawEllipse(int(keys[i].pos.x - scroll.x), int(keys[i].pos.y - scroll.y), (int)keys[i].width, (int)keys[i].height, 0.0f, 0xFF5555FF, kFillModeWireFrame);
+	}
+}
+
 void LoadImages(Handle& handle) {
-	handle.enemy = Novice::LoadTexture("./Resources/enemy.png");
-	handle.enemyHorming = Novice::LoadTexture("./Resources/enemy2.png");
-	handle.enemyShot = Novice::LoadTexture("./Resources/enemy2.png");
+	handle.enemy = Novice::LoadTexture("./Resources/Enemy/EnemyStopBoom32.png");
+	handle.enemyHorming = Novice::LoadTexture("./Resources/Enemy/enemyFollow30.png");
+	handle.enemyShot = Novice::LoadTexture("./Resources/Enemy/enemyShot30.png");
 	handle.bullet = Novice::LoadTexture("./Resources/bullet.png");
 	handle.deathEffect = Novice::LoadTexture("./Resources/effect.png");
 }
