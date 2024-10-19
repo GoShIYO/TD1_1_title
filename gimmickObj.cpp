@@ -2,13 +2,12 @@
 #include "obj.h"
 #include <Novice.h>
 
-const int BOX_COUNT = 3;
+const int BOX_COUNT = 1;
 
 void InitGimmickObjs(GimmickObj gimmickObjs[]) {
+	gimmickObjs[0].obj.pos = { -2088.6f, -450.0f };
 	for (int i = 0; i < BOX_COUNT; i++) {
-		gimmickObjs[i].obj.pos.x = (float)(300 + i * 200);
-		gimmickObjs[i].obj.pos.y = 400.0f;
-		gimmickObjs[i].obj.radius = 20.0f;
+		gimmickObjs[i].obj.radius = 30.0f;
 		gimmickObjs[i].isActive = true;
 		gimmickObjs[i].moveDir = 1;
 	}
@@ -18,8 +17,8 @@ void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
 	for (int i = 0; i < BOX_COUNT; i++) {
 		if (gimmickObjs[i].isActive) {
 
-			gimmickObjs[i].obj.pos.y += 2.0f * gimmickObjs[i].moveDir;
-			if (gimmickObjs[i].obj.pos.y >= 450.0f || gimmickObjs[i].obj.pos.y <= 350.0f) {
+			gimmickObjs[i].obj.pos.x += 2.0f * gimmickObjs[i].moveDir;
+			if (gimmickObjs[i].obj.pos.x >= -1888.6f || gimmickObjs[i].obj.pos.x <= -2088.6f) {
 				gimmickObjs[i].moveDir *= -1;
 			}
 
@@ -37,7 +36,7 @@ void RenderGimmickObjs(GimmickObj gimmickObjs[], Vector2* scroll) {
 			Novice::DrawBox(
 				(int)(gimmickObjs[i].obj.pos.x - scroll->x),
 				(int)(gimmickObjs[i].obj.pos.y - scroll->y),
-				40, 100, 0, 0xFFFF00FF, kFillModeSolid
+				40, 40, 0, 0xFFFF00FF, kFillModeSolid
 			);
 		}
 	}
@@ -54,7 +53,7 @@ float Min(float a, float b) {
 bool CheckGimmickCollision(GimmickObj& gimmick, Obj& player, Vector2& collisionNormal) {
 
 	float halfBoxWidth = 20.0f;
-	float halfBoxHeight = 50.0f;
+	float halfBoxHeight = 20.0f;
 
 	float closestX = Max(gimmick.obj.pos.x - halfBoxWidth, Min(player.pos.x, gimmick.obj.pos.x + halfBoxWidth));
 	float closestY = Max(gimmick.obj.pos.y - halfBoxHeight, Min(player.pos.y, gimmick.obj.pos.y + halfBoxHeight));
