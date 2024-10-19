@@ -385,6 +385,14 @@ void EmitParticle(Particle particles[], Obj* player) {
 float Lerp(float start, float end, float t) {
 	return start + t * (end - start);
 }
+float EaseOutLerp(float start, float end, float t) {
+	t = 1.0f - (1.0f - t) * (1.0f - t);
+	return start + t * (end - start);
+}
+float EaseOutCubic(float start, float end, float t) {
+	t = 1.0f - powf(1.0f - t, 3);
+	return start + t * (end - start);
+}
 //パーティクル更新処理
 void UpdateParticle(Particle* particles) {
 
@@ -394,14 +402,15 @@ void UpdateParticle(Particle* particles) {
 		particles->pos.y += particles->velocity.y;
 
 		particles->life -= 0.01f;
+		float t = 1.0f - particles->life;	
 
-		float t = 1.0f - particles->life;
-		unsigned int r = (unsigned int)Lerp(0xa1, 0x00, t);
-		unsigned int g = (unsigned int)Lerp(0x5b, 0x00, t);
-		unsigned int b = (unsigned int)Lerp(0xff, 0x00, t);
-		unsigned int a = (unsigned int)(Lerp(0xFF, 0x80, t));
+		
+		unsigned int r = (unsigned int)EaseOutCubic(0xf4, 0x27, t);
+		unsigned int g = (unsigned int)EaseOutCubic(0xbb, 0x69, t);
+		unsigned int b = (unsigned int)EaseOutCubic(0xf2, 0xcd, t);
+		unsigned int a = (unsigned int)(EaseOutLerp(0xFF, 0x00, t));
 
-		particles->color = (a << 24) | (r << 16) | (g << 8) | b;
+		particles->color = ( (r << 24) | (g << 16) | (b<<8) | a);
 		if (particles->life <= 0) {
 			particles->isActive = false;
 		}
