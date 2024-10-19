@@ -134,7 +134,7 @@ void InitEnemyBullet(EnemyBullet bullet[]) {
 		bullet[i].directions.x = 0.0f;
 		bullet[i].directions.y = 0.0f;
 		bullet[i].magnitude = 0.0f;
-		bullet[i].isShot = false;
+		bullet[i].isActive = false;
 	}
 }
 
@@ -201,30 +201,44 @@ void EnemyMoveHorming(Enemy enemy[], Obj& player) {
 }
 
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]) {
-	for (int j = 0;j < ENEMY_COUNT;j++) {
-		enemy[j].shotTimer++;
-		for (int i = 0;i < BULLET_COUNT;i++) {
-			if (enemy[j].shotTimer >= SHOT_TIME) {
-				bullet[i].isShot = true;
-				bullet[i].pos.x = enemy[j].pos.x;
-				bullet[i].pos.y = enemy[j].pos.y;
-				bullet[i].components.x = player.pos.x - bullet[i].pos.x;
-				bullet[i].components.y = player.pos.y - bullet[i].pos.y;
-				bullet[i].magnitude = (float)sqrt(pow(bullet[i].components.x, 2) + pow(bullet[i].components.y, 2));
-				bullet[i].directions.x = bullet[i].components.x / bullet[i].magnitude;
-				bullet[i].directions.y = bullet[i].components.y / bullet[i].magnitude;
-				enemy[j].shotTimer = 0;
+	for (int i = 0;i < ENEMY_COUNT;i++) {
+		if (!enemy[i].isActive) {
+			enemy[i].shotTimer++;
+			if (enemy[i].shotTimer >= SHOT_TIME) {
+				enemy[i].isActive = true;
+			}
+		}
+	}
+	for (int i = 0;i < ENEMY_COUNT;i++) {
+		for (int j = 0;j < BULLET_COUNT;j++) {
+			if (!bullet[j].isActive && enemy[i].isActive) {
+				bullet[j].pos.x = enemy[i].pos.x;
+				bullet[j].pos.y = enemy[i].pos.y;
+				bullet[j].isActive = true;
 				break;
 			}
-			if (bullet[i].isShot) {
-				bullet[i].pos.x += bullet[i].directions.x * bullet[i].velocity.x;
-				bullet[i].pos.y += bullet[i].directions.y * bullet[i].velocity.y;
-			}
-			if (bullet[i].pos.x >= kWindowWidth * 3 || bullet[i].pos.x <= -kWindowWidth * 2 || bullet[i].pos.y >= kWindowHeight * 3 || bullet[i].pos.y <= -kWindowHeight * 2) {
-				bullet[i].pos.x = -10000.0f;
-				bullet[i].pos.y = -10000.0f;
-				bullet[i].isShot = false;
-			}
+		}
+	}
+
+	for (int j = 0;j < BULLET_COUNT;j++) {
+		if (!bullet[j].isActive) {
+			bullet[j].components.x = player.pos.x - bullet[j].pos.x;
+			bullet[j].components.y = player.pos.y - bullet[j].pos.y;
+			bullet[j].magnitude = (float)sqrt(pow(bullet[j].components.x, 2) + pow(bullet[j].components.y, 2));
+			bullet[j].directions.x = bullet[j].components.x / bullet[j].magnitude;
+			bullet[j].directions.y = bullet[j].components.y / bullet[j].magnitude;
+			bullet[j].isActive = true;
+			enemy[j].shotTimer = 0;
+			break;
+		}
+		if (bullet[j].isActive) {
+			bullet[j].pos.x += bullet[j].directions.x * bullet[j].velocity.x;
+			bullet[j].pos.y += bullet[j].directions.y * bullet[j].velocity.y;
+		}
+		if (bullet[j].pos.x >= kWindowWidth * 3 || bullet[j].pos.x <= -kWindowWidth * 2 || bullet[j].pos.y >= kWindowHeight * 3 || bullet[j].pos.y <= -kWindowHeight * 2) {
+			bullet[j].pos.x = -10000.0f;
+			bullet[j].pos.y = -10000.0f;
+			bullet[j].isActive = false;
 		}
 	}
 }
@@ -359,16 +373,16 @@ void UpdateKeys(BossKeys keys[], Enemy enemy[]) {
 		keys[0].pos.y = enemy[0].pos.y + enemy[0].radius;
 	}
 	if (!keys[1].isHit) {
-		keys[1].pos.x = enemy[9].pos.x + enemy[0].radius;
-		keys[1].pos.y = enemy[9].pos.y + enemy[0].radius;
+		keys[1].pos.x = enemy[5].pos.x + enemy[0].radius;
+		keys[1].pos.y = enemy[5].pos.y + enemy[0].radius;
 	}
 	if (!keys[2].isHit) {
-		keys[2].pos.x = enemy[15].pos.x + enemy[0].radius;
-		keys[2].pos.y = enemy[15].pos.y + enemy[0].radius;
+		keys[2].pos.x = enemy[10].pos.x + enemy[0].radius;
+		keys[2].pos.y = enemy[10].pos.y + enemy[0].radius;
 	}
 	if (!keys[3].isHit) {
-		keys[3].pos.x = enemy[19].pos.x + enemy[0].radius;
-		keys[3].pos.y = enemy[19].pos.y + enemy[0].radius;
+		keys[3].pos.x = enemy[15].pos.x + enemy[0].radius;
+		keys[3].pos.y = enemy[15].pos.y + enemy[0].radius;
 	}
 }
 

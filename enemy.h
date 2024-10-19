@@ -33,6 +33,7 @@ struct Enemy {
 	int health;
 	bool isAlive;
 	bool isMove;
+	bool isActive;
 };
 
 struct EnemyBullet {
@@ -44,7 +45,7 @@ struct EnemyBullet {
 	float width;
 	float height;
 	int graphHnadle;
-	bool isShot;
+	bool isActive;
 };
 
 struct Handle {
