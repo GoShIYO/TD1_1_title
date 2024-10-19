@@ -540,9 +540,11 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 
 		player->angle = Lerp(player->angle, angleTmp,t);
 
+		if (t > 0.5f) {
+			player->isAdapt = false;
+		}
 		if (t >= 1.0f) {
 			player->angle = angleTmp;
-			player->isAdapt = false;
 		}
 
 		if (angleTmp > M_PI) {
