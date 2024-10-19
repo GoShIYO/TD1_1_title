@@ -207,7 +207,7 @@ Rect RectRotedPoint(const Obj* player) {
 
 	return points;
 }
-void RenderPlayer(Obj* player, Vector2* scroll, int* handle) {
+void RenderPlayer(Obj* player, Vector2* scroll, int* handle,int* handle2) {
 	Rect points = RectRotedPoint(player);
 	Vector2 a = points.a;
 	Vector2 b = points.b;
@@ -223,6 +223,16 @@ void RenderPlayer(Obj* player, Vector2* scroll, int* handle) {
 			0, 0, int(player->width), int(player->height),
 			*handle, WHITE
 		);
+		if (player->attack) {
+			Novice::DrawQuad(
+				int(a.x - scroll->x), int(a.y - scroll->y),
+				int(b.x - scroll->x), int(b.y - scroll->y),
+				int(c.x - scroll->x), int(c.y - scroll->y),
+				int(d.x - scroll->x), int(d.y - scroll->y),
+				0, 0, 40, 38,
+				*handle2, WHITE
+			);
+		}
 	}
 	if (player->InvincibleTimer % 5 == 0 && player->isCollied) {
 		Novice::DrawQuad(
@@ -234,6 +244,7 @@ void RenderPlayer(Obj* player, Vector2* scroll, int* handle) {
 			*handle, WHITE
 		);
 	}
+	
 
 }
 void RenderObj(Obj obj[], Vector2* scroll, AllResource& texture) {
@@ -339,7 +350,7 @@ float SetRotedSpeed(int* const objType) {
 	}
 	return speed;
 }
-void RenderMiniMap(Obj* obj, Vector2* scroll, Obj* player) {
+void RenderMiniMap(Obj obj[], Vector2* scroll, Obj* player) {
 	for (int i = 0; i < objCount; i++) {
 		Novice::ScreenPrintf(int(obj[i].pos.x - scroll->x), int(obj[i].pos.y - scroll->y), "%d", i);
 		Novice::DrawEllipse(
@@ -450,7 +461,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 	static int rotateDirection = 1;
 	static Vector2 objPosTmp = { 0 };
 	static float radiusTmp = 0.0f;
-
+	static int atTimer = 60;
 	if (player->isCollied && player->InvincibleTimer > 0) {
 		player->InvincibleTimer--;
 	}
@@ -458,7 +469,13 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 		player->InvincibleTimer = 60;
 		player->isCollied = false;
 	}
-
+	if (player->attack && atTimer>0) {
+		atTimer--;
+	}
+	else {
+		atTimer = 60;
+		player->attack = false;
+	}
 	Novice::ScreenPrintf(0, 200, "player.iTimer = %d", player->InvincibleTimer);
 
 	for (int i = 0; i < objCount; i++) {

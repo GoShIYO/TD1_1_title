@@ -37,6 +37,7 @@ struct Obj
 	float height;
 	bool isRotate;
 	bool isCollied;
+	bool attack;
 	int health;
 	int InvincibleTimer;
 	int type;
@@ -132,7 +133,7 @@ void checkPlayerMoveRange(Obj* player);
 /// プレイヤー描画
 /// </summary>
 /// <param name="player"></param>
-void RenderPlayer(Obj* player,Vector2* scroll,int* handle);
+void RenderPlayer(Obj* player,Vector2* scroll,int* handle, int* handle2);
 
 /// <summary>
 /// パーティクル更新処理
