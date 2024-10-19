@@ -4,7 +4,7 @@
 #include <Novice.h>
 #include <stdlib.h>
 
-int remainingKeys = 4;
+int remainingKeys = keyCount;
 
 void InitEnemyNormal(Enemy enemy[]) {
 	enemy[0].pos = { 0.0f, -120.0f };
@@ -352,20 +352,20 @@ void EnemyRange(Enemy enemy[], Enemy enemy1[]) {
 
 void UpdateKeys(BossKeys keys[], Enemy enemy[]) {
 	if (!keys[0].isHit) {
-		keys[0].pos.x = enemy[0].pos.x;
-		keys[0].pos.y = enemy[0].pos.y;
+		keys[0].pos.x = enemy[0].pos.x + enemy[0].radius;
+		keys[0].pos.y = enemy[0].pos.y + enemy[0].radius;
 	}
 	if (!keys[1].isHit) {
-		keys[1].pos.x = enemy[9].pos.x;
-		keys[1].pos.y = enemy[9].pos.y;
+		keys[1].pos.x = enemy[9].pos.x + enemy[0].radius;
+		keys[1].pos.y = enemy[9].pos.y + enemy[0].radius;
 	}
 	if (!keys[2].isHit) {
-		keys[2].pos.x = enemy[15].pos.x;
-		keys[2].pos.y = enemy[15].pos.y;
+		keys[2].pos.x = enemy[15].pos.x + enemy[0].radius;
+		keys[2].pos.y = enemy[15].pos.y + enemy[0].radius;
 	}
 	if (!keys[3].isHit) {
-		keys[3].pos.x = enemy[19].pos.x;
-		keys[3].pos.y = enemy[19].pos.y;
+		keys[3].pos.x = enemy[19].pos.x + enemy[0].radius;
+		keys[3].pos.y = enemy[19].pos.y + enemy[0].radius;
 	}
 }
 
@@ -381,11 +381,6 @@ void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[]) {
 			keys[i].pos.y = -10000.0f;
 			remainingKeys--;
 		}
-		/*if (keys[i].isHit) {
-			keys[i].pos.x = -10000.0f;
-			keys[i].pos.y = -10000.0f;
-			remainingKeys--;
-		}*/
 	}
 }
 

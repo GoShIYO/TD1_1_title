@@ -148,7 +148,7 @@ void InitBossKeys(BossKeys keys[]) {
 		keys[i].pos.y = -10000.0f;
 		keys[i].width = 16.0f;
 		keys[i].height = 16.0f;
-		keys[i].radius = 16.0f;
+		keys[i].radius = 8.0f;
 		keys[i].isHit = false;
 		keys[i].isPosSet = false;
 	}
