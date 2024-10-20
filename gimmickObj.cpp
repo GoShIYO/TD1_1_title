@@ -2,91 +2,175 @@
 #include "obj.h"
 #include <Novice.h>
 
-const int BOX_COUNT = 1;
+const int BOX_COUNT = 20;
+int boxTexture;
+int horizontalBoxTexture100_40;
+int horizontalBoxTexture670_40;
+int verticalBoxTexture40_740;
+int verticalBoxTexture40_100;
 
 void InitGimmickObjs(GimmickObj gimmickObjs[]) {
-	gimmickObjs[0].obj.pos = { -2088.6f, -450.0f };
+	boxTexture = Novice::LoadTexture("./Resources/box.png");
+	horizontalBoxTexture100_40 = Novice::LoadTexture("./Resources/horizontalBox100x40.png");
+	horizontalBoxTexture670_40 = Novice::LoadTexture("./Resources/horizontalBox670x40.png");
+	verticalBoxTexture40_740 = Novice::LoadTexture("./Resources/verticalBox40x740.png");
+	verticalBoxTexture40_100 = Novice::LoadTexture("./Resources/verticalBox40x100.png");
+
+	gimmickObjs[0].obj.pos = { -1790.0f, -450.0f };
+	gimmickObjs[0].obj.width = 100;
+	gimmickObjs[0].obj.height = 40;
+
+	gimmickObjs[1].obj.pos = { -2460.0f, -500.0f };
+	gimmickObjs[1].obj.width = 670;
+	gimmickObjs[1].obj.height = 40;
+
+	gimmickObjs[2].obj.pos = { -1390.0f, -1340.0f };
+	gimmickObjs[2].obj.width = 40;
+	gimmickObjs[2].obj.height = 740;
+
+	gimmickObjs[3].obj.pos = { -2200.0f, -230.0f };
+	gimmickObjs[3].obj.width = 40;
+	gimmickObjs[3].obj.height = 100;
+
+	gimmickObjs[4].obj.pos = { 100.0f, 1500.0f };
+	gimmickObjs[4].obj.width = 40;
+	gimmickObjs[4].obj.height = 100;
+
+	gimmickObjs[5].obj.pos = { 2300.0f, -400.0f };
+	gimmickObjs[5].obj.width = 100;
+	gimmickObjs[5].obj.height = 40;
+
+	gimmickObjs[6].obj.pos = { 2800.0f, 1400.0f };
+	gimmickObjs[6].obj.width = 40;
+	gimmickObjs[6].obj.height = 100;
+
+	gimmickObjs[7].obj.pos = { 3640.0f, 1450.0f };
+	gimmickObjs[7].obj.width = 100;
+	gimmickObjs[7].obj.height = 40;
+
+	gimmickObjs[8].obj.pos = { 3340.0f, 1960.0f };
+	gimmickObjs[8].obj.width = 40;
+	gimmickObjs[8].obj.height = 100;
+
+	gimmickObjs[9].obj.pos = { 3490.0f, 2020.0f };
+	gimmickObjs[9].obj.width = 100;
+	gimmickObjs[9].obj.height = 40;
+
+	gimmickObjs[10].obj.pos = { 3700.0f, 1850.0f };
+	gimmickObjs[10].obj.width = 40;
+	gimmickObjs[10].obj.height = 100;
+
+	gimmickObjs[11].obj.pos = { -850.0f, 650.0f };
+	gimmickObjs[11].obj.width = 40;
+	gimmickObjs[11].obj.height = 100;
+
+	gimmickObjs[12].obj.pos = { 2600.0f, -1340.0f };
+	gimmickObjs[12].obj.width = 40;
+	gimmickObjs[12].obj.height = 740;
+
+	gimmickObjs[13].obj.pos = { 2640.0f, -640.0f };
+	gimmickObjs[13].obj.width = 100;
+	gimmickObjs[13].obj.height = 40;
+
+	gimmickObjs[14].obj.pos = { 3100.0f, -750.0f };
+	gimmickObjs[14].obj.width = 40;
+	gimmickObjs[14].obj.height = 100;
+
+	gimmickObjs[15].obj.pos = { 2100.0f, 900.0f };
+	gimmickObjs[15].obj.width = 100;
+	gimmickObjs[15].obj.height = 40;
+
+	gimmickObjs[16].obj.pos = { 1100.0f, 2020.0f };
+	gimmickObjs[16].obj.width = 100;
+	gimmickObjs[16].obj.height = 40;
+
+	gimmickObjs[17].obj.pos = { -1800.0f, 2020.0f };
+	gimmickObjs[17].obj.width = 100;
+	gimmickObjs[17].obj.height = 40;
+
+	gimmickObjs[18].obj.pos = { -2460.0f, 1200.0f };
+	gimmickObjs[18].obj.width = 40;
+	gimmickObjs[18].obj.height = 100;
+
+	gimmickObjs[19].obj.pos = { 1300.0f, -1340.0f };
+	gimmickObjs[19].obj.width = 100;
+	gimmickObjs[19].obj.height = 40;
+
 	for (int i = 0; i < BOX_COUNT; i++) {
-		gimmickObjs[i].obj.radius = 30.0f;
 		gimmickObjs[i].isActive = true;
 		gimmickObjs[i].moveDir = 1;
 	}
+
+}
+
+float Clamp(float value, float minValue, float maxValue) {
+	if (value < minValue) return minValue;
+	if (value > maxValue) return maxValue;
+	return value;
 }
 
 void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
 	for (int i = 0; i < BOX_COUNT; i++) {
 		if (gimmickObjs[i].isActive) {
-
-			gimmickObjs[i].obj.pos.x += 2.0f * gimmickObjs[i].moveDir;
-			if (gimmickObjs[i].obj.pos.x >= -1888.6f || gimmickObjs[i].obj.pos.x <= -2088.6f) {
-				gimmickObjs[i].moveDir *= -1;
+			gimmickObjs[0].obj.pos.x += 1.0f * gimmickObjs[0].moveDir;
+			if (gimmickObjs[0].obj.pos.x >= -1290.0f || gimmickObjs[0].obj.pos.x <= -1790.0f) {
+				gimmickObjs[0].moveDir *= -1;
 			}
 
-			Vector2 collisionNormal = { 0.0f, 0.0f };
-			if (CheckGimmickCollision(gimmickObjs[i], player, collisionNormal)) {
+			gimmickObjs[4].obj.pos.y += 1.0f * gimmickObjs[4].moveDir;
+			if (gimmickObjs[4].obj.pos.y >= 1900.0f || gimmickObjs[4].obj.pos.y <= 1500.0f) {
+				gimmickObjs[4].moveDir *= -1;
+			}
+
+			gimmickObjs[5].obj.pos.x += 2.0f * gimmickObjs[5].moveDir;
+			if (gimmickObjs[5].obj.pos.x >= 2700 || gimmickObjs[5].obj.pos.x <= 2300.0f) {
+				gimmickObjs[5].moveDir *= -1;
+			}
+
+			gimmickObjs[6].obj.pos.y += 2.0f * gimmickObjs[6].moveDir;
+			if (gimmickObjs[6].obj.pos.y >= 1900.0f || gimmickObjs[6].obj.pos.y <= 1400.0f) {
+				gimmickObjs[6].moveDir *= -1;
+			}
+
+			gimmickObjs[7].obj.pos.x -= 3.0f * gimmickObjs[7].moveDir;
+			if (gimmickObjs[7].obj.pos.x >= 3640.0f || gimmickObjs[7].obj.pos.x <= 2840.0f) {
+				gimmickObjs[7].moveDir *= -1;
+			}
+
+			gimmickObjs[8].obj.pos.y -= 2.0f * gimmickObjs[8].moveDir;
+			if (gimmickObjs[8].obj.pos.y >= 1960.0f || gimmickObjs[8].obj.pos.y <= 1700.0f) {
+				gimmickObjs[8].moveDir *= -1;
+			}
+
+			gimmickObjs[14].obj.pos.y += 0.25f * gimmickObjs[14].moveDir;
+			if (gimmickObjs[14].obj.pos.y >= -550.0f || gimmickObjs[14].obj.pos.y <= -750.0f) {
+				gimmickObjs[14].moveDir *= -1;
+			}
+
+
+			if (CheckGimmickCollision(gimmickObjs[i], player)) {
+				Vector2 collisionNormal = {
+					player.pos.x - gimmickObjs[i].obj.pos.x,
+					player.pos.y - gimmickObjs[i].obj.pos.y
+				};
+				NormalizeVector(collisionNormal);
 				ReflectPlayer(player, collisionNormal);
 			}
 		}
 	}
 }
+bool CheckGimmickCollision(GimmickObj& gimmick, Obj& player) {
 
-void RenderGimmickObjs(GimmickObj gimmickObjs[], Vector2* scroll) {
-	for (int i = 0; i < BOX_COUNT; i++) {
-		if (gimmickObjs[i].isActive) {
-			Novice::DrawBox(
-				(int)(gimmickObjs[i].obj.pos.x - scroll->x),
-				(int)(gimmickObjs[i].obj.pos.y - scroll->y),
-				40, 40, 0, 0xFFFF00FF, kFillModeSolid
-			);
-		}
-	}
+	float closestX = Clamp(player.pos.x, gimmick.obj.pos.x - gimmick.obj.width / 2.0f, gimmick.obj.pos.x + gimmick.obj.width / 2.0f);
+	float closestY = Clamp(player.pos.y, gimmick.obj.pos.y - gimmick.obj.height / 2.0f, gimmick.obj.pos.y + gimmick.obj.height / 2.0f);
+
+
+	float dx = player.pos.x - closestX;
+	float dy = player.pos.y - closestY;
+
+
+	return (dx * dx + dy * dy) < (player.radius * player.radius);
 }
-
-float Max(float a, float b) {
-	return (a > b) ? a : b;
-}
-
-float Min(float a, float b) {
-	return (a < b) ? a : b;
-}
-
-bool CheckGimmickCollision(GimmickObj& gimmick, Obj& player, Vector2& collisionNormal) {
-
-	float halfBoxWidth = 20.0f;
-	float halfBoxHeight = 20.0f;
-
-	float closestX = Max(gimmick.obj.pos.x - halfBoxWidth, Min(player.pos.x, gimmick.obj.pos.x + halfBoxWidth));
-	float closestY = Max(gimmick.obj.pos.y - halfBoxHeight, Min(player.pos.y, gimmick.obj.pos.y + halfBoxHeight));
-
-	float distanceX = player.pos.x - closestX;
-	float distanceY = player.pos.y - closestY;
-	float distanceSquared = distanceX * distanceX + distanceY * distanceY;
-
-	if (distanceSquared < (player.radius * player.radius)) {
-
-		if (closestX == gimmick.obj.pos.x - halfBoxWidth) {
-
-			collisionNormal = { -1.0f, 0.0f };
-		}
-		else if (closestX == gimmick.obj.pos.x + halfBoxWidth) {
-
-			collisionNormal = { 1.0f, 0.0f };
-		}
-		else if (closestY == gimmick.obj.pos.y - halfBoxHeight) {
-
-			collisionNormal = { 0.0f, -1.0f };
-		}
-		else if (closestY == gimmick.obj.pos.y + halfBoxHeight) {
-
-			collisionNormal = { 0.0f, 1.0f };
-		}
-
-		return true;
-	}
-
-	return false;
-}
-
 
 
 void NormalizeVector(Vector2& vector) {
@@ -98,19 +182,62 @@ void NormalizeVector(Vector2& vector) {
 }
 
 void ReflectPlayer(Obj& player, Vector2& normal) {
-	if (!player.isRotate) {
+	Vector2 velocity = {
+		cosf(player.angle) * player.velocity.x,
+		sinf(player.angle) * player.velocity.y
+	};
 
-		Vector2 velocity = { cosf(player.angle) * player.velocity.x, sinf(player.angle) * player.velocity.y };
+	NormalizeVector(normal);
 
-		NormalizeVector(normal);
+	float dotProduct = velocity.x * normal.x + velocity.y * normal.y;
+	velocity.x -= 2 * dotProduct * normal.x;
+	velocity.y -= 2 * dotProduct * normal.y;
 
-		float dotProduct = velocity.x * normal.x + velocity.y * normal.y;
+	player.angle = atan2f(velocity.y, velocity.x);
 
-		velocity.x -= 2 * dotProduct * normal.x;
-		velocity.y -= 2 * dotProduct * normal.y;
+	player.pos.x += normal.x * (player.radius + 1.0f);
+	player.pos.y += normal.y * (player.radius + 1.0f);
 
-		player.angle = atan2f(velocity.y, velocity.x);
-		player.pos.x += velocity.x;
-		player.pos.y += velocity.y;
+	float newVelocityMagnitude = sqrtf(velocity.x * velocity.x + velocity.y * velocity.y);
+	player.velocity.x = newVelocityMagnitude;
+	player.velocity.y = newVelocityMagnitude;
+}
+
+
+void RenderGimmickObjs(GimmickObj gimmickObjs[], Vector2* scroll) {
+	int textures[] = {
+		horizontalBoxTexture100_40, horizontalBoxTexture670_40, verticalBoxTexture40_740, verticalBoxTexture40_100
+	};
+
+	for (int i = 0; i < BOX_COUNT; i++) {
+		if (gimmickObjs[i].isActive) {
+			int texture = textures[0];
+			switch (i) {
+			case 0:
+			case 5:
+			case 7:
+			case 9:
+			case 13:
+			case 15:
+			case 16:
+			case 17:
+			case 19:
+				texture = horizontalBoxTexture100_40; break;
+			case 1:
+				texture = horizontalBoxTexture670_40; break;
+			case 2:
+			case 12:
+				texture = verticalBoxTexture40_740; break;
+			default:
+				texture = verticalBoxTexture40_100; break;
+			}
+
+			Novice::DrawSprite(
+				(int)(gimmickObjs[i].obj.pos.x - scroll->x),
+				(int)(gimmickObjs[i].obj.pos.y - scroll->y),
+				texture, 1.0f, 1.0f, 0.0f, 0xFFFFFFFF
+			);
+		}
 	}
 }
+
