@@ -186,7 +186,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderEnemy(enemyHorming, scroll, handle.enemyHorming, player.pos.x, player.pos.y);
 			RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y);
 			RenderBullet(bullet, scroll, handle.bullet);
-			RenderKeys(bossKeys, scroll);
+			RenderKeys(bossKeys, scroll, texture.key18x38);
 			Novice::ScreenPrintf(0, 0, "keyCount : %d", remainingKeys);
 			Novice::ScreenPrintf(0, 20, "player.health : %d", player.health);
 

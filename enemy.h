@@ -72,7 +72,7 @@ void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]);
 
 void UpdateKeys(BossKeys keys[], Enemy enemy[]);
 void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[]);
-void RenderKeys(BossKeys keys[], Vector2 scroll);
+void RenderKeys(BossKeys keys[], Vector2 scroll, int& handle);
 
 void EnemyRange(Enemy enemy[], Enemy enemy1[]);
 
