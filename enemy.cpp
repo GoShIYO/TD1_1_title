@@ -119,6 +119,7 @@ void InitEnemyShot(Enemy enemy[]) {
 		enemy[i].radius = 16.0f;
 		enemy[i].shotTimer = 0;
 		enemy[i].isAlive = true;
+		enemy[i].isActive = false;
 		enemy[i].health = 1;
 	}
 }
