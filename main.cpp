@@ -159,6 +159,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			/// ↓描画処理ここから
 			UpdateScroll(&player, &scroll);
 			Novice::DrawBox(0, 0, kWindowWidth, kWindowHeight, 0, 0x002222FF, kFillModeSolid);	
+			Novice::DrawSprite(-3840 - int(scroll.x), -2160 - int(scroll.y), texture.bg7x7, 1, 1, 0, WHITE);
 			RenderMiniMap(obj, &scroll, &player);
 			RenderObj(obj, &scroll, texture);
 			RenderPlayer(&player, &scroll, &texture.player30_32,&texture.attackShield40x38);
