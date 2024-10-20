@@ -206,11 +206,11 @@ void EnemyMoveHorming(Enemy enemy[], Obj& player) {
 
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]) {
 	for (int i = 0;i < ENEMY_COUNT;i++) {
-		float distanceX = player.pos.x - enemy[i].pos.x;
-		float distanceY = player.pos.y - enemy[i].pos.y;
+		float distanceX = player.pos.x - enemy[i].pos.x + enemy[i].radius;
+		float distanceY = player.pos.y - enemy[i].pos.y + enemy[i].radius;
 		float distance = sqrtf(static_cast<float>(pow(distanceX, 2) + static_cast<float>(pow(distanceY, 2))));
 
-		if (!enemy[i].isActive && distance <= BULLET_ACTIVE_RANGE) {
+		if (!enemy[i].isActive && enemy[i].isAlive && distance <= BULLET_ACTIVE_RANGE) {
 			enemy[i].shotTimer++;
 			if (enemy[i].shotTimer >= SHOT_TIME) {
 				enemy[i].isActive = true;
@@ -314,8 +314,8 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, char keys[], char preKey
 
 void UpdatePlayerBulletEvent(Obj& player, EnemyBullet bullet[]) {
 	for (int i = 0;i < BULLET_COUNT;i++) {
-		float distanceX = player.pos.x - bullet[i].pos.x;
-		float distanceY = player.pos.y - bullet[i].pos.y;
+		float distanceX = player.pos.x - bullet[i].pos.x + bullet[i].radius;
+		float distanceY = player.pos.y - bullet[i].pos.y + bullet[i].radius;
 		float distance = sqrtf(static_cast<float>(pow(distanceX, 2) + static_cast<float>(pow(distanceY, 2))));
 
 		if (distance <= player.radius + bullet[i].radius) {
