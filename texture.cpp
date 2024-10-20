@@ -18,6 +18,7 @@
 	texture->player30_32 = Novice::LoadTexture("./Resources/player30_32.png");
 	texture->attackShield40x38 = Novice::LoadTexture("./Resources/Effect/attackShield40x38.png");
 	texture->bg7x7 = Novice::LoadTexture("./Resources/BG/bg7x7.png");
+	texture->key18x38 = Novice::LoadTexture("./Resources/key18x38.png");
 }
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////

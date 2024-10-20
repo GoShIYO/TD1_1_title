@@ -413,9 +413,9 @@ void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[]) {
 	}
 }
 
-void RenderKeys(BossKeys keys[], Vector2 scroll) {
+void RenderKeys(BossKeys keys[], Vector2 scroll, int& handle) {
 	for (int i = 0;i < keyCount;i++) {
-		Novice::DrawEllipse(int(keys[i].pos.x - scroll.x), int(keys[i].pos.y - scroll.y), (int)keys[i].width, (int)keys[i].height, 0.0f, 0xFF5555FF, kFillModeWireFrame);
+		Novice::DrawSprite(int(keys[i].pos.x - scroll.x), int(keys[i].pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
 	}
 }
 

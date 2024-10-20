@@ -25,6 +25,7 @@ struct AllResource final {
 	int player30_32;
 	int attackShield40x38;
 	int bg7x7;
+	int key18x38;
 };
 
 
