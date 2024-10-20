@@ -3,6 +3,7 @@
 #include<Vector2.h>
 #include<math.h>
 #include"texture.h"
+#include"sound.h"
 #define MAX_PARTICLES 1000
 
 extern const int kWindowWidth;
@@ -123,13 +124,13 @@ void viewDig(int* digFlat, int key1, int preKey1, int key2, int preKey2, int key
 /// <param name="obj"></param>
 /// <param name="keys"></param>
 /// <param name="preKeys"></param>
-void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]);
+void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[],Sound* sound);
 
 /// <summary>
 /// プレイヤーの移動範囲処理関数
 /// </summary>
 /// <param name="player">player</param>
-void checkPlayerMoveRange(Obj* player);
+void checkPlayerMoveRange(Obj* player, Sound* sound);
 
 /// <summary>
 /// プレイヤー描画

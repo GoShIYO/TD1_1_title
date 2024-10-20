@@ -3,6 +3,7 @@
 #include "obj.h"
 #include "enemy.h"
 #include "gimmickObj.h" 
+#include"sound.h"
 
 const char kWindowTitle[] = "5107_イノウエ_カン_ミハラ_リ";
 const int kWindowWidth = 1280;
@@ -51,6 +52,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Particle particles[MAX_PARTICLES];
 
+
+	Sound sound;
+	InitSound(&sound);
 
 	Scene scene = PLAY;
 	InitPlayer(&player);
@@ -108,8 +112,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				player.angle = (float)(M_PI) / 8.0f;
 			}
 
-			UpdatePlayer(&player, obj, keys, preKeys);
-			checkPlayerMoveRange(&player);
+			UpdatePlayer(&player, obj, keys, preKeys,&sound);
+			checkPlayerMoveRange(&player,&sound);
 			EmitParticle(particles, &player);
 			for (int i = 0; i < MAX_PARTICLES; i++) {
 				UpdateParticle(&particles[i]);
@@ -140,9 +144,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			EnemyRange(enemy, enemyHorming);
 
 			//敵の当たり判定
-			UpdatePlayerEnemyEvent(enemy, player, keys, preKeys);
-			UpdatePlayerEnemyEvent(enemyHorming, player, keys, preKeys);
-			UpdatePlayerEnemyEvent(enemyShot, player, keys, preKeys);
+			UpdatePlayerEnemyEvent(enemy, player,sound);
+			UpdatePlayerEnemyEvent(enemyHorming, player, sound);
+			UpdatePlayerEnemyEvent(enemyShot, player, sound);
 
 			//プレイヤーと弾の当たり判定
 			UpdatePlayerBulletEvent(player, bullet);

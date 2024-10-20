@@ -2,7 +2,7 @@
 #include"obj.h"
 #include<time.h>
 #include<stdlib.h>
-
+#include<assert.h>
 
 
 float Lerp(float start, float end, float t);
@@ -463,7 +463,12 @@ void RenderParticle(Particle particles[], Vector2* scroll) {
 	}
 }
 
-void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
+void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[],Sound* sound) {
+	assert(player != nullptr);
+	assert(obj != nullptr);
+	assert(keys != nullptr);
+	assert(preKeys != nullptr);
+	assert(sound != nullptr);
 
 	static float angleTmp = 0;
 	static float angle_dif = 0;
@@ -484,7 +489,10 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 	//攻撃処理
 	if (!player->isRotate) {
 		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
-			player->attack = true;			
+			player->attack = true;	
+			if (!Novice::IsPlayingAudio(sound->shield.play) && player->atTimer == 60) {
+				sound->shield.play = Novice::PlayAudio(sound->shield.audio, 0, 1.0f);
+			}
 		}
 	}
 	if (player->attack && player->atTimer > 0) {
@@ -528,6 +536,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 
 	if (player->isRotate) {
 		//Novice::ScreenPrintf(700, 45, "angle_dif = %.10f", angle_dif);
+		Novice::StopAudio(sound->player_move.play);
 		angle_dif = angle_difference(angleTmp, player->angle);
 
 		player->pos.x = objPosTmp.x + radiusTmp * cosf(angleTmp);
@@ -564,12 +573,15 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 	else {
 		player->pos.x += player->velocity.x * cosf(player->angle);
 		player->pos.y += player->velocity.y * sinf(player->angle);
+		if (!Novice::IsPlayingAudio(sound->player_move.play)) {
+			sound->player_move.play = Novice::PlayAudio(sound->player_move.audio, 1, 0.2f);
+		}
 	}
 
 	//Novice::ScreenPrintf(700, 30, "player.angle = %.10f  angle = %.10f", player->angle, angleTmp);
 }
 
-void checkPlayerMoveRange(Obj* player) {
+void checkPlayerMoveRange(Obj* player,Sound* sound) {
 	const int rangeWidthMin = -kWindowWidth * 2 + 100;
 	const int rangeWidthMax = kWindowWidth * 3 - 100;
 	const int rangeHeightMin = -kWindowHeight * 2 + 100;
@@ -578,11 +590,17 @@ void checkPlayerMoveRange(Obj* player) {
 	if (player->pos.x + player->radius > rangeWidthMax ||
 		player->pos.x - player->radius < rangeWidthMin) {
 		player->angle = float(M_PI) - player->angle;
+		if (!Novice::IsPlayingAudio(sound->collision_wall.play)) {
+			sound->collision_wall.play = Novice::PlayAudio(sound->collision_wall.audio, 0, 0.7f);
+		}
 	}
 
 	if (player->pos.y + player->radius > rangeHeightMax ||
 		player->pos.y - player->radius < rangeHeightMin) {
 		player->angle = -player->angle;
+		if (!Novice::IsPlayingAudio(sound->collision_wall.play)) {
+			sound->collision_wall.play = Novice::PlayAudio(sound->collision_wall.audio, 0, 0.7f);
+		}
 	}
 
 	//Novice::ScreenPrintf(700, 80, "player.pos x = %.2f  y = %.2f", player->pos.x, player->pos.y);

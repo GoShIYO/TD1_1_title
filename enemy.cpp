@@ -277,7 +277,7 @@ bool CheckCircleCollision(Vector2& a, Vector2& b, const float& radiusA, const fl
 	}
 	return false;
 }
-void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, char keys[], char preKeys[]) {
+void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player,Sound& sound) {
 	const float r = 50.0f;
 	for (int i = 0;i < ENEMY_COUNT;i++) {
 		if (enemy[i].isAlive) {
@@ -286,11 +286,11 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, char keys[], char preKey
 				if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius, player.radius) && !player.isCollied) {
 					player.isCollied = true;
 					player.health--;
-				}
-				if (player.attack) {
-					if (keys && !preKeys) {
-
+					if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
+						sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 1.0f);
 					}
+				}
+				if (player.attack) {					
 					if (!player.isRotate) {
 						float dx = player.pos.x - enemy[i].pos.x;
 						float dy = player.pos.y - enemy[i].pos.y;

@@ -8,6 +8,7 @@
 #define ENEMY_COUNT 20
 #include <Vector2.h>
 #include "obj.h"
+#include"sound.h"
 
 extern int remainingKeys;
 
@@ -81,6 +82,6 @@ void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle);
 void EnemyDebug(EnemyBullet bullet[]);
 void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]);
 
-void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, char keys[], char preKeys[]);
+void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player,Sound& sound);
 
 void UpdatePlayerBulletEvent(Obj& player, EnemyBullet bullet[]);
