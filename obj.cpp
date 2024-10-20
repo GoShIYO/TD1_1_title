@@ -362,9 +362,9 @@ float SetRotedSpeed(int* const objType) {
 	}
 	return speed;
 }
-void RenderMiniMap(Obj obj[], Vector2* scroll, Obj* player) {
+void RenderMiniMap(Obj obj[], Obj* player) {
 	for (int i = 0; i < objCount; i++) {
-		Novice::ScreenPrintf(int(obj[i].pos.x - scroll->x), int(obj[i].pos.y - scroll->y), "%d", i);
+		//Novice::ScreenPrintf(int(obj[i].pos.x - scroll->x), int(obj[i].pos.y - scroll->y), "%d", i);
 		Novice::DrawEllipse(
 			int(obj[i].pos.x / 20 + kWindowWidth * 5 / 6.0f), int(obj[i].pos.y / 20 + kWindowHeight / 8.0f),
 			int(obj[i].radius / 20), int(obj[i].radius / 20),
@@ -495,7 +495,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 		player->attack = false;
 	}
 	
-	Novice::ScreenPrintf(0, 200, "player.iTimer = %d", player->InvincibleTimer);
+	//Novice::ScreenPrintf(0, 200, "player.iTimer = %d", player->InvincibleTimer);
 
 	for (int i = 0; i < objCount; i++) {
 		float dx = player->pos.x - obj[i].pos.x;
@@ -527,7 +527,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 	}
 
 	if (player->isRotate) {
-		Novice::ScreenPrintf(700, 45, "angle_dif = %.10f", angle_dif);
+		//Novice::ScreenPrintf(700, 45, "angle_dif = %.10f", angle_dif);
 		angle_dif = angle_difference(angleTmp, player->angle);
 
 		player->pos.x = objPosTmp.x + radiusTmp * cosf(angleTmp);
@@ -566,7 +566,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[]) {
 		player->pos.y += player->velocity.y * sinf(player->angle);
 	}
 
-	Novice::ScreenPrintf(700, 30, "player.angle = %.10f  angle = %.10f", player->angle, angleTmp);
+	//Novice::ScreenPrintf(700, 30, "player.angle = %.10f  angle = %.10f", player->angle, angleTmp);
 }
 
 void checkPlayerMoveRange(Obj* player) {
@@ -585,7 +585,7 @@ void checkPlayerMoveRange(Obj* player) {
 		player->angle = -player->angle;
 	}
 
-	Novice::ScreenPrintf(700, 80, "player.pos x = %.2f  y = %.2f", player->pos.x, player->pos.y);
+	//Novice::ScreenPrintf(700, 80, "player.pos x = %.2f  y = %.2f", player->pos.x, player->pos.y);
 }
 void UpdateScroll(Obj* player, Vector2* scroll) {
 

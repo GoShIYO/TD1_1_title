@@ -308,9 +308,9 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, char keys[], char preKey
 		if (enemy[i].health <= 0) {
 			enemy[i].isAlive = false;
 		}
-		Novice::ScreenPrintf(0, 60, "player.health : %d", player.health);
-		Novice::ScreenPrintf(0, 80, "enemy.health : %d", enemy[i].health);
-		Novice::ScreenPrintf(0, 100, "enemy.isAlive : %s", enemy[i].isAlive ? "alive" : "death");
+		//Novice::ScreenPrintf(0, 60, "player.health : %d", player.health);
+		//Novice::ScreenPrintf(0, 80, "enemy.health : %d", enemy[i].health);
+		//Novice::ScreenPrintf(0, 100, "enemy.isAlive : %s", enemy[i].isAlive ? "alive" : "death");
 	}
 
 }

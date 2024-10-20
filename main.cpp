@@ -160,7 +160,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			UpdateScroll(&player, &scroll);
 			Novice::DrawBox(0, 0, kWindowWidth, kWindowHeight, 0, 0x002222FF, kFillModeSolid);	
 			Novice::DrawSprite(-3840 - int(scroll.x), -2160 - int(scroll.y), texture.bg7x7, 1, 1, 0, WHITE);
-			RenderMiniMap(obj, &scroll, &player);
+			RenderMiniMap(obj, &player);
 			RenderObj(obj, &scroll, texture);
 			RenderPlayer(&player, &scroll, &texture.player30_32,&texture.attackShield40x38);
 			RenderParticle(particles, &scroll);
@@ -180,7 +180,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y);
 			RenderBullet(bullet, scroll, handle.bullet);
 			RenderKeys(bossKeys, scroll);
-			Novice::ScreenPrintf(100, 100, "keyCount : %d", remainingKeys);
+			//Novice::ScreenPrintf(100, 100, "keyCount : %d", remainingKeys);
 
 			// デバッグ表示
 			viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);

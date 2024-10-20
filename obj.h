@@ -157,7 +157,7 @@ void EmitParticle(Particle particles[], Obj* player);
 /// MINI MAP 描画
 /// </summary>
 /// <param name="obj"></param>
-void RenderMiniMap(Obj obj[], Vector2* scroll, Obj* player);
+void RenderMiniMap(Obj obj[], Obj* player);
 
 /// <summary>
 /// 星描画
