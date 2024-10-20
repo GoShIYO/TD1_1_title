@@ -1,8 +1,9 @@
 ﻿#pragma once
 #define MOVE_TIME 60
 #define STOP_TIME 120
-#define SHOT_TIME 60
-#define BULLET_COUNT 20
+#define SHOT_TIME 180
+#define BULLET_COUNT 100
+#define BULLET_ACTIVE_RANGE 500.0f
 #define ENEMY_TO_PLAYER 500.0f
 #define ENEMY_COUNT 20
 #include <Vector2.h>
@@ -44,6 +45,7 @@ struct EnemyBullet {
 	float magnitude;
 	float width;
 	float height;
+	float radius;
 	int graphHnadle;
 	bool isActive;
 };
@@ -80,3 +82,5 @@ void EnemyDebug(EnemyBullet bullet[]);
 void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]);
 
 void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, char keys[], char preKeys[]);
+
+void UpdatePlayerBulletEvent(Obj& player, EnemyBullet bullet[]);

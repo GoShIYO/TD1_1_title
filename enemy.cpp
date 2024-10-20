@@ -134,6 +134,9 @@ void InitEnemyBullet(EnemyBullet bullet[]) {
 		bullet[i].directions.x = 0.0f;
 		bullet[i].directions.y = 0.0f;
 		bullet[i].magnitude = 0.0f;
+		bullet[i].width = 25.0f;
+		bullet[i].height = 25.0f;
+		bullet[i].radius = 12.5f;
 		bullet[i].isActive = false;
 	}
 }
@@ -202,35 +205,35 @@ void EnemyMoveHorming(Enemy enemy[], Obj& player) {
 
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]) {
 	for (int i = 0;i < ENEMY_COUNT;i++) {
-		if (!enemy[i].isActive) {
+		float distanceX = player.pos.x - enemy[i].pos.x;
+		float distanceY = player.pos.y - enemy[i].pos.y;
+		float distance = sqrtf(static_cast<float>(pow(distanceX, 2) + static_cast<float>(pow(distanceY, 2))));
+
+		if (!enemy[i].isActive && distance <= BULLET_ACTIVE_RANGE) {
 			enemy[i].shotTimer++;
 			if (enemy[i].shotTimer >= SHOT_TIME) {
 				enemy[i].isActive = true;
 			}
 		}
-	}
-	for (int i = 0;i < ENEMY_COUNT;i++) {
 		for (int j = 0;j < BULLET_COUNT;j++) {
 			if (!bullet[j].isActive && enemy[i].isActive) {
 				bullet[j].pos.x = enemy[i].pos.x;
 				bullet[j].pos.y = enemy[i].pos.y;
 				bullet[j].isActive = true;
+				bullet[j].components.x = player.pos.x - bullet[j].pos.x;
+				bullet[j].components.y = player.pos.y - bullet[j].pos.y;
+				bullet[j].magnitude = (float)sqrt(pow(bullet[j].components.x, 2) + pow(bullet[j].components.y, 2));
+				bullet[j].directions.x = bullet[j].components.x / bullet[j].magnitude;
+				bullet[j].directions.y = bullet[j].components.y / bullet[j].magnitude;
+				bullet[j].isActive = true;
+				enemy[i].isActive = false;
+				enemy[i].shotTimer = 0;
 				break;
 			}
 		}
 	}
 
 	for (int j = 0;j < BULLET_COUNT;j++) {
-		if (!bullet[j].isActive) {
-			bullet[j].components.x = player.pos.x - bullet[j].pos.x;
-			bullet[j].components.y = player.pos.y - bullet[j].pos.y;
-			bullet[j].magnitude = (float)sqrt(pow(bullet[j].components.x, 2) + pow(bullet[j].components.y, 2));
-			bullet[j].directions.x = bullet[j].components.x / bullet[j].magnitude;
-			bullet[j].directions.y = bullet[j].components.y / bullet[j].magnitude;
-			bullet[j].isActive = true;
-			enemy[j].shotTimer = 0;
-			break;
-		}
 		if (bullet[j].isActive) {
 			bullet[j].pos.x += bullet[j].directions.x * bullet[j].velocity.x;
 			bullet[j].pos.y += bullet[j].directions.y * bullet[j].velocity.y;
@@ -262,13 +265,6 @@ void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle) {
 		Novice::DrawSprite(int(bullet[i].pos.x - scroll.x), int(bullet[i].pos.y - scroll.y), handle, 1, 1, 0.0f, 0xFFFFFF99);
 	}
 }
-
-//void EnemyDebug(EnemyBullet bullet[]) {
-//	for (int i = 0;i < 5;i++) {
-//		Novice::ScreenPrintf(0, 100 * i, "bullet.pos.x : %f", bullet[i].pos.x);
-//		Novice::ScreenPrintf(100, 100 * i, "bullet.pos.y : %f", bullet[i].pos.y);
-//	}
-//}
 
 bool CheckCircleCollision(Vector2& a, Vector2& b, const float& radiusA, const float& radiusB) {
 	float x = a.x - b.x;
@@ -313,6 +309,21 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, char keys[], char preKey
 		//Novice::ScreenPrintf(0, 100, "enemy.isAlive : %s", enemy[i].isAlive ? "alive" : "death");
 	}
 
+}
+
+void UpdatePlayerBulletEvent(Obj& player, EnemyBullet bullet[]) {
+	for (int i = 0;i < BULLET_COUNT;i++) {
+		float distanceX = player.pos.x - bullet[i].pos.x;
+		float distanceY = player.pos.y - bullet[i].pos.y;
+		float distance = sqrtf(static_cast<float>(pow(distanceX, 2) + static_cast<float>(pow(distanceY, 2))));
+
+		if (distance <= player.radius + bullet[i].radius) {
+			player.health--;
+			bullet[i].pos.x = -10000.0f;
+			bullet[i].pos.y = -10000.0f;
+			bullet[i].isActive = false;
+		}
+	}
 }
 
 void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {

@@ -144,6 +144,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			UpdatePlayerEnemyEvent(enemyHorming, player, keys, preKeys);
 			UpdatePlayerEnemyEvent(enemyShot, player, keys, preKeys);
 
+			//プレイヤーと弾の当たり判定
+			UpdatePlayerBulletEvent(player, bullet);
+
 			// ギミックオブジェクトの更新
 			UpdateGimmickObjs(gimmickObjs, player);
 
@@ -180,7 +183,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y);
 			RenderBullet(bullet, scroll, handle.bullet);
 			RenderKeys(bossKeys, scroll);
-			//Novice::ScreenPrintf(100, 100, "keyCount : %d", remainingKeys);
+			Novice::ScreenPrintf(0, 0, "keyCount : %d", remainingKeys);
+			Novice::ScreenPrintf(0, 20, "player.health : %d", player.health);
 
 			// デバッグ表示
 			viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
