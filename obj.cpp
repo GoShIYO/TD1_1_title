@@ -19,7 +19,7 @@ void InitPlayer(Obj* player) {
 	player->width = 32.0f;
 	player->height = 30.0f;
 	player->isRotate = false;
-	player->health = 3;
+	player->health = 10000;
 	player->InvincibleTimer = 60;
 	player->isCollied = false;
 	player->atTimer = 60;
