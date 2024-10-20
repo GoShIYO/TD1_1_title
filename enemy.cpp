@@ -273,9 +273,9 @@ void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle) {
 bool CheckCircleCollision(Vector2& a, Vector2& b, const float& radiusA, const float& radiusB) {
 	float x = a.x - b.x;
 	float y = a.y - b.y;
-	float distence = x * x + y * y;
+	float distance = x * x + y * y;
 	float radius = radiusA + radiusB;
-	if (distence <= radius * radius) {
+	if (distance <= radius * radius) {
 		return true;
 	}
 	return false;
