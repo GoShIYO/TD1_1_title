@@ -251,6 +251,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			/// ↑更新処理ここまで
 			/// ---------------------------------------------------------------------
 			/// ↓描画処理ここから
+			Novice::ScreenPrintf(0,100,"x:%f,y:%f",player.pos.x,player.pos.y);
 			UpdateScroll(&player, &scroll);
 			//Novice::DrawBox(0, 0, kWindowWidth, kWindowHeight, 0, 0x002222FF, kFillModeSolid);
 			Novice::DrawSprite(
