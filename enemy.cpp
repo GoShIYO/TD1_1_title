@@ -1,4 +1,5 @@
 #define _USE_MATH_DEFINES
+#define ANIM_COUNT 240
 #include "enemy.h"
 #include <math.h>
 #include <Novice.h>
@@ -137,8 +138,30 @@ void InitEnemyBullet(EnemyBullet bullet[]) {
 		bullet[i].magnitude = 0.0f;
 		bullet[i].width = 25.0f;
 		bullet[i].height = 25.0f;
+		bullet[i].imageWidth = 300.0f;
+		bullet[i].imageHeight = 25.0f;
 		bullet[i].radius = 12.5f;
+		bullet[i].moveX = 0;
+		bullet[i].animTimer = 0;
 		bullet[i].isActive = false;
+	}
+}
+
+void InitBossKeys(BossKeys keys[], Enemy enemy[]) {
+	keys[0].pos.x = enemy[0].pos.x + enemy[0].radius;
+	keys[0].pos.y = enemy[0].pos.y + enemy[0].radius;
+	keys[1].pos.x = enemy[5].pos.x + enemy[0].radius;
+	keys[1].pos.y = enemy[5].pos.y + enemy[0].radius;
+	keys[2].pos.x = enemy[10].pos.x + enemy[0].radius;
+	keys[2].pos.y = enemy[10].pos.y + enemy[0].radius;
+	keys[3].pos.x = enemy[15].pos.x + enemy[0].radius;
+	keys[3].pos.y = enemy[15].pos.y + enemy[0].radius;
+	for (int i = 0;i < keyCount;i++) {
+		keys[i].width = 18.0f;
+		keys[i].height = 38.0f;
+		keys[i].radius = 8.0f;
+		keys[i].isHit = false;
+		keys[i].isPosSet = false;
 	}
 }
 
@@ -263,7 +286,23 @@ void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle, float px, float py) 
 
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle) {
 	for (int i = 0;i < BULLET_COUNT;i++) {
-		Novice::DrawSprite(int(bullet[i].pos.x - scroll.x), int(bullet[i].pos.y - scroll.y), handle, 1, 1, 0.0f, 0xFFFFFF99);
+		Novice::DrawSpriteRect(int(bullet[i].pos.x - scroll.x), int(bullet[i].pos.y - scroll.y), bullet[i].moveX, 0, 
+			(int)bullet[i].width, (int)bullet[i].height, handle, (bullet[i].imageHeight / bullet[i].imageWidth), 1, 0.0f, 0xFFFFFFFF);
+	}
+}
+
+void BulletAnim(EnemyBullet bullet[]) {
+	for (int i = 0;i < BULLET_COUNT;i++) {
+		if (bullet[i].isActive) {
+			bullet[i].animTimer++;
+			if (bullet[i].animTimer >= ANIM_COUNT) {
+				bullet[i].animTimer = 0;
+				bullet[i].moveX = 0;
+			}
+			if (bullet[i].animTimer % 20 == 0) {
+				bullet[i].moveX += static_cast<int>(bullet[i].width);
+			}
+		}
 	}
 }
 
@@ -277,7 +316,7 @@ bool CheckCircleCollision(Vector2& a, Vector2& b, const float& radiusA, const fl
 	}
 	return false;
 }
-void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player,Sound& sound) {
+void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound) {
 	const float r = 50.0f;
 	for (int i = 0;i < ENEMY_COUNT;i++) {
 		if (enemy[i].isAlive) {
@@ -290,7 +329,7 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player,Sound& sound) {
 						sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 1.0f);
 					}
 				}
-				if (player.attack) {					
+				if (player.attack) {
 					if (!player.isRotate) {
 						float dx = player.pos.x - enemy[i].pos.x;
 						float dy = player.pos.y - enemy[i].pos.y;
@@ -379,24 +418,9 @@ void EnemyRange(Enemy enemy[], Enemy enemy1[]) {
 	}
 }
 
-void UpdateKeys(BossKeys keys[], Enemy enemy[]) {
-	if (!keys[0].isHit) {
-		keys[0].pos.x = enemy[0].pos.x + enemy[0].radius;
-		keys[0].pos.y = enemy[0].pos.y + enemy[0].radius;
-	}
-	if (!keys[1].isHit) {
-		keys[1].pos.x = enemy[5].pos.x + enemy[0].radius;
-		keys[1].pos.y = enemy[5].pos.y + enemy[0].radius;
-	}
-	if (!keys[2].isHit) {
-		keys[2].pos.x = enemy[10].pos.x + enemy[0].radius;
-		keys[2].pos.y = enemy[10].pos.y + enemy[0].radius;
-	}
-	if (!keys[3].isHit) {
-		keys[3].pos.x = enemy[15].pos.x + enemy[0].radius;
-		keys[3].pos.y = enemy[15].pos.y + enemy[0].radius;
-	}
-}
+//void UpdateKeys(BossKeys keys[], Enemy enemy[]) {
+//
+//}
 
 void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[],Sound& sound) {
 	for (int i = 0;i < keyCount;i++) {
@@ -426,6 +450,6 @@ void LoadImages(Handle& handle) {
 	handle.enemy = Novice::LoadTexture("./Resources/Enemy/EnemyStopBoom32.png");
 	handle.enemyHorming = Novice::LoadTexture("./Resources/Enemy/enemyFollow30.png");
 	handle.enemyShot = Novice::LoadTexture("./Resources/Enemy/enemyShot30.png");
-	handle.bullet = Novice::LoadTexture("./Resources/bullet.png");
+	handle.bullet = Novice::LoadTexture("./Resources/Enemy/enemyBullet.png");
 	handle.deathEffect = Novice::LoadTexture("./Resources/effect.png");
 }
