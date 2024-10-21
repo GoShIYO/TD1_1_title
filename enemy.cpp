@@ -398,7 +398,7 @@ void UpdateKeys(BossKeys keys[], Enemy enemy[]) {
 	}
 }
 
-void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[]) {
+void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[],Sound& sound) {
 	for (int i = 0;i < keyCount;i++) {
 		float distanceX = player.pos.x - keys[i].pos.x;
 		float distanceY = player.pos.y - keys[i].pos.y;
@@ -409,6 +409,9 @@ void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[]) {
 			keys[i].pos.x = -10000.0f;
 			keys[i].pos.y = -10000.0f;
 			remainingKeys--;
+			if (!Novice::IsPlayingAudio(sound.key.play)) {
+				sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
+			}
 		}
 	}
 }

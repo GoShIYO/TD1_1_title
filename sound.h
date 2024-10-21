@@ -12,6 +12,7 @@ struct Sound
 	AudioHandle collision_wall;
 	AudioHandle enemy_dead;
 	AudioHandle shield;
+	AudioHandle key;
 };
 
 void InitSound(Sound* sound);

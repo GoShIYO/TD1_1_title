@@ -156,7 +156,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//鍵の更新
 			UpdateKeys(bossKeys, enemyShot);
-			UpdatePlayerKeyEvent(player, bossKeys);
+			UpdatePlayerKeyEvent(player, bossKeys,sound);
 
 			if (player.health <= 0) {
 				scene = GAME_OVER;
@@ -166,7 +166,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			/// ↓描画処理ここから
 			UpdateScroll(&player, &scroll);
 			Novice::DrawBox(0, 0, kWindowWidth, kWindowHeight, 0, 0x002222FF, kFillModeSolid);	
-			Novice::DrawSprite(-3840 - int(scroll.x * 0.5f), -2160 - int(scroll.y * 0.5f), texture.bg7x7, 1, 1, 0, WHITE);
+			Novice::DrawSprite(-3840 - int(scroll.x), -2160 - int(scroll.y), texture.bg7x7, 1, 1, 0, WHITE);
 			RenderMiniMap(obj, &player);
 			RenderObj(obj, &scroll, texture);
 			RenderPlayer(&player, &scroll, &texture.player30_32,&texture.attackShield50_48);
