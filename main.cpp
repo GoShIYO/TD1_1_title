@@ -65,14 +65,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	initializeResource(&texture);
 	InitGimmickObjs(gimmickObjs);
 
-	Vector2 earthStar = { -1480.0f,-280.0f };
-	Vector2 textStart = { 565.0f,1540.0f };
+	Vector2 earthStar = { -980.0f,-280.0f };
+	Vector2 textStart = { 565.0f,940.0f };
 	Vector2 title = { 150.0f,-216.0f };
 	Vector2 titlePlayer = { 1380.0f, 920.0f };
 	Vector2 titleParticles = { 1705.0f, 1105.0f };
 	float scale = 1500;
 	float titleTimer = 0;
-	bool isGameStart = false;
+	float startTimer = 0;
+	float titleEarthAngle = 0;
+	bool isPlayTitleAnimation= true;
+	bool isSceneChange = false;
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
@@ -90,28 +93,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		switch (scene)
 		{
 		case TITLE:
-			isGameStart = true;
-			if (isGameStart) {
+			if (isPlayTitleAnimation) {
 				if (titleTimer < 1.0f) {
 					titleTimer += 0.005f;
 				}
+				else {
+					isPlayTitleAnimation = false;
+				}
 				Novice::ScreenPrintf(0, 0, "%.04f", titleTimer);
-				earthStar.x = EaseOutElastic(-1480.0f, -480.0f, titleTimer);
+				earthStar.x = EaseOutElastic(-980.0f, -480.0f, titleTimer);
 				title.y = EaseOutElastic(-216.0f, -16.0f, titleTimer);
 				titlePlayer.x = EaseOutElastic(1380.0f, 880.0f, titleTimer);
 				titlePlayer.y = EaseOutElastic(920.0f, 420.0f, titleTimer);
-				titleParticles.x = EaseOutElastic(1705.0f, 1205.0f, titleTimer);
-				titleParticles.y = EaseOutElastic(1105.0f, 605.0f, titleTimer);
-				textStart.y = EaseOutElastic(1540.0f, 540.0f, titleTimer);
+				titleParticles.x = EaseOutElastic(1700.0f, 1200.0f, titleTimer);
+				titleParticles.y = EaseOutElastic(1100.0f, 600.0f, titleTimer);
+				textStart.y = EaseOutElastic(940.0f, 540.0f, titleTimer);
 			}
 			else {
 				titleTimer = 0;
 			}
 
+
 			Novice::DrawSprite(0, 0, texture.BG3_3, 1, 1, 0, WHITE);
-			Novice::DrawSprite(int(earthStar.x) , int(earthStar.y), texture.earthStar1000, scale / 1000.0f, scale / 1000.0f, 0, WHITE);
+			Novice::DrawSprite(int(earthStar.x) , int(earthStar.y), texture.earthStar1000, scale / 1000.0f, scale / 1000.0f, titleEarthAngle, WHITE);
 			Novice::DrawSprite(int(title.x), int(title.y), texture.title932x430, 1, 1, 0, WHITE);
-			Novice::DrawSprite(int(titlePlayer.x), int(titlePlayer.y), texture.titlePlayer337x279, 1, 1, 0, WHITE);
 			Novice::DrawSprite(int(textStart.x), int(textStart.y), texture.textStart151x56, 1, 1, 0, WHITE);
 			for (int i = 0; i < MAX_PARTICLES; i++) {
 				if (!particles[i].isActive) {
@@ -129,10 +134,33 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						0, particles[i].color, kFillModeSolid);
 				}
 			}
-			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
-				scene = PLAY;
-			}
+			Novice::DrawSprite(int(titlePlayer.x), int(titlePlayer.y), texture.titlePlayer337x279, 1, 1, 0, WHITE);
 
+
+
+			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN] && !isSceneChange && !isPlayTitleAnimation) {
+				isSceneChange = true;
+				startTimer = 0;
+			}
+			if (isSceneChange) {
+				Novice::ScreenPrintf(0, 20, "%.04f", startTimer);
+				startTimer += 0.01f;
+				earthStar.x = EaseOutCubic(-980.0f, obj[0].pos.x + 20, startTimer);
+				earthStar.y = EaseOutCubic(-280.0f, obj[0].pos.y - 80, startTimer);
+				scale = EaseOutCubic(1500.0f, 131.0f, startTimer);
+				titleEarthAngle = EaseOutCubic(0, 1.0f, startTimer);
+
+				title.y = EaseOutCubic(-16.0f ,-616.0f, startTimer);
+				titlePlayer.x = EaseOutCubic(880.0f, player.pos.x, startTimer);
+				titlePlayer.y = EaseOutCubic(420.0f, player.pos.y, startTimer);
+				titleParticles.x = EaseOutCubic(1200.0f,player.pos.x - player.width / 2.0f * cosf(player.angle), startTimer);
+				titleParticles.y = EaseOutCubic(600.0f, player.pos.y - player.height / 2.0f * sinf(player.angle), startTimer);
+				textStart.y = EaseOutCubic(540.0f,940.0f, startTimer);
+
+				if (startTimer > 1) {
+					scene = PLAY;
+				}
+			}
 			if (scene == PLAY) {
 				InitPlayer(&player);
 				InitObj(obj);
