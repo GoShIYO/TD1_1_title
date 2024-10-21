@@ -122,22 +122,22 @@ void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
 				gimmickObjs[4].moveDir *= -1;
 			}
 
-			gimmickObjs[5].obj.pos.x += 2.0f * gimmickObjs[5].moveDir;
+			gimmickObjs[5].obj.pos.x += 1.0f * gimmickObjs[5].moveDir;
 			if (gimmickObjs[5].obj.pos.x >= 2700 || gimmickObjs[5].obj.pos.x <= 2300.0f) {
 				gimmickObjs[5].moveDir *= -1;
 			}
 
-			gimmickObjs[6].obj.pos.y += 2.0f * gimmickObjs[6].moveDir;
+			gimmickObjs[6].obj.pos.y += 1.0f * gimmickObjs[6].moveDir;
 			if (gimmickObjs[6].obj.pos.y >= 1900.0f || gimmickObjs[6].obj.pos.y <= 1400.0f) {
 				gimmickObjs[6].moveDir *= -1;
 			}
 
-			gimmickObjs[7].obj.pos.x -= 3.0f * gimmickObjs[7].moveDir;
+			gimmickObjs[7].obj.pos.x -= 1.0f * gimmickObjs[7].moveDir;
 			if (gimmickObjs[7].obj.pos.x >= 3640.0f || gimmickObjs[7].obj.pos.x <= 2840.0f) {
 				gimmickObjs[7].moveDir *= -1;
 			}
 
-			gimmickObjs[8].obj.pos.y -= 2.0f * gimmickObjs[8].moveDir;
+			gimmickObjs[8].obj.pos.y -= 1.0f * gimmickObjs[8].moveDir;
 			if (gimmickObjs[8].obj.pos.y >= 1960.0f || gimmickObjs[8].obj.pos.y <= 1700.0f) {
 				gimmickObjs[8].moveDir *= -1;
 			}
