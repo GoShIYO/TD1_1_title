@@ -4,6 +4,7 @@
 #include "enemy.h"
 #include "gimmickObj.h" 
 #include"sound.h"
+#include"number.h"
 
 const char kWindowTitle[] = "5107_イノウエ_カン_ミハラ_リ";
 const int kWindowWidth = 1280;
@@ -65,6 +66,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	initializeResource(&texture);
 	InitGimmickObjs(gimmickObjs);
 
+	UI ui;
+	InitUI(ui);
+
+	//アニメション用変数
 	Vector2 earthStar = { -980.0f,-280.0f };
 	Vector2 textStart = { 565.0f,940.0f };
 	Vector2 title = { 150.0f,-216.0f };
@@ -191,7 +196,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				player.angle = (float)(M_PI) / 8.0f;
 			}
 
-			UpdatePlayer(&player, obj, keys, preKeys, &sound);
+			UpdatePlayer(&player, obj, keys, preKeys, &sound,&ui);
 			checkPlayerMoveRange(&player, &sound);
 			EmitParticle(particles, &player);
 			for (int i = 0; i < MAX_PARTICLES; i++) {
@@ -253,7 +258,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				-2160 - int(scroll.y * 0.5f),
 				texture.bg7x7, 1, 1, 0, WHITE);
 			RenderObj(obj, &scroll, texture);
-			RenderPlayer(&player, &scroll, &texture.player30_32, &texture.attackShield50_48);
+			RenderPlayer(&player, &scroll, &texture,&ui);
 			RenderParticle(particles, &scroll);
 			Novice::DrawSprite(
 				-3 * kWindowWidth - int(scroll.x),
@@ -272,6 +277,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//ミニマップ
 			RenderMiniMap(obj, &player);
 			RenderMiniMapEnemy(enemy, enemyHorming, enemyShot);
+
+			showNumber(ui.score.x, ui.score.y,5, player.score, 18, 25, texture.textNumber18_25);
 			//DEBUG INFO
 			Novice::ScreenPrintf(0, 0, "keyCount : %d", remainingKeys);
 			Novice::ScreenPrintf(0, 20, "player.health : %d", player.health);

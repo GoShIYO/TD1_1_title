@@ -43,6 +43,7 @@ void InitEnemyNormal(Enemy enemy[]) {
 		enemy[i].isAlive = true;
 		enemy[i].isMove = false;
 		enemy[i].health = 1;
+		enemy[i].score = 100;
 	}
 }
 
@@ -86,6 +87,8 @@ void InitEnemyHorming(Enemy enemy[]) {
 		enemy[i].isAlive = true;
 		enemy[i].isMove = false;
 		enemy[i].health = 1;
+		enemy[i].score = 200;
+
 	}
 }
 
@@ -122,6 +125,7 @@ void InitEnemyShot(Enemy enemy[]) {
 		enemy[i].isAlive = true;
 		enemy[i].isActive = false;
 		enemy[i].health = 1;
+		enemy[i].score = 150;
 	}
 }
 
@@ -337,6 +341,7 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound) {
 						player.angle += angle;
 					}
 					enemy[i].health--;
+					player.score += enemy[i].score;
 				}
 			}
 		}

@@ -2,6 +2,16 @@
 #include <Novice.h>
 #include <Vector2.h>
 
+
+struct UI
+{
+	Vector2 score;
+	Vector2 damageShield;
+	unsigned int damageShieldColor;
+	Vector2 life;
+	unsigned int lifeColor;
+	Vector2 marker;
+};
 /// <summary>
 /// show number by texture
 /// </summary>
@@ -26,3 +36,5 @@ void showNumber(float x, float y, int mn, int n, int w, int h, int texture);
 /// <param name="texture's height"></param>
 /// <param name="texture handle"></param>
 void showFloatNumber(float x, float y, int mn, int mnf, float n, int w, int h, int texture);
+
+void InitUI(UI& ui);

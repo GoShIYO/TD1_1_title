@@ -4,6 +4,7 @@
 #include<math.h>
 #include"texture.h"
 #include"sound.h"
+#include"number.h"
 #define MAX_PARTICLES 1000
 
 extern const int kWindowWidth;
@@ -44,6 +45,7 @@ struct Obj
 	int InvincibleTimer;
 	int type;
 	int atTimer;
+	int score;
 };
 struct Rect
 {
@@ -118,7 +120,7 @@ void viewDig(int* digFlat, int key1, int preKey1, int key2, int preKey2, int key
 /// <param name="obj"></param>
 /// <param name="keys"></param>
 /// <param name="preKeys"></param>
-void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[],Sound* sound);
+void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[],Sound* sound,UI* ui);
 
 /// <summary>
 /// プレイヤーの移動範囲処理関数
@@ -130,7 +132,7 @@ void checkPlayerMoveRange(Obj* player, Sound* sound);
 /// プレイヤー描画
 /// </summary>
 /// <param name="player"></param>
-void RenderPlayer(Obj* player,Vector2* scroll,int* handle, int* handle2);
+void RenderPlayer(Obj* player,Vector2* scroll, AllResource* handle, UI* ui);
 
 /// <summary>
 /// パーティクル更新処理
@@ -174,6 +176,7 @@ float EaseOutLerp(float start, float end, float t);
 float EaseOutCubic(float start, float end, float t);
 float EaseOutElastic(float start, float end, float t);
 float EaseInBounce(float start, float end, float t);
+unsigned int RgbaAnimation(unsigned int color, float t);
 
 void InitParticle(Particle* p, float x, float y, float direction);
 void UpdateParticle(Particle* particles);

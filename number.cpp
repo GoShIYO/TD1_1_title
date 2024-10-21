@@ -1,6 +1,5 @@
 #include "number.h"
 
-
 void showNumber(float x, float y, int mn, int n, int w, int h, int texture) {
 	int number[10];
 	float numberPosX[10];
@@ -128,4 +127,14 @@ void showFloatNumber(float x, float y, int mn, int mnf, float n, int w, int h, i
 				int((number[j] - 1 + (number[j] == 0) * 10) * (int)w), 0, w, h, texture, 0xFFFFFFFF);
 		}
 	}
+}
+
+void InitUI(UI& ui)
+{
+	ui.score = { 10,690 };
+	ui.damageShield = { 0 };
+	ui.life = { 0 };
+	ui.marker = { 0 };
+	ui.damageShieldColor = 0xFFFFFFFF;
+	ui.lifeColor = 0xFFFFFFFF;
 }

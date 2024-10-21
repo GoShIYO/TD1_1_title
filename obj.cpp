@@ -16,11 +16,12 @@ void InitPlayer(Obj* player) {
 	player->height = 30.0f;
 	player->isRotate = false;
 	player->health = 10000;
-	player->InvincibleTimer = 60;
+	player->InvincibleTimer = 90;
 	player->attack = false;
 	player->isCollied = false;
 	player->atTimer = 60;
 	player->isAdapt = false;
+	player->score = 0;
 }
 void InitObj(Obj obj[]) {
 	srand(static_cast<unsigned int>(time(NULL)));
@@ -198,7 +199,20 @@ Rect RectRotedPlayer(const Vector2* pos, float width, float height, float angle)
 	return points;
 }
 
-void RenderPlayer(Obj* player, Vector2* scroll, int* handle, int* handle2) {
+void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle,UI* ui) {
+	static int life = 0;
+	if (player->health > 2) {
+		life = 0;
+	}
+	else if (player->health <= 2 && player->health > 1) {
+		life = 1;
+	}
+	else if (player->health == 1) {
+		life = 2;
+	}
+	else {
+		life = 3;
+	}
 	Rect points = RectRotedPlayer(&player->pos, player->width, player->height, player->angle);
 	Vector2 a = points.a;
 	Vector2 b = points.b;
@@ -220,7 +234,7 @@ void RenderPlayer(Obj* player, Vector2* scroll, int* handle, int* handle2) {
 			int(c.x - scroll->x), int(c.y - scroll->y),
 			int(d.x - scroll->x), int(d.y - scroll->y),
 			0, 0, int(player->width), int(player->height),
-			*handle, WHITE
+			handle->player30_32, WHITE
 		);
 		if (player->attack) {
 
@@ -235,18 +249,36 @@ void RenderPlayer(Obj* player, Vector2* scroll, int* handle, int* handle2) {
 				int(cp.x - scroll->x), int(cp.y - scroll->y),
 				int(dp.x - scroll->x), int(dp.y - scroll->y),
 				0, 0, 50, 48,
-				*handle2, color
+				handle->attackShield50_48, color
 			);
 		}
 	}
-	if (player->InvincibleTimer % 5 == 0 && player->isCollied) {
+	if (player->isCollied){
+		Rect shieldRect = RectRotedPlayer(&player->pos, 56.0f, 56.0f, player->angle);
+		Vector2 ap = shieldRect.a;
+		Vector2 bp = shieldRect.b;
+		Vector2 cp = shieldRect.c;
+		Vector2 dp = shieldRect.d;
+		Novice::DrawQuad(
+			int(ap.x - scroll->x), int(ap.y - scroll->y),
+			int(bp.x - scroll->x), int(bp.y - scroll->y),
+			int(cp.x - scroll->x), int(cp.y - scroll->y),
+			int(dp.x - scroll->x), int(dp.y - scroll->y),
+			0, 0, 56, 56,
+			handle->damageShield56, ui->damageShieldColor
+		);
+		Novice::DrawSpriteRect(
+			int(player->pos.x + 50 - scroll->x), int(player->pos.y - 50 - scroll->y),
+			life * 22, 0,22,30, handle->life30x22, 1 / 4.0f, 1, 0, ui->lifeColor);
+	}
+	if (player->InvincibleTimer % 8 == 0 && player->isCollied) {
 		Novice::DrawQuad(
 			int(a.x - scroll->x), int(a.y - scroll->y),
 			int(b.x - scroll->x), int(b.y - scroll->y),
 			int(c.x - scroll->x), int(c.y - scroll->y),
 			int(d.x - scroll->x), int(d.y - scroll->y),
 			0, 0, int(player->width), int(player->height),
-			*handle, WHITE
+			handle->player30_32, WHITE
 		);
 	}
 
@@ -458,6 +490,19 @@ float EaseOutElastic(float start, float end, float t) {
 		return start + t * (end - start);
 	}
 }
+unsigned int RgbaAnimation(unsigned int color, float t) {
+	unsigned int rTmp = (color >> 24) & 0xFF;
+	unsigned int gTmp = (color >> 16) & 0xFF;
+	unsigned int bTmp = (color >> 8) & 0xFF;
+	unsigned int aTmp = color & 0xFF;
+
+	unsigned int r = (unsigned int)EaseOutLerp(float(rTmp), float(rTmp), t);
+	unsigned int g = (unsigned int)EaseOutLerp(float(gTmp), float(gTmp), t);
+	unsigned int b = (unsigned int)EaseOutLerp(float(bTmp), float(bTmp), t);
+	unsigned int a = (unsigned int)(EaseOutLerp(float(aTmp), 0x00, t));
+
+	return ((r << 24) | (g << 16) | (b << 8) | a);
+}
 //パーティクル更新処理
 void UpdateParticle(Particle* particles) {
 
@@ -493,7 +538,7 @@ void RenderParticle(Particle particles[], Vector2* scroll) {
 	}
 }
 
-void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* sound) {
+void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* sound,UI*ui) {
 	assert(player != nullptr);
 	assert(obj != nullptr);
 	assert(keys != nullptr);
@@ -511,11 +556,15 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 	//無敵時間処理
 	if (player->isCollied && player->InvincibleTimer > 0) {
 		player->InvincibleTimer--;
+		ui->damageShieldColor = RgbaAnimation(WHITE,1 - float(player->InvincibleTimer / 90.0f));
+		ui->lifeColor = RgbaAnimation(WHITE, 1 - float(player->InvincibleTimer / 90.0f));
 	}
 	else {
-		player->InvincibleTimer = 60;
+		player->InvincibleTimer = 90;
 		player->isCollied = false;
+		ui->damageShieldColor = WHITE;
 	}
+	
 	//攻撃処理
 	if (!player->isRotate) {
 		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
