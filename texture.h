@@ -23,7 +23,7 @@ struct AllResource final {
 	int sandStar100_130;
 	int sun65_160;
 	int player30_32;
-	int attackShield40x38;
+	int attackShield50_48;
 	int bg7x7;
 	int key18x38;
 };

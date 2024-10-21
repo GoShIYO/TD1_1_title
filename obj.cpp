@@ -147,7 +147,7 @@ void InitSystem(System* system) {
 }
 
 void InitBossKeys(BossKeys keys[]) {
-	for (int i = 0;i < keyCount;i++) {
+	for (int i = 0; i < keyCount; i++) {
 		keys[i].pos.x = -10000.0f;
 		keys[i].pos.y = -10000.0f;
 		keys[i].width = 18.0f;
@@ -190,41 +190,42 @@ void viewDig(int* digFlat, int key1, int preKey1, int key2, int preKey2, int key
 		Novice::ScreenPrintf(sx + 5, sy + 185, "Page%8d ", (*digFlat - 1) / 2);
 	}
 }
-Rect RectRotedPoint(const Obj* player) {
+Rect RectRotedPlayer(const Vector2* pos, float width, float height, float angle) {
 	Rect points;
-	const Vector2 ap = { -player->width / 2.0f , -player->height / 2.0f };
-	const Vector2 bp = { player->width / 2.0f , -player->height / 2.0f };
-	const Vector2 cp = { -player->width / 2.0f , player->height / 2.0f };
-	const Vector2 dp = { player->width / 2.0f ,  player->height / 2.0f };
+	const Vector2 ap = { -width / 2.0f , -height / 2.0f };
+	const Vector2 bp = { width / 2.0f , -height / 2.0f };
+	const Vector2 cp = { -width / 2.0f , height / 2.0f };
+	const Vector2 dp = { width / 2.0f ,  height / 2.0f };
 
-	points.a.x = ap.x * cosf(player->angle) - ap.y * sinf(player->angle) + player->pos.x;
-	points.a.y = ap.y * cosf(player->angle) + ap.x * sinf(player->angle) + player->pos.y;
+	points.a.x = ap.x * cosf(angle) - ap.y * sinf(angle) + pos->x;
+	points.a.y = ap.y * cosf(angle) + ap.x * sinf(angle) + pos->y;
 
-	points.b.x = bp.x * cosf(player->angle) - bp.y * sinf(player->angle) + player->pos.x;
-	points.b.y = bp.y * cosf(player->angle) + bp.x * sinf(player->angle) + player->pos.y;
+	points.b.x = bp.x * cosf(angle) - bp.y * sinf(angle) + pos->x;
+	points.b.y = bp.y * cosf(angle) + bp.x * sinf(angle) + pos->y;
 
-	points.c.x = cp.x * cosf(player->angle) - cp.y * sinf(player->angle) + player->pos.x;
-	points.c.y = cp.y * cosf(player->angle) + cp.x * sinf(player->angle) + player->pos.y;
+	points.c.x = cp.x * cosf(angle) - cp.y * sinf(angle) + pos->x;
+	points.c.y = cp.y * cosf(angle) + cp.x * sinf(angle) + pos->y;
 
-	points.d.x = dp.x * cosf(player->angle) - dp.y * sinf(player->angle) + player->pos.x;
-	points.d.y = dp.y * cosf(player->angle) + dp.x * sinf(player->angle) + player->pos.y;
+	points.d.x = dp.x * cosf(angle) - dp.y * sinf(angle) + pos->x;
+	points.d.y = dp.y * cosf(angle) + dp.x * sinf(angle) + pos->y;
 
 	return points;
 }
-void RenderPlayer(Obj* player, Vector2* scroll, int* handle,int* handle2) {
-	Rect points = RectRotedPoint(player);
+
+void RenderPlayer(Obj* player, Vector2* scroll, int* handle, int* handle2) {
+	Rect points = RectRotedPlayer(&player->pos, player->width, player->height, player->angle);
 	Vector2 a = points.a;
 	Vector2 b = points.b;
 	Vector2 c = points.c;
 	Vector2 d = points.d;
 
-	float t = 1-(player->atTimer / 60.0f);
+	float t = 1 - (player->atTimer / 60.0f);
 	static unsigned int color = WHITE;
 
 	unsigned int red = (unsigned int)Lerp(0xFF, 0xFF, t);
 	unsigned int green = (unsigned int)Lerp(0xFF, 0xFF, t);
 	unsigned int blue = (unsigned int)Lerp(0xFF, 0xFF, t);
-	unsigned int alpha = (unsigned int)(Lerp(0xFF, 0x00, t));
+	unsigned int alpha = (unsigned int)(Lerp(0xF0, 0x00, t));
 	color = ((red << 24) | (green << 16) | (blue << 8) | alpha);
 	if (!player->isCollied) {
 		Novice::DrawQuad(
@@ -236,12 +237,18 @@ void RenderPlayer(Obj* player, Vector2* scroll, int* handle,int* handle2) {
 			*handle, WHITE
 		);
 		if (player->attack) {
+
+			Rect s_points = RectRotedPlayer(&player->pos, 50.0f, 48.0f, player->angle);
+			Vector2 ap = s_points.a;
+			Vector2 bp = s_points.b;
+			Vector2 cp = s_points.c;
+			Vector2 dp = s_points.d;
 			Novice::DrawQuad(
-				int(a.x - scroll->x), int(a.y - scroll->y),
-				int(b.x - scroll->x), int(b.y - scroll->y),
-				int(c.x - scroll->x), int(c.y - scroll->y),
-				int(d.x - scroll->x), int(d.y - scroll->y),
-				0, 0, 40, 38,
+				int(ap.x - scroll->x), int(ap.y - scroll->y),
+				int(bp.x - scroll->x), int(bp.y - scroll->y),
+				int(cp.x - scroll->x), int(cp.y - scroll->y),
+				int(dp.x - scroll->x), int(dp.y - scroll->y),
+				0, 0, 50, 48,
 				*handle2, color
 			);
 		}
@@ -256,7 +263,7 @@ void RenderPlayer(Obj* player, Vector2* scroll, int* handle,int* handle2) {
 			*handle, WHITE
 		);
 	}
-	
+
 
 }
 void RenderObj(Obj obj[], Vector2* scroll, AllResource& texture) {
@@ -437,15 +444,15 @@ void UpdateParticle(Particle* particles) {
 		particles->pos.y += particles->velocity.y;
 
 		particles->life -= 0.01f;
-		float t = 1.0f - particles->life;	
+		float t = 1.0f - particles->life;
 
-		
+
 		unsigned int r = (unsigned int)EaseOutCubic(0xf4, 0x27, t);
 		unsigned int g = (unsigned int)EaseOutCubic(0xbb, 0x69, t);
 		unsigned int b = (unsigned int)EaseOutCubic(0xf2, 0xcd, t);
 		unsigned int a = (unsigned int)(EaseOutLerp(0xFF, 0x00, t));
 
-		particles->color = ( (r << 24) | (g << 16) | (b<<8) | a);
+		particles->color = ((r << 24) | (g << 16) | (b << 8) | a);
 		if (particles->life <= 0) {
 			particles->isActive = false;
 		}
@@ -463,7 +470,7 @@ void RenderParticle(Particle particles[], Vector2* scroll) {
 	}
 }
 
-void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[],Sound* sound) {
+void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* sound) {
 	assert(player != nullptr);
 	assert(obj != nullptr);
 	assert(keys != nullptr);
@@ -485,11 +492,11 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[],Sound* sou
 	else {
 		player->InvincibleTimer = 60;
 		player->isCollied = false;
-	}	
+	}
 	//攻撃処理
 	if (!player->isRotate) {
 		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
-			player->attack = true;	
+			player->attack = true;
 			if (!Novice::IsPlayingAudio(sound->shield.play) && player->atTimer == 60) {
 				sound->shield.play = Novice::PlayAudio(sound->shield.audio, 0, 1.0f);
 			}
@@ -502,7 +509,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[],Sound* sou
 		player->atTimer = 60;
 		player->attack = false;
 	}
-	
+
 	//Novice::ScreenPrintf(0, 200, "player.iTimer = %d", player->InvincibleTimer);
 
 	for (int i = 0; i < objCount; i++) {
@@ -547,7 +554,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[],Sound* sou
 			t += lerpSpeed;
 		}
 
-		player->angle = Lerp(player->angle, angleTmp,t);
+		player->angle = Lerp(player->angle, angleTmp, t);
 
 		if (t > 0.3f) {
 			player->isAdapt = false;
@@ -581,7 +588,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[],Sound* sou
 	//Novice::ScreenPrintf(700, 30, "player.angle = %.10f  angle = %.10f", player->angle, angleTmp);
 }
 
-void checkPlayerMoveRange(Obj* player,Sound* sound) {
+void checkPlayerMoveRange(Obj* player, Sound* sound) {
 	const int rangeWidthMin = -kWindowWidth * 2 + 100;
 	const int rangeWidthMax = kWindowWidth * 3 - 100;
 	const int rangeHeightMin = -kWindowHeight * 2 + 100;

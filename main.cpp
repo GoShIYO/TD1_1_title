@@ -166,10 +166,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			/// ↓描画処理ここから
 			UpdateScroll(&player, &scroll);
 			Novice::DrawBox(0, 0, kWindowWidth, kWindowHeight, 0, 0x002222FF, kFillModeSolid);	
-			Novice::DrawSprite(-3840 - int(scroll.x), -2160 - int(scroll.y), texture.bg7x7, 1, 1, 0, WHITE);
+			Novice::DrawSprite(-3840 - int(scroll.x * 0.5f), -2160 - int(scroll.y * 0.5f), texture.bg7x7, 1, 1, 0, WHITE);
 			RenderMiniMap(obj, &player);
 			RenderObj(obj, &scroll, texture);
-			RenderPlayer(&player, &scroll, &texture.player30_32,&texture.attackShield40x38);
+			RenderPlayer(&player, &scroll, &texture.player30_32,&texture.attackShield50_48);
 			RenderParticle(particles, &scroll);
 			//for (int i = 0; i < objCount; i++) {
 			//	showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.bubble60_90, 0xFFAAAAFF,&scroll);
