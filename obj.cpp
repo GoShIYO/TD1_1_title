@@ -359,7 +359,7 @@ float SetRotedSpeed(int* const objType) {
 	return speed;
 }
 void RenderMiniMap(Obj obj[], Obj* player) {
-	Novice::DrawBox(950, 28, 310, 160, 0, 0x100824A0, kFillModeSolid);
+	Novice::DrawBox(945, 25, 320, 165, 0, 0x100824A0, kFillModeSolid);
 	for (int i = 0; i < objCount; i++) {
 		//Novice::ScreenPrintf(int(obj[i].pos.x - scroll->x), int(obj[i].pos.y - scroll->y), "%d", i);
 		Novice::DrawEllipse(
