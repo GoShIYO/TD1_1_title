@@ -173,12 +173,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				-3840 - int(scroll.x * 0.5f), 
 				-2160 - int(scroll.y * 0.5f), 
 				texture.bg7x7, 1, 1, 0, WHITE);
-			RenderMiniMap(obj, &player);
 			RenderObj(obj, &scroll, texture);
 			RenderPlayer(&player, &scroll, &texture.player30_32, &texture.attackShield50_48);
-			RenderParticle(particles, &scroll);
-
-			RenderMiniMapEnemy(enemy, enemyHorming, enemyShot);
+			RenderParticle(particles, &scroll);			
 			Novice::DrawSprite(
 				-3 * kWindowWidth - int(scroll.x),
 				-3 * kWindowHeight - int(scroll.y),
@@ -193,6 +190,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y);
 			RenderBullet(bullet, scroll, handle.bullet);
 			RenderKeys(bossKeys, scroll, texture.key18x38);
+			//ミニマップ
+			RenderMiniMap(obj, &player);
+			RenderMiniMapEnemy(enemy, enemyHorming, enemyShot);
+			//DEBUG INFO
 			Novice::ScreenPrintf(0, 0, "keyCount : %d", remainingKeys);
 			Novice::ScreenPrintf(0, 20, "player.health : %d", player.health);
 			Novice::ScreenPrintf(0, 40, "moveX : %d", bullet[0].moveX);

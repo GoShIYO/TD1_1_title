@@ -11,6 +11,7 @@ struct Resource final {
 };
 
 struct AllResource final {
+	//OBJ
 	int bubble60_90;
 	int earthStar100_130;
 	int electricStar65_160;
@@ -24,6 +25,7 @@ struct AllResource final {
 	int sun65_160;
 	int player30_32;
 	int attackShield50_48;
+	//SCENE
 	int bg7x7;
 	int key18x38;
 	int GameClear;
@@ -34,6 +36,13 @@ struct AllResource final {
 	int title932x430;
 	int titlePlayer337x279;
 	int outsideRockWall;
+	//UI
+	int damageShield56;
+	int life30x22;
+	int marker20;
+	int textNumber18_25;
+	int textScore84_25;
+	int textScores53x65;
 };
 
 

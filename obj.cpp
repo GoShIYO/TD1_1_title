@@ -21,6 +21,7 @@ void InitPlayer(Obj* player) {
 	player->isRotate = false;
 	player->health = 10000;
 	player->InvincibleTimer = 60;
+	player->attack = false;
 	player->isCollied = false;
 	player->atTimer = 60;
 	player->isAdapt = false;
@@ -358,6 +359,7 @@ float SetRotedSpeed(int* const objType) {
 	return speed;
 }
 void RenderMiniMap(Obj obj[], Obj* player) {
+	Novice::DrawBox(950, 28, 310, 160, 0, 0x100824A0, kFillModeSolid);
 	for (int i = 0; i < objCount; i++) {
 		//Novice::ScreenPrintf(int(obj[i].pos.x - scroll->x), int(obj[i].pos.y - scroll->y), "%d", i);
 		Novice::DrawEllipse(

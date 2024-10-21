@@ -27,6 +27,12 @@
 	texture->textStart151x56 = Novice::LoadTexture("./Resources/scene/textStart151x56.png");
 	texture->titlePlayer337x279 = Novice::LoadTexture("./Resources/scene/titlePlayer337x279.png");
 	texture->earthStar1000 = Novice::LoadTexture("./Resources/scene/earthStar1000.png");
+	texture->damageShield56 = Novice::LoadTexture("./Resources/UI/damageShield56.png");
+	texture->life30x22 = Novice::LoadTexture("./Resources/UI/life30x22.png");
+	texture->marker20 = Novice::LoadTexture("./Resources/UI/marker20.png");
+	texture->textNumber18_25 = Novice::LoadTexture("./Resources/UI/textNumber18_25.png");
+	texture->textScore84_25 = Novice::LoadTexture("./Resources/UI/textScore84_25.png");
+	texture->textScores53x65 = Novice::LoadTexture("./Resources/UI/textScores53x65.png");
 }
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////
