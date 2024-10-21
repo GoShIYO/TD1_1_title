@@ -11,6 +11,8 @@
 #include"sound.h"
 
 extern int remainingKeys;
+extern float move;
+extern float moveSpeed;
 
 enum EnemyDirection {
 	UP = 0,
@@ -76,7 +78,7 @@ void EnemyMoveHorming(Enemy enemy[], Obj& player);
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]);
 
 //void UpdateKeys(BossKeys keys[], Enemy enemy[]);
-void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[],Sound& sound);
+void UpdatePlayerKeyEvent(BossKeys keys[],Sound& sound, Enemy enemy[]);
 void RenderKeys(BossKeys keys[], Vector2 scroll, int& handle);
 
 void EnemyRange(Enemy enemy[], Enemy enemy1[]);

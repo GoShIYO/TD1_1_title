@@ -6,6 +6,8 @@
 #include <stdlib.h>
 
 int remainingKeys = keyCount;
+float move = 0.0f;
+float moveSpeed = 0.2f;
 
 void InitEnemyNormal(Enemy enemy[]) {
 	enemy[0].pos = { 0.0f, -120.0f };
@@ -286,7 +288,7 @@ void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle, float px, float py) 
 
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle) {
 	for (int i = 0;i < BULLET_COUNT;i++) {
-		Novice::DrawSpriteRect(int(bullet[i].pos.x - scroll.x), int(bullet[i].pos.y - scroll.y), bullet[i].moveX, 0, 
+		Novice::DrawSpriteRect(int(bullet[i].pos.x - scroll.x), int(bullet[i].pos.y - scroll.y), bullet[i].moveX, 0,
 			(int)bullet[i].width, (int)bullet[i].height, handle, (bullet[i].imageHeight / bullet[i].imageWidth), 1, 0.0f, 0xFFFFFFFF);
 	}
 }
@@ -391,29 +393,29 @@ void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {
 
 void EnemyRange(Enemy enemy[], Enemy enemy1[]) {
 	for (int i = 0;i < ENEMY_COUNT;i++) {
-		if (enemy[i].pos.x >= kWindowWidth * 3 - enemy[i].radius) {
-			enemy[i].pos.x = kWindowWidth * 3 - enemy[i].radius;
+		if (enemy[i].pos.x >= kWindowWidth * 3 - enemy[i].radius - 100.0f) {
+			enemy[i].pos.x = kWindowWidth * 3 - enemy[i].radius - 100.0f;
 		}
-		if (enemy1[i].pos.x >= kWindowWidth * 3 - enemy1[i].radius) {
-			enemy1[i].pos.x = kWindowWidth * 3 - enemy1[i].radius;
+		if (enemy1[i].pos.x >= kWindowWidth * 3 - enemy1[i].radius - 100.0f) {
+			enemy1[i].pos.x = kWindowWidth * 3 - enemy1[i].radius - 100.0f;
 		}
-		if (enemy[i].pos.x <= -kWindowWidth * 2 + enemy[i].radius) {
-			enemy[i].pos.x = -kWindowWidth * 2 + enemy[i].radius;
+		if (enemy[i].pos.x <= -kWindowWidth * 2 + enemy[i].radius + 100.0f) {
+			enemy[i].pos.x = -kWindowWidth * 2 + enemy[i].radius + 100.0f;
 		}
-		if (enemy1[i].pos.x <= -kWindowWidth * 2 + enemy1[i].radius) {
-			enemy1[i].pos.x = -kWindowWidth * 2 + enemy1[i].radius;
+		if (enemy1[i].pos.x <= -kWindowWidth * 2 + enemy1[i].radius + 100.0f) {
+			enemy1[i].pos.x = -kWindowWidth * 2 + enemy1[i].radius + 100.0f;
 		}
-		if (enemy[i].pos.y >= kWindowHeight * 3 - enemy[i].radius) {
-			enemy[i].pos.y = kWindowHeight * 3 - enemy[i].radius;
+		if (enemy[i].pos.y >= kWindowHeight * 3 - enemy[i].radius - 100.0f) {
+			enemy[i].pos.y = kWindowHeight * 3 - enemy[i].radius - 100.0f;
 		}
-		if (enemy1[i].pos.y >= kWindowHeight * 3 - enemy1[i].radius) {
-			enemy1[i].pos.y = kWindowHeight * 3 - enemy1[i].radius;
+		if (enemy1[i].pos.y >= kWindowHeight * 3 - enemy1[i].radius - 100.0f) {
+			enemy1[i].pos.y = kWindowHeight * 3 - enemy1[i].radius - 100.0f;
 		}
-		if (enemy[i].pos.y <= -kWindowHeight * 2 + enemy[i].radius) {
-			enemy[i].pos.y = -kWindowHeight * 2 + enemy[i].radius;
+		if (enemy[i].pos.y <= -kWindowHeight * 2 + enemy[i].radius + 100.0f) {
+			enemy[i].pos.y = -kWindowHeight * 2 + enemy[i].radius + 100.0f;
 		}
-		if (enemy1[i].pos.y <= -kWindowHeight * 2 + enemy1[i].radius) {
-			enemy1[i].pos.y = -kWindowHeight * 2 + enemy1[i].radius;
+		if (enemy1[i].pos.y <= -kWindowHeight * 2 + enemy1[i].radius + 100.0f) {
+			enemy1[i].pos.y = -kWindowHeight * 2 + enemy1[i].radius + 100.0f;
 		}
 	}
 }
@@ -422,27 +424,57 @@ void EnemyRange(Enemy enemy[], Enemy enemy1[]) {
 //
 //}
 
-void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[],Sound& sound) {
-	for (int i = 0;i < keyCount;i++) {
-		float distanceX = player.pos.x - keys[i].pos.x;
-		float distanceY = player.pos.y - keys[i].pos.y;
-		float distance = sqrtf(static_cast<float>(pow(distanceX, 2)) + static_cast<float>(pow(distanceY, 2)));
+void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[]) {
+	if (!enemy[0].isAlive && !keys[0].isHit) {
+		keys[0].isHit = true;
+		keys[0].pos.x = -10000.0f;
+		keys[0].pos.y = -10000.0f;
+		remainingKeys--;
+		if (!Novice::IsPlayingAudio(sound.key.play)) {
+			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
+		}
+	}
 
-		if (distance <= player.radius + keys[i].radius) {
-			keys[i].isHit = true;
-			keys[i].pos.x = -10000.0f;
-			keys[i].pos.y = -10000.0f;
-			remainingKeys--;
-			if (!Novice::IsPlayingAudio(sound.key.play)) {
-				sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
-			}
+	if (!enemy[5].isAlive && !keys[1].isHit) {
+		keys[1].isHit = true;
+		keys[1].pos.x = -10000.0f;
+		keys[1].pos.y = -10000.0f;
+		remainingKeys--;
+		if (!Novice::IsPlayingAudio(sound.key.play)) {
+			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
+		}
+	}
+
+	if (!enemy[10].isAlive && !keys[2].isHit) {
+		keys[2].isHit = true;
+		keys[2].pos.x = -10000.0f;
+		keys[2].pos.y = -10000.0f;
+		remainingKeys--;
+		if (!Novice::IsPlayingAudio(sound.key.play)) {
+			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
+		}
+	}
+
+	if (!enemy[15].isAlive && !keys[3].isHit) {
+		keys[3].isHit = true;
+		keys[3].pos.x = -10000.0f;
+		keys[3].pos.y = -10000.0f;
+		remainingKeys--;
+		if (!Novice::IsPlayingAudio(sound.key.play)) {
+			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
 		}
 	}
 }
 
 void RenderKeys(BossKeys keys[], Vector2 scroll, int& handle) {
+	move += moveSpeed;
+	if (move >= 2.0f || move <= -2.0f) {
+		moveSpeed *= -1;
+	}
 	for (int i = 0;i < keyCount;i++) {
-		Novice::DrawSprite(int(keys[i].pos.x - scroll.x), int(keys[i].pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
+		if (!keys[i].isHit) {
+			Novice::DrawSprite(int(keys[i].pos.x - scroll.x), int(keys[i].pos.y - scroll.y + move), handle, 1, 1, 0.0f, WHITE);
+		}
 	}
 }
 
