@@ -19,6 +19,13 @@
 	texture->attackShield50_48 = Novice::LoadTexture("./Resources/Effect/attackShield50x48.png");
 	texture->bg7x7 = Novice::LoadTexture("./Resources/BG/bg7x7.png");
 	texture->key18x38 = Novice::LoadTexture("./Resources/key18x38.png");
+	texture->GameClear = Novice::LoadTexture("./Resources/scene/GameClear.png");
+	texture->GameOver = Novice::LoadTexture("./Resources/scene/GameOver.png");
+	texture->ScoreBoard950x574 = Novice::LoadTexture("./Resources/scene/ScoreBoard950x574.png");
+	texture->title932x430 = Novice::LoadTexture("./Resources/scene/title932x430.png");
+	texture->textStart151x56 = Novice::LoadTexture("./Resources/scene/textStart151x56.png");
+	texture->titlePlayer337x279 = Novice::LoadTexture("./Resources/scene/titlePlayer337x279.png");
+	texture->earthStar1000 = Novice::LoadTexture("./Resources/scene/earthStar1000.png");
 }
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////

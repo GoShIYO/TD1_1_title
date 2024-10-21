@@ -112,8 +112,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				player.angle = (float)(M_PI) / 8.0f;
 			}
 
-			UpdatePlayer(&player, obj, keys, preKeys,&sound);
-			checkPlayerMoveRange(&player,&sound);
+			UpdatePlayer(&player, obj, keys, preKeys, &sound);
+			checkPlayerMoveRange(&player, &sound);
 			EmitParticle(particles, &player);
 			for (int i = 0; i < MAX_PARTICLES; i++) {
 				UpdateParticle(&particles[i]);
@@ -135,16 +135,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			}
 
-		//敵の移動処理
-		EnemyMove(enemy);
-		EnemyMoveHorming(enemyHorming, player);
-		BulletShot(enemyShot, player, bullet);
+			//敵の移動処理
+			EnemyMove(enemy);
+			EnemyMoveHorming(enemyHorming, player);
+			BulletShot(enemyShot, player, bullet);
 
 			//敵の移動制限
 			EnemyRange(enemy, enemyHorming);
 
 			//敵の当たり判定
-			UpdatePlayerEnemyEvent(enemy, player,sound);
+			UpdatePlayerEnemyEvent(enemy, player, sound);
 			UpdatePlayerEnemyEvent(enemyHorming, player, sound);
 			UpdatePlayerEnemyEvent(enemyShot, player, sound);
 
@@ -156,7 +156,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//鍵の更新
 			UpdateKeys(bossKeys, enemyShot);
-			UpdatePlayerKeyEvent(player, bossKeys,sound);
+			UpdatePlayerKeyEvent(player, bossKeys, sound);
 
 			if (player.health <= 0) {
 				scene = GAME_OVER;
@@ -165,11 +165,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			/// ---------------------------------------------------------------------
 			/// ↓描画処理ここから
 			UpdateScroll(&player, &scroll);
-			Novice::DrawBox(0, 0, kWindowWidth, kWindowHeight, 0, 0x002222FF, kFillModeSolid);	
+			Novice::DrawBox(0, 0, kWindowWidth, kWindowHeight, 0, 0x002222FF, kFillModeSolid);
 			Novice::DrawSprite(-3840 - int(scroll.x), -2160 - int(scroll.y), texture.bg7x7, 1, 1, 0, WHITE);
 			RenderMiniMap(obj, &player);
 			RenderObj(obj, &scroll, texture);
-			RenderPlayer(&player, &scroll, &texture.player30_32,&texture.attackShield50_48);
+			RenderPlayer(&player, &scroll, &texture.player30_32, &texture.attackShield50_48);
 			RenderParticle(particles, &scroll);
 			//for (int i = 0; i < objCount; i++) {
 			//	showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.bubble60_90, 0xFFAAAAFF,&scroll);
@@ -194,14 +194,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
 			break;
 		case GAME_OVER:
-			Novice::DrawSprite(0, 0, witeHandle, kWindowWidth, kWindowHeight, 0, 0xfabb01FF);
+			Novice::DrawSprite(0, 0, texture.GameOver, 1, 1, 0, 0xfabb01FF);
 
 			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
 				scene = TITLE;
 			}
 			break;
 		case CLEAR:
-			Novice::DrawSprite(0, 0, witeHandle, kWindowWidth, kWindowHeight, 0, 0x0078f3FF);
+			Novice::DrawSprite(0, 0, texture.GameClear, 1, 1, 0, 0x0078f3FF);
 
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
 				scene = TITLE;

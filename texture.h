@@ -26,6 +26,13 @@ struct AllResource final {
 	int attackShield50_48;
 	int bg7x7;
 	int key18x38;
+	int GameClear;
+	int GameOver;
+	int ScoreBoard950x574;
+	int textStart151x56;
+	int earthStar1000;
+	int title932x430;
+	int titlePlayer337x279;
 };
 
 
