@@ -46,8 +46,12 @@ struct EnemyBullet {
 	float magnitude;
 	float width;
 	float height;
+	float imageWidth;
+	float imageHeight;
 	float radius;
 	int graphHnadle;
+	int moveX;
+	int animTimer;
 	bool isActive;
 };
 
@@ -63,6 +67,7 @@ void InitEnemyNormal(Enemy enemy[]);
 void InitEnemyHorming(Enemy enemy[]);
 void InitEnemyShot(Enemy enemy[]);
 void InitEnemyBullet(EnemyBullet bullet[]);
+void InitBossKeys(BossKeys keys[], Enemy enemy[]);
 
 void LoadImages(Handle& handle);
 
@@ -70,7 +75,7 @@ void EnemyMove(Enemy enemy[]);
 void EnemyMoveHorming(Enemy enemy[], Obj& player);
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]);
 
-void UpdateKeys(BossKeys keys[], Enemy enemy[]);
+//void UpdateKeys(BossKeys keys[], Enemy enemy[]);
 void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[]);
 void RenderKeys(BossKeys keys[], Vector2 scroll, int& handle);
 
@@ -78,6 +83,8 @@ void EnemyRange(Enemy enemy[], Enemy enemy1[]);
 
 void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle, float px, float py);
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle);
+
+void BulletAnim(EnemyBullet bullet[]);
 
 void EnemyDebug(EnemyBullet bullet[]);
 void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]);
