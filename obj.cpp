@@ -4,10 +4,6 @@
 #include<stdlib.h>
 #include<assert.h>
 
-
-float Lerp(float start, float end, float t);
-float EaseOutLerp(float start, float end, float t);
-float EaseOutCubic(float start, float end, float t);
 /////////////////////////////////////////////////////////////////Normalization/////////////////////////////////////////////////////////////
 void InitPlayer(Obj* player) {
 	player->pos.x = 640.0f;
@@ -63,6 +59,7 @@ void InitObj(Obj obj[]) {
 		case SUN:
 			obj[i].type = SUN;
 			obj[i].radius = 40.0f;
+			break;
 		case WATER:
 			obj[i].type = WATER;
 			obj[i].radius = 58.0f;
@@ -424,6 +421,20 @@ float EaseOutLerp(float start, float end, float t) {
 float EaseOutCubic(float start, float end, float t) {
 	t = 1.0f - powf(1.0f - t, 3);
 	return start + t * (end - start);
+}
+float EaseOutElastic(float start, float end, float t) {
+	const float c4 = (2.0f * float(M_PI)) / 3.0f;
+
+	if (t == 0) {
+		return start;
+	}
+	else if (t == 1) {
+		return end;
+	}
+	else {
+		t = powf(2, -10 * t) * sinf((t * 10 - 0.75f) * c4) + 1;
+		return start + t * (end - start);
+	}
 }
 //パーティクル更新処理
 void UpdateParticle(Particle* particles) {

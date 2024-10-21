@@ -18,6 +18,7 @@
 	texture->player30_32 = Novice::LoadTexture("./Resources/player30_32.png");
 	texture->attackShield50_48 = Novice::LoadTexture("./Resources/Effect/attackShield50x48.png");
 	texture->bg7x7 = Novice::LoadTexture("./Resources/BG/bg7x7.png");
+	texture->BG3_3 = Novice::LoadTexture("./Resources/BG/BG3_3.png");
 	texture->outsideRockWall = Novice::LoadTexture("./Resources/BG/outsideRockWall.png");
 	texture->key18x38 = Novice::LoadTexture("./Resources/key18x38.png");
 	texture->GameClear = Novice::LoadTexture("./Resources/scene/GameClear.png");

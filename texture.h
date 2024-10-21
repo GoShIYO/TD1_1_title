@@ -27,6 +27,7 @@ struct AllResource final {
 	int attackShield50_48;
 	//SCENE
 	int bg7x7;
+	int BG3_3;
 	int key18x38;
 	int GameClear;
 	int GameOver;

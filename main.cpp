@@ -22,7 +22,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, kWindowWidth, kWindowHeight);
 
-	int witeHandle = Novice::LoadTexture("white1x1.png");
 	srand(static_cast<unsigned>(time(NULL)));
 
 	Obj player;
@@ -54,7 +53,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Sound sound;
 	InitSound(&sound);
 
-	Scene scene = PLAY;
+	Scene scene = TITLE;
 	InitPlayer(&player);
 	InitObj(obj);
 	InitEnemyNormal(enemy);
@@ -65,6 +64,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	InitSystem(&system);
 	initializeResource(&texture);
 	InitGimmickObjs(gimmickObjs);
+
+	Vector2 earthStar = { -1480.0f,-280.0f };
+	Vector2 textStart = { 565.0f,1540.0f };
+	Vector2 title = { 150.0f,-216.0f };
+	Vector2 titlePlayer = { 1380.0f, 920.0f };
+	Vector2 titleParticles = { 1705.0f, 1105.0f };
+	float scale = 1500;
+	float titleTimer = 0;
+	bool isGameStart = false;
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
@@ -82,7 +90,45 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		switch (scene)
 		{
 		case TITLE:
-			Novice::DrawSprite(0, 0, witeHandle, kWindowWidth, kWindowHeight, 0, 0xf0bce0FF);
+			isGameStart = true;
+			if (isGameStart) {
+				if (titleTimer < 1.0f) {
+					titleTimer += 0.005f;
+				}
+				Novice::ScreenPrintf(0, 0, "%.04f", titleTimer);
+				earthStar.x = EaseOutElastic(-1480.0f, -480.0f, titleTimer);
+				title.y = EaseOutElastic(-216.0f, -16.0f, titleTimer);
+				titlePlayer.x = EaseOutElastic(1380.0f, 880.0f, titleTimer);
+				titlePlayer.y = EaseOutElastic(920.0f, 420.0f, titleTimer);
+				titleParticles.x = EaseOutElastic(1705.0f, 1205.0f, titleTimer);
+				titleParticles.y = EaseOutElastic(1105.0f, 605.0f, titleTimer);
+				textStart.y = EaseOutElastic(1540.0f, 540.0f, titleTimer);
+			}
+			else {
+				titleTimer = 0;
+			}
+
+			Novice::DrawSprite(0, 0, texture.BG3_3, 1, 1, 0, WHITE);
+			Novice::DrawSprite(int(earthStar.x) , int(earthStar.y), texture.earthStar1000, scale / 1000.0f, scale / 1000.0f, 0, WHITE);
+			Novice::DrawSprite(int(title.x), int(title.y), texture.title932x430, 1, 1, 0, WHITE);
+			Novice::DrawSprite(int(titlePlayer.x), int(titlePlayer.y), texture.titlePlayer337x279, 1, 1, 0, WHITE);
+			Novice::DrawSprite(int(textStart.x), int(textStart.y), texture.textStart151x56, 1, 1, 0, WHITE);
+			for (int i = 0; i < MAX_PARTICLES; i++) {
+				if (!particles[i].isActive) {
+					InitParticle(
+						&particles[i], titleParticles.x, titleParticles.y, 0.8236f);
+					break;
+				}
+			}
+			for (int i = 0; i < MAX_PARTICLES; i++) {
+				UpdateParticle(&particles[i]);
+				if (particles[i].isActive) {
+					Novice::DrawEllipse(
+						int(particles[i].pos.x), int(particles[i].pos.y),
+						int(particles[i].size), int(particles[i].size),
+						0, particles[i].color, kFillModeSolid);
+				}
+			}
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
 				scene = PLAY;
 			}
@@ -159,7 +205,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//鍵の更新
 			//UpdateKeys(bossKeys, enemyShot);
-			UpdatePlayerKeyEvent(player, bossKeys,sound);
+			UpdatePlayerKeyEvent(player, bossKeys, sound);
 
 			if (player.health <= 0) {
 				scene = GAME_OVER;
@@ -170,16 +216,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			UpdateScroll(&player, &scroll);
 			//Novice::DrawBox(0, 0, kWindowWidth, kWindowHeight, 0, 0x002222FF, kFillModeSolid);
 			Novice::DrawSprite(
-				-3840 - int(scroll.x * 0.5f), 
-				-2160 - int(scroll.y * 0.5f), 
+				-3840 - int(scroll.x * 0.5f),
+				-2160 - int(scroll.y * 0.5f),
 				texture.bg7x7, 1, 1, 0, WHITE);
 			RenderObj(obj, &scroll, texture);
 			RenderPlayer(&player, &scroll, &texture.player30_32, &texture.attackShield50_48);
-			RenderParticle(particles, &scroll);			
+			RenderParticle(particles, &scroll);
 			Novice::DrawSprite(
 				-3 * kWindowWidth - int(scroll.x),
 				-3 * kWindowHeight - int(scroll.y),
-				texture.outsideRockWall,1, 1, 0, WHITE);
+				texture.outsideRockWall, 1, 1, 0, WHITE);
 
 
 			// ギミックオブジェクトの描画

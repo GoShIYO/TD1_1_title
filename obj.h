@@ -168,3 +168,11 @@ void RenderObj(Obj obj[], Vector2* scroll, AllResource& texture);
 /// <param name="player">プレイヤー</param>
 /// <param name="scroll">スクロール変数</param>
 void UpdateScroll(Obj* player, Vector2* scroll);
+
+float Lerp(float start, float end, float t);
+float EaseOutLerp(float start, float end, float t);
+float EaseOutCubic(float start, float end, float t);
+float EaseOutElastic(float start, float end, float t);
+
+void InitParticle(Particle* p, float x, float y, float direction);
+void UpdateParticle(Particle* particles);
