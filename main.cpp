@@ -151,10 +151,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				titleEarthAngle = EaseOutCubic(0, 1.0f, startTimer);
 
 				title.y = EaseOutCubic(-16.0f ,-616.0f, startTimer);
-				titlePlayer.x = EaseOutCubic(880.0f, player.pos.x, startTimer);
-				titlePlayer.y = EaseOutCubic(420.0f, player.pos.y, startTimer);
-				titleParticles.x = EaseOutCubic(1200.0f,player.pos.x - player.width / 2.0f * cosf(player.angle), startTimer);
-				titleParticles.y = EaseOutCubic(600.0f, player.pos.y - player.height / 2.0f * sinf(player.angle), startTimer);
+				titlePlayer.x = EaseInBounce(880.0f, -480.0f, startTimer);
+				titlePlayer.y = EaseInBounce(420.0f, -20.0f, startTimer);
+				titleParticles.x = EaseInBounce(1200.0f,-800.0f, startTimer);
+				titleParticles.y = EaseInBounce(600.0f, -200.0f, startTimer);
 				textStart.y = EaseOutCubic(540.0f,940.0f, startTimer);
 
 				if (startTimer > 1) {

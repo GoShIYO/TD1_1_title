@@ -173,6 +173,7 @@ float Lerp(float start, float end, float t);
 float EaseOutLerp(float start, float end, float t);
 float EaseOutCubic(float start, float end, float t);
 float EaseOutElastic(float start, float end, float t);
+float EaseInBounce(float start, float end, float t);
 
 void InitParticle(Particle* p, float x, float y, float direction);
 void UpdateParticle(Particle* particles);

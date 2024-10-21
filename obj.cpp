@@ -410,6 +410,24 @@ void EmitParticle(Particle particles[], Obj* player) {
 		}
 	}
 }
+float easeOutBounce(float t) {
+	if (t < 1 / 2.75f) {
+		return 7.5625f * t * t;
+	}
+	else if (t < 2 / 2.75f) {
+		t -= 1.5f / 2.75f;
+		return 7.5625f * t * t + 0.75f;
+	}
+	else if (t < 2.5 / 2.75) {
+		t -= 2.25f / 2.75f;
+		return 7.5625f * t * t + 0.9375f;
+	}
+	else {
+		t -= 2.625f / 2.75f;
+		return 7.5625f * t * t + 0.984375f;
+	}
+}
+
 //線形補間
 float Lerp(float start, float end, float t) {
 	return start + t * (end - start);
@@ -420,6 +438,10 @@ float EaseOutLerp(float start, float end, float t) {
 }
 float EaseOutCubic(float start, float end, float t) {
 	t = 1.0f - powf(1.0f - t, 3);
+	return start + t * (end - start);
+}
+float EaseInBounce(float start, float end, float t) {
+	t = 1.0f - easeOutBounce(1.0f - t);
 	return start + t * (end - start);
 }
 float EaseOutElastic(float start, float end, float t) {
