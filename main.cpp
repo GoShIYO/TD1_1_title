@@ -70,11 +70,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector2 title = { 150.0f,-216.0f };
 	Vector2 titlePlayer = { 1380.0f, 920.0f };
 	Vector2 titleParticles = { 1705.0f, 1105.0f };
-	float scale = 1500;
 	float titleTimer = 0;
 	float startTimer = 0;
+	float scale = 1500;
 	float titleEarthAngle = 0;
-	bool isPlayTitleAnimation= true;
+	bool isPlayTitleAnimation = true;
 	bool isSceneChange = false;
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
@@ -100,7 +100,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				else {
 					isPlayTitleAnimation = false;
 				}
-				Novice::ScreenPrintf(0, 0, "%.04f", titleTimer);
 				earthStar.x = EaseOutElastic(-980.0f, -480.0f, titleTimer);
 				title.y = EaseOutElastic(-216.0f, -16.0f, titleTimer);
 				titlePlayer.x = EaseOutElastic(1380.0f, 880.0f, titleTimer);
@@ -113,9 +112,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				titleTimer = 0;
 			}
 
+			Novice::ScreenPrintf(0, 0, "%.04f %.04f", earthStar.x, earthStar.y);
 
 			Novice::DrawSprite(0, 0, texture.BG3_3, 1, 1, 0, WHITE);
-			Novice::DrawSprite(int(earthStar.x) , int(earthStar.y), texture.earthStar1000, scale / 1000.0f, scale / 1000.0f, titleEarthAngle, WHITE);
+			Novice::DrawSprite(int(earthStar.x), int(earthStar.y), texture.earthStar1000, scale / 1000.0f, scale / 1000.0f, titleEarthAngle, WHITE);
 			Novice::DrawSprite(int(title.x), int(title.y), texture.title932x430, 1, 1, 0, WHITE);
 			Novice::DrawSprite(int(textStart.x), int(textStart.y), texture.textStart151x56, 1, 1, 0, WHITE);
 			for (int i = 0; i < MAX_PARTICLES; i++) {
@@ -145,19 +145,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (isSceneChange) {
 				Novice::ScreenPrintf(0, 20, "%.04f", startTimer);
 				startTimer += 0.01f;
-				earthStar.x = EaseOutCubic(-980.0f, obj[0].pos.x + 20, startTimer);
-				earthStar.y = EaseOutCubic(-280.0f, obj[0].pos.y - 80, startTimer);
+				earthStar.x = EaseOutCubic(-480.0f, obj[0].pos.x - 66, startTimer);
+				earthStar.y = EaseOutCubic(-280.0f, obj[0].pos.y - 66, startTimer);
 				scale = EaseOutCubic(1500.0f, 131.0f, startTimer);
-				titleEarthAngle = EaseOutCubic(0, 1.0f, startTimer);
+				titleEarthAngle = EaseOutCubic(0, float(M_PI) * 2, startTimer);
 
-				title.y = EaseOutCubic(-16.0f ,-616.0f, startTimer);
+				title.y = EaseOutCubic(-16.0f, -616.0f, startTimer);
 				titlePlayer.x = EaseInBounce(880.0f, -480.0f, startTimer);
 				titlePlayer.y = EaseInBounce(420.0f, -20.0f, startTimer);
-				titleParticles.x = EaseInBounce(1200.0f,-800.0f, startTimer);
+				titleParticles.x = EaseInBounce(1200.0f, -800.0f, startTimer);
 				titleParticles.y = EaseInBounce(600.0f, -200.0f, startTimer);
-				textStart.y = EaseOutCubic(540.0f,940.0f, startTimer);
+				textStart.y = EaseOutCubic(540.0f, 940.0f, startTimer);
 
 				if (startTimer > 1) {
+					isSceneChange = false;
+					scale = 1500.0f;
+					titleEarthAngle = 0;
+					earthStar = { -980.0f,-280.0f };
+
 					scene = PLAY;
 				}
 			}
@@ -274,11 +279,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			// デバッグ表示
 			viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
+
+			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
+				isPlayTitleAnimation = true;
+				isSceneChange = false;
+				titleTimer = 0;
+				startTimer = 0;
+
+				scene = TITLE;
+			}
 			break;
 		case GAME_OVER:
 			Novice::DrawSprite(0, 0, texture.GameOver, 1, 1, 0, 0xfabb01FF);
 
-			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
+				isPlayTitleAnimation = true;
+				isSceneChange = false;
+				titleTimer = 0;
+				startTimer = 0;
+
 				scene = TITLE;
 			}
 			break;
@@ -286,6 +305,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			Novice::DrawSprite(0, 0, texture.GameClear, 1, 1, 0, 0x0078f3FF);
 
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
+				isPlayTitleAnimation = true;
+				isSceneChange = false;
+				titleTimer = 0;
+				startTimer = 0;
+
 				scene = TITLE;
 			}
 			break;
