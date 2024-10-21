@@ -75,7 +75,7 @@ void EnemyMove(Enemy enemy[]);
 void EnemyMoveHorming(Enemy enemy[], Obj& player);
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]);
 
-void UpdateKeys(BossKeys keys[], Enemy enemy[]);
+//void UpdateKeys(BossKeys keys[], Enemy enemy[]);
 void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[],Sound& sound);
 void RenderKeys(BossKeys keys[], Vector2 scroll, int& handle);
 

@@ -158,7 +158,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			UpdateGimmickObjs(gimmickObjs, player);
 
 			//鍵の更新
-			UpdateKeys(bossKeys, enemyShot);
+			//UpdateKeys(bossKeys, enemyShot);
 			UpdatePlayerKeyEvent(player, bossKeys,sound);
 
 			if (player.health <= 0) {
