@@ -29,13 +29,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Obj obj[objCount];
 
-	BossKeys bossKeys[keyCount];
-	InitBossKeys(bossKeys);
-
 	Enemy enemy[ENEMY_COUNT];
 	Enemy enemyHorming[ENEMY_COUNT];
 	Enemy enemyShot[ENEMY_COUNT];
 
+	BossKeys bossKeys[keyCount];
 
 	EnemyBullet bullet[BULLET_COUNT];
 
@@ -63,6 +61,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	InitEnemyHorming(enemyHorming);
 	InitEnemyShot(enemyShot);
 	InitEnemyBullet(bullet);
+	InitBossKeys(bossKeys, enemyShot);
 	InitSystem(&system);
 	initializeResource(&texture);
 	InitGimmickObjs(gimmickObjs);
@@ -95,6 +94,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				InitEnemyHorming(enemyHorming);
 				InitEnemyShot(enemyShot);
 				InitEnemyBullet(bullet);
+				InitBossKeys(bossKeys, enemyShot);
 				InitSystem(&system);
 				initializeResource(&texture);
 				InitGimmickObjs(gimmickObjs); // ギミックオブジェクトの初期化
@@ -148,6 +148,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			UpdatePlayerEnemyEvent(enemyHorming, player, sound);
 			UpdatePlayerEnemyEvent(enemyShot, player, sound);
 
+			//弾のアニメーション
+			BulletAnim(bullet);
+
 			//プレイヤーと弾の当たり判定
 			UpdatePlayerBulletEvent(player, bullet);
 
@@ -189,6 +192,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderKeys(bossKeys, scroll, texture.key18x38);
 			Novice::ScreenPrintf(0, 0, "keyCount : %d", remainingKeys);
 			Novice::ScreenPrintf(0, 20, "player.health : %d", player.health);
+			Novice::ScreenPrintf(0, 40, "moveX : %d", bullet[0].moveX);
 
 			// デバッグ表示
 			viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);

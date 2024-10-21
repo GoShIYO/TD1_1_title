@@ -146,18 +146,6 @@ void InitSystem(System* system) {
 	system->digFlat = 0;
 }
 
-void InitBossKeys(BossKeys keys[]) {
-	for (int i = 0; i < keyCount; i++) {
-		keys[i].pos.x = -10000.0f;
-		keys[i].pos.y = -10000.0f;
-		keys[i].width = 18.0f;
-		keys[i].height = 38.0f;
-		keys[i].radius = 8.0f;
-		keys[i].isHit = false;
-		keys[i].isPosSet = false;
-	}
-}
-
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////
 
 void viewDig(int* digFlat, int key1, int preKey1, int key2, int preKey2, int key3, int preKey3) {

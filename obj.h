@@ -97,12 +97,6 @@ void InitObj(Obj obj[]);
 /// <param name="system"></param>
 void InitSystem(System* system);
 
-/// <summary>
-/// 鍵の初期化関数
-/// </summary>
-/// <param name="keys"></param>
-void InitBossKeys(BossKeys keys[]);
-
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////
 
 /// <summary>
