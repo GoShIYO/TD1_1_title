@@ -15,13 +15,16 @@ void InitPlayer(Obj* player) {
 	player->width = 32.0f;
 	player->height = 30.0f;
 	player->isRotate = false;
-	player->health = 10000;
+	player->health = 3;
 	player->InvincibleTimer = 90;
 	player->attack = false;
 	player->isCollied = false;
 	player->atTimer = 60;
 	player->isAdapt = false;
 	player->score = 0;
+	player->isDead = false;
+	player->deathTimer = 60;
+	player->deathPosTmp = { NULL,NULL };
 }
 void InitObj(Obj obj[]) {
 	srand(static_cast<unsigned int>(time(NULL)));
@@ -227,62 +230,77 @@ void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle,UI* ui) {
 	unsigned int blue = (unsigned int)Lerp(0xFF, 0xFF, t);
 	unsigned int alpha = (unsigned int)(Lerp(0xF0, 0x00, t));
 	color = ((red << 24) | (green << 16) | (blue << 8) | alpha);
-	if (!player->isCollied) {
-		Novice::DrawQuad(
-			int(a.x - scroll->x), int(a.y - scroll->y),
-			int(b.x - scroll->x), int(b.y - scroll->y),
-			int(c.x - scroll->x), int(c.y - scroll->y),
-			int(d.x - scroll->x), int(d.y - scroll->y),
-			0, 0, int(player->width), int(player->height),
-			handle->player30_32, WHITE
-		);
-		if (player->attack) {
+	if (!player->isDead) {
 
-			Rect s_points = RectRotedPlayer(&player->pos, 50.0f, 48.0f, player->angle);
-			Vector2 ap = s_points.a;
-			Vector2 bp = s_points.b;
-			Vector2 cp = s_points.c;
-			Vector2 dp = s_points.d;
+
+		if (!player->isCollied) {
+			Novice::DrawQuad(
+				int(a.x - scroll->x), int(a.y - scroll->y),
+				int(b.x - scroll->x), int(b.y - scroll->y),
+				int(c.x - scroll->x), int(c.y - scroll->y),
+				int(d.x - scroll->x), int(d.y - scroll->y),
+				0, 0, int(player->width), int(player->height),
+				handle->player30_32, WHITE
+			);
+			if (player->attack) {
+
+				Rect s_points = RectRotedPlayer(&player->pos, 50.0f, 48.0f, player->angle);
+				Vector2 ap = s_points.a;
+				Vector2 bp = s_points.b;
+				Vector2 cp = s_points.c;
+				Vector2 dp = s_points.d;
+				Novice::DrawQuad(
+					int(ap.x - scroll->x), int(ap.y - scroll->y),
+					int(bp.x - scroll->x), int(bp.y - scroll->y),
+					int(cp.x - scroll->x), int(cp.y - scroll->y),
+					int(dp.x - scroll->x), int(dp.y - scroll->y),
+					0, 0, 50, 48,
+					handle->attackShield50_48, color
+				);
+			}
+		}
+		if (player->isCollied) {
+			Rect shieldRect = RectRotedPlayer(&player->pos, 56.0f, 56.0f, player->angle);
+			Vector2 ap = shieldRect.a;
+			Vector2 bp = shieldRect.b;
+			Vector2 cp = shieldRect.c;
+			Vector2 dp = shieldRect.d;
 			Novice::DrawQuad(
 				int(ap.x - scroll->x), int(ap.y - scroll->y),
 				int(bp.x - scroll->x), int(bp.y - scroll->y),
 				int(cp.x - scroll->x), int(cp.y - scroll->y),
 				int(dp.x - scroll->x), int(dp.y - scroll->y),
-				0, 0, 50, 48,
-				handle->attackShield50_48, color
+				0, 0, 56, 56,
+				handle->damageShield56, ui->damageShieldColor
+			);
+			Novice::DrawSpriteRect(
+				int(player->pos.x + 50 - scroll->x), int(player->pos.y - 50 - scroll->y),
+				life * 22, 0, 22, 30, handle->life30x22, 1 / 4.0f, 1, 0, ui->lifeColor);
+		}
+		if (player->InvincibleTimer % 8 == 0 && player->isCollied) {
+			Novice::DrawQuad(
+				int(a.x - scroll->x), int(a.y - scroll->y),
+				int(b.x - scroll->x), int(b.y - scroll->y),
+				int(c.x - scroll->x), int(c.y - scroll->y),
+				int(d.x - scroll->x), int(d.y - scroll->y),
+				0, 0, int(player->width), int(player->height),
+				handle->player30_32, WHITE
 			);
 		}
 	}
-	if (player->isCollied){
-		Rect shieldRect = RectRotedPlayer(&player->pos, 56.0f, 56.0f, player->angle);
-		Vector2 ap = shieldRect.a;
-		Vector2 bp = shieldRect.b;
-		Vector2 cp = shieldRect.c;
-		Vector2 dp = shieldRect.d;
-		Novice::DrawQuad(
-			int(ap.x - scroll->x), int(ap.y - scroll->y),
-			int(bp.x - scroll->x), int(bp.y - scroll->y),
-			int(cp.x - scroll->x), int(cp.y - scroll->y),
-			int(dp.x - scroll->x), int(dp.y - scroll->y),
-			0, 0, 56, 56,
-			handle->damageShield56, ui->damageShieldColor
-		);
+	else {
+		static int count = 0;
+		if (player->deathTimer % 5 == 0) {
+			count++;			
+		}
+		if (player->deathTimer <= 0) {
+			count = 0;
+		}
 		Novice::DrawSpriteRect(
-			int(player->pos.x + 50 - scroll->x), int(player->pos.y - 50 - scroll->y),
-			life * 22, 0,22,30, handle->life30x22, 1 / 4.0f, 1, 0, ui->lifeColor);
+			int(player->deathPosTmp.x - player->width / 2.0f - scroll->x),
+			int(player->deathPosTmp.y - player->height / 2.0f - scroll->y),
+			count * 60, 0, 60, 60, handle->playerExplosion60, 1 / 12.0f, 1, 0, WHITE);		
 	}
-	if (player->InvincibleTimer % 8 == 0 && player->isCollied) {
-		Novice::DrawQuad(
-			int(a.x - scroll->x), int(a.y - scroll->y),
-			int(b.x - scroll->x), int(b.y - scroll->y),
-			int(c.x - scroll->x), int(c.y - scroll->y),
-			int(d.x - scroll->x), int(d.y - scroll->y),
-			0, 0, int(player->width), int(player->height),
-			handle->player30_32, WHITE
-		);
-	}
-
-
 }
 void RenderObj(Obj obj[], Vector2* scroll, AllResource& texture) {
 
@@ -656,7 +674,17 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 			sound->player_move.play = Novice::PlayAudio(sound->player_move.audio, 1, 0.2f);
 		}
 	}
-
+	if (player->health <= 0 && !player->isDead) {
+		player->velocity = { 0,0 };
+		player->deathPosTmp = player->pos;
+		player->isDead = true;
+	}
+	if (player->isDead && player->deathTimer>0) {
+		player->deathTimer--;
+	}
+	else {
+		player->deathTimer = 60;
+	}
 	//Novice::ScreenPrintf(700, 30, "player.angle = %.10f  angle = %.10f", player->angle, angleTmp);
 }
 

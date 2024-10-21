@@ -34,7 +34,7 @@ void InitEnemyNormal(Enemy enemy[]) {
 	enemy[18].pos = { -320.0f, 480.0f };
 	enemy[19].pos = { -120.0f, 720.0f };
 
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		enemy[i].velocity.x = 5.0f;
 		enemy[i].velocity.y = 5.0f;
 		enemy[i].width = 32.0f;
@@ -46,6 +46,9 @@ void InitEnemyNormal(Enemy enemy[]) {
 		enemy[i].isMove = false;
 		enemy[i].health = 1;
 		enemy[i].score = 100;
+		enemy[i].deadTimer = 60;
+		enemy[i].deathAnimationCount = 0;
+
 	}
 }
 
@@ -74,7 +77,7 @@ void InitEnemyHorming(Enemy enemy[]) {
 	enemy[18].pos = { -2000.0f, 480.0f };
 	enemy[19].pos = { -1500.0f, 720.0f };
 
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		enemy[i].velocity.x = 2.0f;
 		enemy[i].velocity.y = 2.0f;
 		enemy[i].components.x = 0.0f;
@@ -90,7 +93,8 @@ void InitEnemyHorming(Enemy enemy[]) {
 		enemy[i].isMove = false;
 		enemy[i].health = 1;
 		enemy[i].score = 200;
-
+		enemy[i].deadTimer = 60;
+		enemy[i].deathAnimationCount = 0;
 	}
 }
 
@@ -119,7 +123,7 @@ void InitEnemyShot(Enemy enemy[]) {
 	enemy[18].pos = { -1600.0f, 1200.0f };
 	enemy[19].pos = { -1500.0f, 1700.0f };
 
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		enemy[i].width = 30.0f;
 		enemy[i].height = 30.0f;
 		enemy[i].radius = 16.0f;
@@ -128,11 +132,14 @@ void InitEnemyShot(Enemy enemy[]) {
 		enemy[i].isActive = false;
 		enemy[i].health = 1;
 		enemy[i].score = 150;
+		enemy[i].deadTimer = 60;
+		enemy[i].deathAnimationCount = 0;
+
 	}
 }
 
 void InitEnemyBullet(EnemyBullet bullet[]) {
-	for (int i = 0;i < BULLET_COUNT;i++) {
+	for (int i = 0; i < BULLET_COUNT; i++) {
 		bullet[i].pos.x = -10000.0f;
 		bullet[i].pos.y = -10000.0f;
 		bullet[i].velocity.x = 5.0f;
@@ -162,7 +169,7 @@ void InitBossKeys(BossKeys keys[], Enemy enemy[]) {
 	keys[2].pos.y = enemy[10].pos.y + enemy[0].radius;
 	keys[3].pos.x = enemy[15].pos.x + enemy[0].radius;
 	keys[3].pos.y = enemy[15].pos.y + enemy[0].radius;
-	for (int i = 0;i < keyCount;i++) {
+	for (int i = 0; i < keyCount; i++) {
 		keys[i].width = 18.0f;
 		keys[i].height = 38.0f;
 		keys[i].radius = 8.0f;
@@ -172,7 +179,7 @@ void InitBossKeys(BossKeys keys[], Enemy enemy[]) {
 }
 
 void EnemyMove(Enemy enemy[]) {
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		enemy[i].moveTimer++;
 
 		if (enemy[i].moveTimer == MOVE_TIME) {
@@ -215,7 +222,7 @@ void EnemyMove(Enemy enemy[]) {
 }
 
 void EnemyMoveHorming(Enemy enemy[], Obj& player) {
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		enemy[i].components.x = player.pos.x - enemy[i].pos.x;
 		enemy[i].components.y = player.pos.y - enemy[i].pos.y;
 		enemy[i].magnitude = (float)sqrt(pow(enemy[i].components.x, 2) + pow(enemy[i].components.y, 2));
@@ -234,7 +241,7 @@ void EnemyMoveHorming(Enemy enemy[], Obj& player) {
 }
 
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]) {
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		float distanceX = player.pos.x - enemy[i].pos.x + enemy[i].radius;
 		float distanceY = player.pos.y - enemy[i].pos.y + enemy[i].radius;
 		float distance = sqrtf(static_cast<float>(pow(distanceX, 2) + static_cast<float>(pow(distanceY, 2))));
@@ -245,7 +252,7 @@ void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]) {
 				enemy[i].isActive = true;
 			}
 		}
-		for (int j = 0;j < BULLET_COUNT;j++) {
+		for (int j = 0; j < BULLET_COUNT; j++) {
 			if (!bullet[j].isActive && enemy[i].isActive) {
 				bullet[j].pos.x = enemy[i].pos.x;
 				bullet[j].pos.y = enemy[i].pos.y;
@@ -263,7 +270,7 @@ void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]) {
 		}
 	}
 
-	for (int j = 0;j < BULLET_COUNT;j++) {
+	for (int j = 0; j < BULLET_COUNT; j++) {
 		if (bullet[j].isActive) {
 			bullet[j].pos.x += bullet[j].directions.x * bullet[j].velocity.x;
 			bullet[j].pos.y += bullet[j].directions.y * bullet[j].velocity.y;
@@ -276,29 +283,49 @@ void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]) {
 	}
 }
 
-void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle, float px, float py) {
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+void RenderEnemy(Enemy enemy[], Vector2& scroll, int handle, float px, float py, int deathHandle) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		float distanceX = enemy[i].pos.x - px;
 		float distanceY = enemy[i].pos.y - py;
-		float distance = sqrtf(static_cast<float>(pow(distanceX, 2)) + static_cast<float>(pow(distanceY, 2)));
+		float distanceSquared = distanceX * distanceX + distanceY * distanceY;
+		float maxDistanceSquared = float(kWindowWidth * kWindowWidth);
 
-		if (distance <= kWindowWidth) {
+		if (distanceSquared <= maxDistanceSquared) {
 			if (enemy[i].isAlive) {
 				Novice::DrawSprite(int(enemy[i].pos.x - scroll.x), int(enemy[i].pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
+			}
+			else if (!enemy[i].isAlive && enemy[i].deadTimer > 0) {
+				enemy[i].deadTimer--;
+
+				if (enemy[i].deadTimer % 5 == 0) {
+					enemy[i].deathAnimationCount++;
+				}
+
+				const int maxFrames = 12;
+				if (enemy[i].deathAnimationCount >= maxFrames) {
+					enemy[i].deathAnimationCount = maxFrames - 1;
+				}
+
+				Novice::DrawSpriteRect(
+					int(enemy[i].pos.x - scroll.x), int(enemy[i].pos.y - scroll.y),
+					enemy[i].deathAnimationCount * 50, 0,
+					50, 50,
+					deathHandle, 1 / 12.0f, 1, 0, WHITE);
 			}
 		}
 	}
 }
 
+
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle) {
-	for (int i = 0;i < BULLET_COUNT;i++) {
+	for (int i = 0; i < BULLET_COUNT; i++) {
 		Novice::DrawSpriteRect(int(bullet[i].pos.x - scroll.x), int(bullet[i].pos.y - scroll.y), bullet[i].moveX, 0,
 			(int)bullet[i].width, (int)bullet[i].height, handle, (bullet[i].imageHeight / bullet[i].imageWidth), 1, 0.0f, 0xFFFFFFFF);
 	}
 }
 
 void BulletAnim(EnemyBullet bullet[]) {
-	for (int i = 0;i < BULLET_COUNT;i++) {
+	for (int i = 0; i < BULLET_COUNT; i++) {
 		if (bullet[i].isActive) {
 			bullet[i].animTimer++;
 			if (bullet[i].animTimer >= ANIM_COUNT) {
@@ -324,7 +351,7 @@ bool CheckCircleCollision(Vector2& a, Vector2& b, const float& radiusA, const fl
 }
 void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound) {
 	const float r = 50.0f;
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].isAlive) {
 			if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius + r, player.radius)) {
 
@@ -351,6 +378,7 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound) {
 		if (enemy[i].health <= 0) {
 			enemy[i].isAlive = false;
 		}
+
 		//Novice::ScreenPrintf(0, 60, "player.health : %d", player.health);
 		//Novice::ScreenPrintf(0, 80, "enemy.health : %d", enemy[i].health);
 		//Novice::ScreenPrintf(0, 100, "enemy.isAlive : %s", enemy[i].isAlive ? "alive" : "death");
@@ -359,7 +387,7 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound) {
 }
 
 void UpdatePlayerBulletEvent(Obj& player, EnemyBullet bullet[]) {
-	for (int i = 0;i < BULLET_COUNT;i++) {
+	for (int i = 0; i < BULLET_COUNT; i++) {
 		float distanceX = player.pos.x - bullet[i].pos.x + bullet[i].radius;
 		float distanceY = player.pos.y - bullet[i].pos.y + bullet[i].radius;
 		float distance = sqrtf(static_cast<float>(pow(distanceX, 2) + static_cast<float>(pow(distanceY, 2))));
@@ -374,6 +402,7 @@ void UpdatePlayerBulletEvent(Obj& player, EnemyBullet bullet[]) {
 }
 
 void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {
+
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].isAlive) {
 			Novice::DrawEllipse(
@@ -397,7 +426,7 @@ void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {
 }
 
 void EnemyRange(Enemy enemy[], Enemy enemy1[]) {
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].pos.x >= kWindowWidth * 3 - enemy[i].radius - 100.0f) {
 			enemy[i].pos.x = kWindowWidth * 3 - enemy[i].radius - 100.0f;
 		}
@@ -476,7 +505,7 @@ void RenderKeys(BossKeys keys[], Vector2 scroll, int& handle) {
 	if (move >= 2.0f || move <= -2.0f) {
 		moveSpeed *= -1;
 	}
-	for (int i = 0;i < keyCount;i++) {
+	for (int i = 0; i < keyCount; i++) {
 		if (!keys[i].isHit) {
 			Novice::DrawSprite(int(keys[i].pos.x - scroll.x), int(keys[i].pos.y - scroll.y + move), handle, 1, 1, 0.0f, WHITE);
 		}

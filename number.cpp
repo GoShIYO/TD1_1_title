@@ -131,7 +131,7 @@ void showFloatNumber(float x, float y, int mn, int mnf, float n, int w, int h, i
 
 void InitUI(UI& ui)
 {
-	ui.score = { 10,690 };
+	ui.score = { 89,690 };
 	ui.damageShield = { 0 };
 	ui.life = { 0 };
 	ui.marker = { 0 };

@@ -34,6 +34,8 @@
 	texture->textNumber18_25 = Novice::LoadTexture("./Resources/UI/textNumber18_25.png");
 	texture->textScore84_25 = Novice::LoadTexture("./Resources/UI/textScore84_25.png");
 	texture->textScores53x65 = Novice::LoadTexture("./Resources/UI/textScores53x65.png");
+	texture->playerExplosion60 = Novice::LoadTexture("./Resources/Effect/playerExplosion60.png");
+	texture->enemyExplosion50 = Novice::LoadTexture("./Resources/Effect/enemyExplosion50.png");
 }
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////

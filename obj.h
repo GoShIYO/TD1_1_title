@@ -33,6 +33,7 @@ struct Obj
 {
 	Vector2 pos;
 	Vector2 velocity;
+	Vector2 deathPosTmp;
 	float angle;
 	float radius;
 	float width;
@@ -41,6 +42,8 @@ struct Obj
 	bool isCollied;
 	bool attack;
 	bool isAdapt;
+	bool isDead;
+	int deathTimer;
 	int health;
 	int InvincibleTimer;
 	int type;

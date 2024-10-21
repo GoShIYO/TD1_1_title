@@ -25,6 +25,8 @@ struct AllResource final {
 	int sun65_160;
 	int player30_32;
 	int attackShield50_48;
+	int playerExplosion60;
+	int enemyExplosion50;
 	//SCENE
 	int bg7x7;
 	int BG3_3;

@@ -39,6 +39,8 @@ struct Enemy {
 	bool isAlive;
 	bool isMove;
 	bool isActive;
+	int deadTimer;
+	int deathAnimationCount;
 };
 
 struct EnemyBullet {
@@ -84,7 +86,7 @@ void RenderKeys(BossKeys keys[], Vector2 scroll, int& handle);
 
 void EnemyRange(Enemy enemy[], Enemy enemy1[]);
 
-void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle, float px, float py);
+void RenderEnemy(Enemy enemy[], Vector2& scroll, int handle, float px, float py,int deathHandle);
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle);
 
 void BulletAnim(EnemyBullet bullet[]);

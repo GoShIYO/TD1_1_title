@@ -245,7 +245,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//UpdateKeys(bossKeys, enemyShot);
 			UpdatePlayerKeyEvent(bossKeys,sound, enemyShot);
 
-			if (player.health <= 0) {
+			if (player.deathTimer <= 0) {
 				scene = GAME_OVER;
 			}
 			/// ↑更新処理ここまで
@@ -269,15 +269,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			// ギミックオブジェクトの描画
 			RenderGimmickObjs(gimmickObjs, &scroll);
 
-			RenderEnemy(enemy, scroll, handle.enemy, player.pos.x, player.pos.y);
-			RenderEnemy(enemyHorming, scroll, handle.enemyHorming, player.pos.x, player.pos.y);
-			RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y);
+			RenderEnemy(enemy, scroll, handle.enemy, player.pos.x, player.pos.y,texture.enemyExplosion50);
+			RenderEnemy(enemyHorming, scroll, handle.enemyHorming, player.pos.x, player.pos.y, texture.enemyExplosion50);
+			RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y, texture.enemyExplosion50);
 			RenderBullet(bullet, scroll, handle.bullet);
 			RenderKeys(bossKeys, scroll, texture.key18x38);
 			//ミニマップ
 			RenderMiniMap(obj, &player);
 			RenderMiniMapEnemy(enemy, enemyHorming, enemyShot);
 
+			Novice::DrawSprite(10, 675, texture.textScore84_25, 1, 1, 0, WHITE);
 			showNumber(ui.score.x, ui.score.y,5, player.score, 18, 25, texture.textNumber18_25);
 			//DEBUG INFO
 			Novice::ScreenPrintf(0, 0, "keyCount : %d", remainingKeys);
@@ -297,7 +298,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 			break;
 		case GAME_OVER:
-			Novice::DrawSprite(0, 0, texture.GameOver, 1, 1, 0, 0xfabb01FF);
+			Novice::DrawSprite(0, 0, texture.GameOver, 1, 1, 0, WHITE);
 
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
 				isPlayTitleAnimation = true;
@@ -309,7 +310,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 			break;
 		case CLEAR:
-			Novice::DrawSprite(0, 0, texture.GameClear, 1, 1, 0, 0x0078f3FF);
+			Novice::DrawSprite(0, 0, texture.GameClear, 1, 1, 0, WHITE);
 
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
 				isPlayTitleAnimation = true;
