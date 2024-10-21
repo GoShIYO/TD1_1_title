@@ -123,30 +123,53 @@ void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
 				gimmickObjs[6].moveDir *= -1;
 			}
 
-
 			if (CheckGimmickCollision(gimmickObjs[i], player)) {
-				Vector2 collisionNormal = {
-					player.pos.x - gimmickObjs[i].obj.pos.x,
-					player.pos.y - gimmickObjs[i].obj.pos.y
-				};
-				NormalizeVector(collisionNormal);
+			
+				Vector2 collisionNormal = { 0.0f, 0.0f };
+
+				float left = gimmickObjs[i].obj.pos.x - gimmickObjs[i].obj.width / 2.0f;
+				float right = gimmickObjs[i].obj.pos.x + gimmickObjs[i].obj.width / 2.0f;
+				float top = gimmickObjs[i].obj.pos.y - gimmickObjs[i].obj.height / 2.0f;
+				float bottom = gimmickObjs[i].obj.pos.y + gimmickObjs[i].obj.height / 2.0f;
+
+				float closestX = Clamp(player.pos.x, left, right);
+				float closestY = Clamp(player.pos.y, top, bottom);
+
+				float dx = player.pos.x - closestX;
+				float dy = player.pos.y - closestY;
+
+				if (fabsf(dx) > fabsf(dy)) {
+					
+					collisionNormal = { dx > 0 ? 1.0f : -1.0f, 0.0f };
+				}
+				else {
+					
+					collisionNormal = { 0.0f, dy > 0 ? 1.0f : -1.0f };
+				}
+
 				ReflectPlayer(player, collisionNormal);
 			}
 		}
 	}
 }
+
+
 bool CheckGimmickCollision(GimmickObj& gimmick, Obj& player) {
 
-	float closestX = Clamp(player.pos.x, gimmick.obj.pos.x - gimmick.obj.width / 2.0f, gimmick.obj.pos.x + gimmick.obj.width / 2.0f);
-	float closestY = Clamp(player.pos.y, gimmick.obj.pos.y - gimmick.obj.height / 2.0f, gimmick.obj.pos.y + gimmick.obj.height / 2.0f);
+	float left = gimmick.obj.pos.x - gimmick.obj.width / 2.0f;
+	float right = gimmick.obj.pos.x + gimmick.obj.width / 2.0f;
+	float top = gimmick.obj.pos.y - gimmick.obj.height / 2.0f;
+	float bottom = gimmick.obj.pos.y + gimmick.obj.height / 2.0f;
 
+	float closestX = Clamp(player.pos.x, left, right);
+	float closestY = Clamp(player.pos.y, top, bottom);
 
 	float dx = player.pos.x - closestX;
 	float dy = player.pos.y - closestY;
 
-
 	return (dx * dx + dy * dy) < (player.radius * player.radius);
 }
+
 
 
 void NormalizeVector(Vector2& vector) {
@@ -158,6 +181,7 @@ void NormalizeVector(Vector2& vector) {
 }
 
 void ReflectPlayer(Obj& player, Vector2& normal) {
+	
 	Vector2 velocity = {
 		cosf(player.angle) * player.velocity.x,
 		sinf(player.angle) * player.velocity.y
@@ -166,6 +190,7 @@ void ReflectPlayer(Obj& player, Vector2& normal) {
 	NormalizeVector(normal);
 
 	float dotProduct = velocity.x * normal.x + velocity.y * normal.y;
+
 	velocity.x -= 2 * dotProduct * normal.x;
 	velocity.y -= 2 * dotProduct * normal.y;
 
@@ -178,6 +203,8 @@ void ReflectPlayer(Obj& player, Vector2& normal) {
 	player.velocity.x = newVelocityMagnitude;
 	player.velocity.y = newVelocityMagnitude;
 }
+
+
 
 
 void RenderGimmickObjs(GimmickObj gimmickObjs[], Vector2* scroll) {
