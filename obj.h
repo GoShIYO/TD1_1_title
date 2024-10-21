@@ -4,6 +4,7 @@
 #include<math.h>
 #include"texture.h"
 #include"sound.h"
+#include"number.h"
 #define MAX_PARTICLES 1000
 
 extern const int kWindowWidth;
@@ -32,6 +33,7 @@ struct Obj
 {
 	Vector2 pos;
 	Vector2 velocity;
+	Vector2 deathPosTmp;
 	float angle;
 	float radius;
 	float width;
@@ -40,10 +42,13 @@ struct Obj
 	bool isCollied;
 	bool attack;
 	bool isAdapt;
+	bool isDead;
+	int deathTimer;
 	int health;
 	int InvincibleTimer;
 	int type;
 	int atTimer;
+	int score;
 };
 struct Rect
 {
@@ -97,12 +102,6 @@ void InitObj(Obj obj[]);
 /// <param name="system"></param>
 void InitSystem(System* system);
 
-/// <summary>
-/// 鍵の初期化関数
-/// </summary>
-/// <param name="keys"></param>
-void InitBossKeys(BossKeys keys[]);
-
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////
 
 /// <summary>
@@ -124,7 +123,7 @@ void viewDig(int* digFlat, int key1, int preKey1, int key2, int preKey2, int key
 /// <param name="obj"></param>
 /// <param name="keys"></param>
 /// <param name="preKeys"></param>
-void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[],Sound* sound);
+void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[],Sound* sound,UI* ui);
 
 /// <summary>
 /// プレイヤーの移動範囲処理関数
@@ -136,7 +135,7 @@ void checkPlayerMoveRange(Obj* player, Sound* sound);
 /// プレイヤー描画
 /// </summary>
 /// <param name="player"></param>
-void RenderPlayer(Obj* player,Vector2* scroll,int* handle, int* handle2);
+void RenderPlayer(Obj* player,Vector2* scroll, AllResource* handle, UI* ui);
 
 /// <summary>
 /// パーティクル更新処理
@@ -174,3 +173,13 @@ void RenderObj(Obj obj[], Vector2* scroll, AllResource& texture);
 /// <param name="player">プレイヤー</param>
 /// <param name="scroll">スクロール変数</param>
 void UpdateScroll(Obj* player, Vector2* scroll);
+
+float Lerp(float start, float end, float t);
+float EaseOutLerp(float start, float end, float t);
+float EaseOutCubic(float start, float end, float t);
+float EaseOutElastic(float start, float end, float t);
+float EaseInBounce(float start, float end, float t);
+unsigned int RgbaAnimation(unsigned int color, float t);
+
+void InitParticle(Particle* p, float x, float y, float direction);
+void UpdateParticle(Particle* particles);

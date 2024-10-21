@@ -1,10 +1,13 @@
 #define _USE_MATH_DEFINES
+#define ANIM_COUNT 240
 #include "enemy.h"
 #include <math.h>
 #include <Novice.h>
 #include <stdlib.h>
 
 int remainingKeys = keyCount;
+float move = 0.0f;
+float moveSpeed = 0.2f;
 
 void InitEnemyNormal(Enemy enemy[]) {
 	enemy[0].pos = { 0.0f, -120.0f };
@@ -31,7 +34,7 @@ void InitEnemyNormal(Enemy enemy[]) {
 	enemy[18].pos = { -320.0f, 480.0f };
 	enemy[19].pos = { -120.0f, 720.0f };
 
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		enemy[i].velocity.x = 5.0f;
 		enemy[i].velocity.y = 5.0f;
 		enemy[i].width = 32.0f;
@@ -42,6 +45,10 @@ void InitEnemyNormal(Enemy enemy[]) {
 		enemy[i].isAlive = true;
 		enemy[i].isMove = false;
 		enemy[i].health = 1;
+		enemy[i].score = 100;
+		enemy[i].deadTimer = 60;
+		enemy[i].deathAnimationCount = 0;
+
 	}
 }
 
@@ -70,7 +77,7 @@ void InitEnemyHorming(Enemy enemy[]) {
 	enemy[18].pos = { -2000.0f, 480.0f };
 	enemy[19].pos = { -1500.0f, 720.0f };
 
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		enemy[i].velocity.x = 2.0f;
 		enemy[i].velocity.y = 2.0f;
 		enemy[i].components.x = 0.0f;
@@ -85,6 +92,9 @@ void InitEnemyHorming(Enemy enemy[]) {
 		enemy[i].isAlive = true;
 		enemy[i].isMove = false;
 		enemy[i].health = 1;
+		enemy[i].score = 200;
+		enemy[i].deadTimer = 60;
+		enemy[i].deathAnimationCount = 0;
 	}
 }
 
@@ -113,7 +123,7 @@ void InitEnemyShot(Enemy enemy[]) {
 	enemy[18].pos = { -1600.0f, 1200.0f };
 	enemy[19].pos = { -1500.0f, 1700.0f };
 
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		enemy[i].width = 30.0f;
 		enemy[i].height = 30.0f;
 		enemy[i].radius = 16.0f;
@@ -121,11 +131,15 @@ void InitEnemyShot(Enemy enemy[]) {
 		enemy[i].isAlive = true;
 		enemy[i].isActive = false;
 		enemy[i].health = 1;
+		enemy[i].score = 150;
+		enemy[i].deadTimer = 60;
+		enemy[i].deathAnimationCount = 0;
+
 	}
 }
 
 void InitEnemyBullet(EnemyBullet bullet[]) {
-	for (int i = 0;i < BULLET_COUNT;i++) {
+	for (int i = 0; i < BULLET_COUNT; i++) {
 		bullet[i].pos.x = -10000.0f;
 		bullet[i].pos.y = -10000.0f;
 		bullet[i].velocity.x = 5.0f;
@@ -137,75 +151,102 @@ void InitEnemyBullet(EnemyBullet bullet[]) {
 		bullet[i].magnitude = 0.0f;
 		bullet[i].width = 25.0f;
 		bullet[i].height = 25.0f;
+		bullet[i].imageWidth = 300.0f;
+		bullet[i].imageHeight = 25.0f;
 		bullet[i].radius = 12.5f;
+		bullet[i].moveX = 0;
+		bullet[i].animTimer = 0;
 		bullet[i].isActive = false;
 	}
 }
 
-void EnemyMove(Enemy enemy[]) {
-	for (int i = 0;i < ENEMY_COUNT;i++) {
-		enemy[i].moveTimer++;
+void InitBossKeys(BossKeys keys[], Enemy enemy[]) {
+	keys[0].pos.x = enemy[0].pos.x + enemy[0].radius;
+	keys[0].pos.y = enemy[0].pos.y + enemy[0].radius;
+	keys[1].pos.x = enemy[5].pos.x + enemy[0].radius;
+	keys[1].pos.y = enemy[5].pos.y + enemy[0].radius;
+	keys[2].pos.x = enemy[10].pos.x + enemy[0].radius;
+	keys[2].pos.y = enemy[10].pos.y + enemy[0].radius;
+	keys[3].pos.x = enemy[15].pos.x + enemy[0].radius;
+	keys[3].pos.y = enemy[15].pos.y + enemy[0].radius;
+	for (int i = 0; i < keyCount; i++) {
+		keys[i].width = 18.0f;
+		keys[i].height = 38.0f;
+		keys[i].radius = 8.0f;
+		keys[i].isHit = false;
+		keys[i].isPosSet = false;
+	}
+}
 
-		if (enemy[i].moveTimer == MOVE_TIME) {
-			enemy[i].isMove = true;
-			enemy[i].direction = rand() % 4;
-		}
-		if (enemy[i].isMove) {
-			switch (enemy[i].direction) {
-			case UP:
-				enemy[i].pos.y -= enemy[i].velocity.y;
-				if (enemy[i].moveTimer >= STOP_TIME) {
-					enemy[i].moveTimer = 0;
-					enemy[i].isMove = false;
+void EnemyMove(Enemy enemy[]) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
+		if (enemy[i].isAlive) {
+			enemy[i].moveTimer++;
+
+			if (enemy[i].moveTimer == MOVE_TIME) {
+				enemy[i].isMove = true;
+				enemy[i].direction = rand() % 4;
+			}
+			if (enemy[i].isMove) {
+				switch (enemy[i].direction) {
+				case UP:
+					enemy[i].pos.y -= enemy[i].velocity.y;
+					if (enemy[i].moveTimer >= STOP_TIME) {
+						enemy[i].moveTimer = 0;
+						enemy[i].isMove = false;
+					}
+					break;
+				case DOWN:
+					enemy[i].pos.y += enemy[i].velocity.y;
+					if (enemy[i].moveTimer >= STOP_TIME) {
+						enemy[i].moveTimer = 0;
+						enemy[i].isMove = false;
+					}
+					break;
+				case RIGHT:
+					enemy[i].pos.x += enemy[i].velocity.x;
+					if (enemy[i].moveTimer >= STOP_TIME) {
+						enemy[i].moveTimer = 0;
+						enemy[i].isMove = false;
+					}
+					break;
+				case LEFT:
+					enemy[i].pos.x -= enemy[i].velocity.x;
+					if (enemy[i].moveTimer >= STOP_TIME) {
+						enemy[i].moveTimer = 0;
+						enemy[i].isMove = false;
+					}
+					break;
 				}
-				break;
-			case DOWN:
-				enemy[i].pos.y += enemy[i].velocity.y;
-				if (enemy[i].moveTimer >= STOP_TIME) {
-					enemy[i].moveTimer = 0;
-					enemy[i].isMove = false;
-				}
-				break;
-			case RIGHT:
-				enemy[i].pos.x += enemy[i].velocity.x;
-				if (enemy[i].moveTimer >= STOP_TIME) {
-					enemy[i].moveTimer = 0;
-					enemy[i].isMove = false;
-				}
-				break;
-			case LEFT:
-				enemy[i].pos.x -= enemy[i].velocity.x;
-				if (enemy[i].moveTimer >= STOP_TIME) {
-					enemy[i].moveTimer = 0;
-					enemy[i].isMove = false;
-				}
-				break;
 			}
 		}
 	}
 }
 
 void EnemyMoveHorming(Enemy enemy[], Obj& player) {
-	for (int i = 0;i < ENEMY_COUNT;i++) {
-		enemy[i].components.x = player.pos.x - enemy[i].pos.x;
-		enemy[i].components.y = player.pos.y - enemy[i].pos.y;
-		enemy[i].magnitude = (float)sqrt(pow(enemy[i].components.x, 2) + pow(enemy[i].components.y, 2));
-		enemy[i].directions.x = enemy[i].components.x / enemy[i].magnitude;
-		enemy[i].directions.y = enemy[i].components.y / enemy[i].magnitude;
+	for (int i = 0; i < ENEMY_COUNT; i++) {
+		if (enemy[i].isAlive) {
 
-		float distanceX = enemy[i].pos.x - player.pos.x;
-		float distanceY = enemy[i].pos.y - player.pos.y;
-		float distance = sqrtf(float(pow(distanceX, 2)) + float(pow(distanceY, 2)));
+			enemy[i].components.x = player.pos.x - enemy[i].pos.x;
+			enemy[i].components.y = player.pos.y - enemy[i].pos.y;
+			enemy[i].magnitude = (float)sqrt(pow(enemy[i].components.x, 2) + pow(enemy[i].components.y, 2));
+			enemy[i].directions.x = enemy[i].components.x / enemy[i].magnitude;
+			enemy[i].directions.y = enemy[i].components.y / enemy[i].magnitude;
 
-		if (distance <= ENEMY_TO_PLAYER) {
-			enemy[i].pos.x += enemy[i].directions.x * enemy[i].velocity.x;
-			enemy[i].pos.y += enemy[i].directions.y * enemy[i].velocity.y;
+			float distanceX = enemy[i].pos.x - player.pos.x;
+			float distanceY = enemy[i].pos.y - player.pos.y;
+			float distance = sqrtf(float(pow(distanceX, 2)) + float(pow(distanceY, 2)));
+
+			if (distance <= ENEMY_TO_PLAYER) {
+				enemy[i].pos.x += enemy[i].directions.x * enemy[i].velocity.x;
+				enemy[i].pos.y += enemy[i].directions.y * enemy[i].velocity.y;
+			}
 		}
 	}
 }
 
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]) {
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		float distanceX = player.pos.x - enemy[i].pos.x + enemy[i].radius;
 		float distanceY = player.pos.y - enemy[i].pos.y + enemy[i].radius;
 		float distance = sqrtf(static_cast<float>(pow(distanceX, 2) + static_cast<float>(pow(distanceY, 2))));
@@ -216,7 +257,7 @@ void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]) {
 				enemy[i].isActive = true;
 			}
 		}
-		for (int j = 0;j < BULLET_COUNT;j++) {
+		for (int j = 0; j < BULLET_COUNT; j++) {
 			if (!bullet[j].isActive && enemy[i].isActive) {
 				bullet[j].pos.x = enemy[i].pos.x;
 				bullet[j].pos.y = enemy[i].pos.y;
@@ -234,7 +275,7 @@ void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]) {
 		}
 	}
 
-	for (int j = 0;j < BULLET_COUNT;j++) {
+	for (int j = 0; j < BULLET_COUNT; j++) {
 		if (bullet[j].isActive) {
 			bullet[j].pos.x += bullet[j].directions.x * bullet[j].velocity.x;
 			bullet[j].pos.y += bullet[j].directions.y * bullet[j].velocity.y;
@@ -247,23 +288,59 @@ void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]) {
 	}
 }
 
-void RenderEnemy(Enemy enemy[], Vector2 scroll, int handle, float px, float py) {
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+void RenderEnemy(Enemy enemy[], Vector2& scroll, int handle, float px, float py, int deathHandle) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		float distanceX = enemy[i].pos.x - px;
 		float distanceY = enemy[i].pos.y - py;
-		float distance = sqrtf(static_cast<float>(pow(distanceX, 2)) + static_cast<float>(pow(distanceY, 2)));
+		float distanceSquared = distanceX * distanceX + distanceY * distanceY;
+		float maxDistanceSquared = float(kWindowWidth * kWindowWidth);
 
-		if (distance <= kWindowWidth) {
+		if (distanceSquared <= maxDistanceSquared) {
 			if (enemy[i].isAlive) {
 				Novice::DrawSprite(int(enemy[i].pos.x - scroll.x), int(enemy[i].pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
+			}
+			else if (!enemy[i].isAlive && enemy[i].deadTimer > 0) {				
+				enemy[i].deadTimer--;
+
+				if (enemy[i].deadTimer % 5 == 0) {
+					enemy[i].deathAnimationCount++;
+				}
+
+				const int maxFrames = 12;
+				if (enemy[i].deathAnimationCount >= maxFrames) {
+					enemy[i].deathAnimationCount = maxFrames - 1;
+				}
+
+				Novice::DrawSpriteRect(
+					int(enemy[i].pos.x - scroll.x), int(enemy[i].pos.y - scroll.y),
+					enemy[i].deathAnimationCount * 50, 0,
+					50, 50,
+					deathHandle, 1 / 12.0f, 1, 0, WHITE);
 			}
 		}
 	}
 }
 
+
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle) {
-	for (int i = 0;i < BULLET_COUNT;i++) {
-		Novice::DrawSprite(int(bullet[i].pos.x - scroll.x), int(bullet[i].pos.y - scroll.y), handle, 1, 1, 0.0f, 0xFFFFFF99);
+	for (int i = 0; i < BULLET_COUNT; i++) {
+		Novice::DrawSpriteRect(int(bullet[i].pos.x - scroll.x), int(bullet[i].pos.y - scroll.y), bullet[i].moveX, 0,
+			(int)bullet[i].width, (int)bullet[i].height, handle, (bullet[i].imageHeight / bullet[i].imageWidth), 1, 0.0f, 0xFFFFFFFF);
+	}
+}
+
+void BulletAnim(EnemyBullet bullet[]) {
+	for (int i = 0; i < BULLET_COUNT; i++) {
+		if (bullet[i].isActive) {
+			bullet[i].animTimer++;
+			if (bullet[i].animTimer >= ANIM_COUNT) {
+				bullet[i].animTimer = 0;
+				bullet[i].moveX = 0;
+			}
+			if (bullet[i].animTimer % 20 == 0) {
+				bullet[i].moveX += static_cast<int>(bullet[i].width);
+			}
+		}
 	}
 }
 
@@ -277,12 +354,14 @@ bool CheckCircleCollision(Vector2& a, Vector2& b, const float& radiusA, const fl
 	}
 	return false;
 }
-void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player,Sound& sound) {
+void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound) {
 	const float r = 50.0f;
-	for (int i = 0;i < ENEMY_COUNT;i++) {
+	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].isAlive) {
 			if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius + r, player.radius)) {
-
+				if (!Novice::IsPlayingAudio(sound.explosion.play)) {
+					sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 0, 0.5f);
+				}
 				if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius, player.radius) && !player.isCollied) {
 					player.isCollied = true;
 					player.health--;
@@ -290,7 +369,7 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player,Sound& sound) {
 						sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 1.0f);
 					}
 				}
-				if (player.attack) {					
+				if (player.attack) {
 					if (!player.isRotate) {
 						float dx = player.pos.x - enemy[i].pos.x;
 						float dy = player.pos.y - enemy[i].pos.y;
@@ -298,6 +377,7 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player,Sound& sound) {
 						player.angle += angle;
 					}
 					enemy[i].health--;
+					player.score += enemy[i].score;
 				}
 			}
 		}
@@ -305,6 +385,7 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player,Sound& sound) {
 		if (enemy[i].health <= 0) {
 			enemy[i].isAlive = false;
 		}
+
 		//Novice::ScreenPrintf(0, 60, "player.health : %d", player.health);
 		//Novice::ScreenPrintf(0, 80, "enemy.health : %d", enemy[i].health);
 		//Novice::ScreenPrintf(0, 100, "enemy.isAlive : %s", enemy[i].isAlive ? "alive" : "death");
@@ -313,7 +394,7 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player,Sound& sound) {
 }
 
 void UpdatePlayerBulletEvent(Obj& player, EnemyBullet bullet[]) {
-	for (int i = 0;i < BULLET_COUNT;i++) {
+	for (int i = 0; i < BULLET_COUNT; i++) {
 		float distanceX = player.pos.x - bullet[i].pos.x + bullet[i].radius;
 		float distanceY = player.pos.y - bullet[i].pos.y + bullet[i].radius;
 		float distance = sqrtf(static_cast<float>(pow(distanceX, 2) + static_cast<float>(pow(distanceY, 2))));
@@ -328,6 +409,7 @@ void UpdatePlayerBulletEvent(Obj& player, EnemyBullet bullet[]) {
 }
 
 void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {
+
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].isAlive) {
 			Novice::DrawEllipse(
@@ -351,71 +433,89 @@ void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {
 }
 
 void EnemyRange(Enemy enemy[], Enemy enemy1[]) {
-	for (int i = 0;i < ENEMY_COUNT;i++) {
-		if (enemy[i].pos.x >= kWindowWidth * 3 - enemy[i].radius) {
-			enemy[i].pos.x = kWindowWidth * 3 - enemy[i].radius;
+	for (int i = 0; i < ENEMY_COUNT; i++) {
+		if (enemy[i].pos.x >= kWindowWidth * 3 - enemy[i].radius - 100.0f) {
+			enemy[i].pos.x = kWindowWidth * 3 - enemy[i].radius - 100.0f;
 		}
-		if (enemy1[i].pos.x >= kWindowWidth * 3 - enemy1[i].radius) {
-			enemy1[i].pos.x = kWindowWidth * 3 - enemy1[i].radius;
+		if (enemy1[i].pos.x >= kWindowWidth * 3 - enemy1[i].radius - 100.0f) {
+			enemy1[i].pos.x = kWindowWidth * 3 - enemy1[i].radius - 100.0f;
 		}
-		if (enemy[i].pos.x <= -kWindowWidth * 2 + enemy[i].radius) {
-			enemy[i].pos.x = -kWindowWidth * 2 + enemy[i].radius;
+		if (enemy[i].pos.x <= -kWindowWidth * 2 + enemy[i].radius + 100.0f) {
+			enemy[i].pos.x = -kWindowWidth * 2 + enemy[i].radius + 100.0f;
 		}
-		if (enemy1[i].pos.x <= -kWindowWidth * 2 + enemy1[i].radius) {
-			enemy1[i].pos.x = -kWindowWidth * 2 + enemy1[i].radius;
+		if (enemy1[i].pos.x <= -kWindowWidth * 2 + enemy1[i].radius + 100.0f) {
+			enemy1[i].pos.x = -kWindowWidth * 2 + enemy1[i].radius + 100.0f;
 		}
-		if (enemy[i].pos.y >= kWindowHeight * 3 - enemy[i].radius) {
-			enemy[i].pos.y = kWindowHeight * 3 - enemy[i].radius;
+		if (enemy[i].pos.y >= kWindowHeight * 3 - enemy[i].radius - 100.0f) {
+			enemy[i].pos.y = kWindowHeight * 3 - enemy[i].radius - 100.0f;
 		}
-		if (enemy1[i].pos.y >= kWindowHeight * 3 - enemy1[i].radius) {
-			enemy1[i].pos.y = kWindowHeight * 3 - enemy1[i].radius;
+		if (enemy1[i].pos.y >= kWindowHeight * 3 - enemy1[i].radius - 100.0f) {
+			enemy1[i].pos.y = kWindowHeight * 3 - enemy1[i].radius - 100.0f;
 		}
-		if (enemy[i].pos.y <= -kWindowHeight * 2 + enemy[i].radius) {
-			enemy[i].pos.y = -kWindowHeight * 2 + enemy[i].radius;
+		if (enemy[i].pos.y <= -kWindowHeight * 2 + enemy[i].radius + 100.0f) {
+			enemy[i].pos.y = -kWindowHeight * 2 + enemy[i].radius + 100.0f;
 		}
-		if (enemy1[i].pos.y <= -kWindowHeight * 2 + enemy1[i].radius) {
-			enemy1[i].pos.y = -kWindowHeight * 2 + enemy1[i].radius;
+		if (enemy1[i].pos.y <= -kWindowHeight * 2 + enemy1[i].radius + 100.0f) {
+			enemy1[i].pos.y = -kWindowHeight * 2 + enemy1[i].radius + 100.0f;
 		}
 	}
 }
 
-void UpdateKeys(BossKeys keys[], Enemy enemy[]) {
-	if (!keys[0].isHit) {
-		keys[0].pos.x = enemy[0].pos.x + enemy[0].radius;
-		keys[0].pos.y = enemy[0].pos.y + enemy[0].radius;
-	}
-	if (!keys[1].isHit) {
-		keys[1].pos.x = enemy[5].pos.x + enemy[0].radius;
-		keys[1].pos.y = enemy[5].pos.y + enemy[0].radius;
-	}
-	if (!keys[2].isHit) {
-		keys[2].pos.x = enemy[10].pos.x + enemy[0].radius;
-		keys[2].pos.y = enemy[10].pos.y + enemy[0].radius;
-	}
-	if (!keys[3].isHit) {
-		keys[3].pos.x = enemy[15].pos.x + enemy[0].radius;
-		keys[3].pos.y = enemy[15].pos.y + enemy[0].radius;
-	}
-}
+//void UpdateKeys(BossKeys keys[], Enemy enemy[]) {
+//
+//}
 
-void UpdatePlayerKeyEvent(Obj& player, BossKeys keys[]) {
-	for (int i = 0;i < keyCount;i++) {
-		float distanceX = player.pos.x - keys[i].pos.x;
-		float distanceY = player.pos.y - keys[i].pos.y;
-		float distance = sqrtf(static_cast<float>(pow(distanceX, 2)) + static_cast<float>(pow(distanceY, 2)));
+void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[]) {
+	if (!enemy[0].isAlive && !keys[0].isHit) {
+		keys[0].isHit = true;
+		keys[0].pos.x = -10000.0f;
+		keys[0].pos.y = -10000.0f;
+		remainingKeys--;
+		if (!Novice::IsPlayingAudio(sound.key.play)) {
+			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
+		}
+	}
 
-		if (distance <= player.radius + keys[i].radius) {
-			keys[i].isHit = true;
-			keys[i].pos.x = -10000.0f;
-			keys[i].pos.y = -10000.0f;
-			remainingKeys--;
+	if (!enemy[5].isAlive && !keys[1].isHit) {
+		keys[1].isHit = true;
+		keys[1].pos.x = -10000.0f;
+		keys[1].pos.y = -10000.0f;
+		remainingKeys--;
+		if (!Novice::IsPlayingAudio(sound.key.play)) {
+			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
+		}
+	}
+
+	if (!enemy[10].isAlive && !keys[2].isHit) {
+		keys[2].isHit = true;
+		keys[2].pos.x = -10000.0f;
+		keys[2].pos.y = -10000.0f;
+		remainingKeys--;
+		if (!Novice::IsPlayingAudio(sound.key.play)) {
+			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
+		}
+	}
+
+	if (!enemy[15].isAlive && !keys[3].isHit) {
+		keys[3].isHit = true;
+		keys[3].pos.x = -10000.0f;
+		keys[3].pos.y = -10000.0f;
+		remainingKeys--;
+		if (!Novice::IsPlayingAudio(sound.key.play)) {
+			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
 		}
 	}
 }
 
 void RenderKeys(BossKeys keys[], Vector2 scroll, int& handle) {
-	for (int i = 0;i < keyCount;i++) {
-		Novice::DrawSprite(int(keys[i].pos.x - scroll.x), int(keys[i].pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
+	move += moveSpeed;
+	if (move >= 2.0f || move <= -2.0f) {
+		moveSpeed *= -1;
+	}
+	for (int i = 0; i < keyCount; i++) {
+		if (!keys[i].isHit) {
+			Novice::DrawSprite(int(keys[i].pos.x - scroll.x), int(keys[i].pos.y - scroll.y + move), handle, 1, 1, 0.0f, WHITE);
+		}
 	}
 }
 
@@ -423,6 +523,6 @@ void LoadImages(Handle& handle) {
 	handle.enemy = Novice::LoadTexture("./Resources/Enemy/EnemyStopBoom32.png");
 	handle.enemyHorming = Novice::LoadTexture("./Resources/Enemy/enemyFollow30.png");
 	handle.enemyShot = Novice::LoadTexture("./Resources/Enemy/enemyShot30.png");
-	handle.bullet = Novice::LoadTexture("./Resources/bullet.png");
+	handle.bullet = Novice::LoadTexture("./Resources/Enemy/enemyBullet.png");
 	handle.deathEffect = Novice::LoadTexture("./Resources/effect.png");
 }

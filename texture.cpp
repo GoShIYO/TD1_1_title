@@ -16,9 +16,26 @@
 	texture->sandStar100_130 = Novice::LoadTexture("./Resources/Star/sandStar100x130.png");
 	texture->sun65_160 = Novice::LoadTexture("./Resources/Star/sun65x160.png");
 	texture->player30_32 = Novice::LoadTexture("./Resources/player30_32.png");
-	texture->attackShield40x38 = Novice::LoadTexture("./Resources/Effect/attackShield40x38.png");
+	texture->attackShield50_48 = Novice::LoadTexture("./Resources/Effect/attackShield50x48.png");
 	texture->bg7x7 = Novice::LoadTexture("./Resources/BG/bg7x7.png");
+	texture->BG3_3 = Novice::LoadTexture("./Resources/BG/BG3_3.png");
+	texture->outsideRockWall = Novice::LoadTexture("./Resources/BG/outsideRockWall.png");
 	texture->key18x38 = Novice::LoadTexture("./Resources/key18x38.png");
+	texture->GameClear = Novice::LoadTexture("./Resources/scene/GameClear.png");
+	texture->GameOver = Novice::LoadTexture("./Resources/scene/GameOver.png");
+	texture->ScoreBoard950x574 = Novice::LoadTexture("./Resources/scene/ScoreBoard950x574.png");
+	texture->title932x430 = Novice::LoadTexture("./Resources/scene/title932x430.png");
+	texture->textStart151x56 = Novice::LoadTexture("./Resources/scene/textStart151x56.png");
+	texture->titlePlayer337x279 = Novice::LoadTexture("./Resources/scene/titlePlayer337x279.png");
+	texture->earthStar1000 = Novice::LoadTexture("./Resources/scene/earthStar1000.png");
+	texture->damageShield56 = Novice::LoadTexture("./Resources/UI/damageShield56.png");
+	texture->life30x22 = Novice::LoadTexture("./Resources/UI/life30x22.png");
+	texture->marker20 = Novice::LoadTexture("./Resources/UI/marker20.png");
+	texture->textNumber18_25 = Novice::LoadTexture("./Resources/UI/textNumber18_25.png");
+	texture->textScore84_25 = Novice::LoadTexture("./Resources/UI/textScore84_25.png");
+	texture->textScores53x65 = Novice::LoadTexture("./Resources/UI/textScores53x65.png");
+	texture->playerExplosion60 = Novice::LoadTexture("./Resources/Effect/playerExplosion60.png");
+	texture->enemyExplosion50 = Novice::LoadTexture("./Resources/Effect/enemyExplosion50.png");
 }
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////

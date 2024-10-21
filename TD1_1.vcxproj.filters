@@ -56,6 +56,9 @@
     <ClCompile Include="sound.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
+    <ClCompile Include="number.cpp">
+      <Filter>KamataEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -136,5 +139,6 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="gimmickObj.h" />
     <ClInclude Include="sound.h" />
+    <ClInclude Include="number.h" />
   </ItemGroup>
 </Project>
