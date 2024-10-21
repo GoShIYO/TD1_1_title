@@ -180,42 +180,44 @@ void InitBossKeys(BossKeys keys[], Enemy enemy[]) {
 
 void EnemyMove(Enemy enemy[]) {
 	for (int i = 0; i < ENEMY_COUNT; i++) {
-		enemy[i].moveTimer++;
+		if (enemy[i].isAlive) {
+			enemy[i].moveTimer++;
 
-		if (enemy[i].moveTimer == MOVE_TIME) {
-			enemy[i].isMove = true;
-			enemy[i].direction = rand() % 4;
-		}
-		if (enemy[i].isMove) {
-			switch (enemy[i].direction) {
-			case UP:
-				enemy[i].pos.y -= enemy[i].velocity.y;
-				if (enemy[i].moveTimer >= STOP_TIME) {
-					enemy[i].moveTimer = 0;
-					enemy[i].isMove = false;
+			if (enemy[i].moveTimer == MOVE_TIME) {
+				enemy[i].isMove = true;
+				enemy[i].direction = rand() % 4;
+			}
+			if (enemy[i].isMove) {
+				switch (enemy[i].direction) {
+				case UP:
+					enemy[i].pos.y -= enemy[i].velocity.y;
+					if (enemy[i].moveTimer >= STOP_TIME) {
+						enemy[i].moveTimer = 0;
+						enemy[i].isMove = false;
+					}
+					break;
+				case DOWN:
+					enemy[i].pos.y += enemy[i].velocity.y;
+					if (enemy[i].moveTimer >= STOP_TIME) {
+						enemy[i].moveTimer = 0;
+						enemy[i].isMove = false;
+					}
+					break;
+				case RIGHT:
+					enemy[i].pos.x += enemy[i].velocity.x;
+					if (enemy[i].moveTimer >= STOP_TIME) {
+						enemy[i].moveTimer = 0;
+						enemy[i].isMove = false;
+					}
+					break;
+				case LEFT:
+					enemy[i].pos.x -= enemy[i].velocity.x;
+					if (enemy[i].moveTimer >= STOP_TIME) {
+						enemy[i].moveTimer = 0;
+						enemy[i].isMove = false;
+					}
+					break;
 				}
-				break;
-			case DOWN:
-				enemy[i].pos.y += enemy[i].velocity.y;
-				if (enemy[i].moveTimer >= STOP_TIME) {
-					enemy[i].moveTimer = 0;
-					enemy[i].isMove = false;
-				}
-				break;
-			case RIGHT:
-				enemy[i].pos.x += enemy[i].velocity.x;
-				if (enemy[i].moveTimer >= STOP_TIME) {
-					enemy[i].moveTimer = 0;
-					enemy[i].isMove = false;
-				}
-				break;
-			case LEFT:
-				enemy[i].pos.x -= enemy[i].velocity.x;
-				if (enemy[i].moveTimer >= STOP_TIME) {
-					enemy[i].moveTimer = 0;
-					enemy[i].isMove = false;
-				}
-				break;
 			}
 		}
 	}
@@ -223,19 +225,22 @@ void EnemyMove(Enemy enemy[]) {
 
 void EnemyMoveHorming(Enemy enemy[], Obj& player) {
 	for (int i = 0; i < ENEMY_COUNT; i++) {
-		enemy[i].components.x = player.pos.x - enemy[i].pos.x;
-		enemy[i].components.y = player.pos.y - enemy[i].pos.y;
-		enemy[i].magnitude = (float)sqrt(pow(enemy[i].components.x, 2) + pow(enemy[i].components.y, 2));
-		enemy[i].directions.x = enemy[i].components.x / enemy[i].magnitude;
-		enemy[i].directions.y = enemy[i].components.y / enemy[i].magnitude;
+		if (enemy[i].isAlive) {
 
-		float distanceX = enemy[i].pos.x - player.pos.x;
-		float distanceY = enemy[i].pos.y - player.pos.y;
-		float distance = sqrtf(float(pow(distanceX, 2)) + float(pow(distanceY, 2)));
+			enemy[i].components.x = player.pos.x - enemy[i].pos.x;
+			enemy[i].components.y = player.pos.y - enemy[i].pos.y;
+			enemy[i].magnitude = (float)sqrt(pow(enemy[i].components.x, 2) + pow(enemy[i].components.y, 2));
+			enemy[i].directions.x = enemy[i].components.x / enemy[i].magnitude;
+			enemy[i].directions.y = enemy[i].components.y / enemy[i].magnitude;
 
-		if (distance <= ENEMY_TO_PLAYER) {
-			enemy[i].pos.x += enemy[i].directions.x * enemy[i].velocity.x;
-			enemy[i].pos.y += enemy[i].directions.y * enemy[i].velocity.y;
+			float distanceX = enemy[i].pos.x - player.pos.x;
+			float distanceY = enemy[i].pos.y - player.pos.y;
+			float distance = sqrtf(float(pow(distanceX, 2)) + float(pow(distanceY, 2)));
+
+			if (distance <= ENEMY_TO_PLAYER) {
+				enemy[i].pos.x += enemy[i].directions.x * enemy[i].velocity.x;
+				enemy[i].pos.y += enemy[i].directions.y * enemy[i].velocity.y;
+			}
 		}
 	}
 }
@@ -294,7 +299,7 @@ void RenderEnemy(Enemy enemy[], Vector2& scroll, int handle, float px, float py,
 			if (enemy[i].isAlive) {
 				Novice::DrawSprite(int(enemy[i].pos.x - scroll.x), int(enemy[i].pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
 			}
-			else if (!enemy[i].isAlive && enemy[i].deadTimer > 0) {
+			else if (!enemy[i].isAlive && enemy[i].deadTimer > 0) {				
 				enemy[i].deadTimer--;
 
 				if (enemy[i].deadTimer % 5 == 0) {
@@ -354,7 +359,9 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound) {
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].isAlive) {
 			if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius + r, player.radius)) {
-
+				if (!Novice::IsPlayingAudio(sound.explosion.play)) {
+					sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 0, 0.5f);
+				}
 				if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius, player.radius) && !player.isCollied) {
 					player.isCollied = true;
 					player.health--;

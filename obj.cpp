@@ -680,6 +680,9 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 		player->isDead = true;
 	}
 	if (player->isDead && player->deathTimer>0) {
+		if (!Novice::IsPlayingAudio(sound->explosion.play)) {
+			sound->explosion.play = Novice::PlayAudio(sound->explosion.audio, 0, 0.5f);
+		}
 		player->deathTimer--;
 	}
 	else {
