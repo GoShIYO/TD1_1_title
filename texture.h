@@ -33,6 +33,7 @@ struct AllResource final {
 	int earthStar1000;
 	int title932x430;
 	int titlePlayer337x279;
+	int outsideRockWall;
 };
 
 

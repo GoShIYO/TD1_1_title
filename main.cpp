@@ -168,18 +168,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			/// ---------------------------------------------------------------------
 			/// ↓描画処理ここから
 			UpdateScroll(&player, &scroll);
-			Novice::DrawBox(0, 0, kWindowWidth, kWindowHeight, 0, 0x002222FF, kFillModeSolid);
-			Novice::DrawSprite(-3840 - int(scroll.x), -2160 - int(scroll.y), texture.bg7x7, 1, 1, 0, WHITE);
+			//Novice::DrawBox(0, 0, kWindowWidth, kWindowHeight, 0, 0x002222FF, kFillModeSolid);
+			Novice::DrawSprite(
+				-3840 - int(scroll.x * 0.5f), 
+				-2160 - int(scroll.y * 0.5f), 
+				texture.bg7x7, 1, 1, 0, WHITE);
 			RenderMiniMap(obj, &player);
 			RenderObj(obj, &scroll, texture);
 			RenderPlayer(&player, &scroll, &texture.player30_32, &texture.attackShield50_48);
 			RenderParticle(particles, &scroll);
-			//for (int i = 0; i < objCount; i++) {
-			//	showCommonColorTexture(90, 90, 0, obj[i].pos.x, obj[i].pos.y, texture.bubble60_90, 0xFFAAAAFF,&scroll);
-			//}
+
 			RenderMiniMapEnemy(enemy, enemyHorming, enemyShot);
-			Novice::DrawBox(-2 * kWindowWidth - int(scroll.x) + 100, -2 * kWindowHeight - int(scroll.y) + 100, 5 * kWindowWidth - 200, 5 * kWindowHeight - 200, 0, RED, kFillModeWireFrame);
-			//showCommonColorTexture(130, 130, 0, 500, 500, texture.earthStar100_130, 0xFFFFFFFF, &scroll);
+			Novice::DrawSprite(
+				-3 * kWindowWidth - int(scroll.x),
+				-3 * kWindowHeight - int(scroll.y),
+				texture.outsideRockWall,1, 1, 0, WHITE);
 
 
 			// ギミックオブジェクトの描画
