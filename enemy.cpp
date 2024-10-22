@@ -83,8 +83,8 @@ void InitEnemyHorming(Enemy enemy[]) {
 	enemy[19].pos = { -1500.0f, 720.0f };
 
 	for (int i = 0; i < ENEMY_COUNT; i++) {
-		enemy[i].velocity.x = 2.0f;
-		enemy[i].velocity.y = 2.0f;
+		enemy[i].velocity.x = 1.0f;
+		enemy[i].velocity.y = 1.0f;
 		enemy[i].components.x = 0.0f;
 		enemy[i].components.y = 0.0f;
 		enemy[i].directions.x = 0.0f;
@@ -147,8 +147,8 @@ void InitEnemyBullet(EnemyBullet bullet[]) {
 	for (int i = 0; i < BULLET_COUNT; i++) {
 		bullet[i].pos.x = -10000.0f;
 		bullet[i].pos.y = -10000.0f;
-		bullet[i].velocity.x = 5.0f;
-		bullet[i].velocity.y = 5.0f;
+		bullet[i].velocity.x = 4.0f;
+		bullet[i].velocity.y = 4.0f;
 		bullet[i].components.x = 0.0f;
 		bullet[i].components.y = 0.0f;
 		bullet[i].directions.x = 0.0f;

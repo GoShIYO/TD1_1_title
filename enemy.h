@@ -1,7 +1,7 @@
 ﻿#pragma once
 #define MOVE_TIME 60
 #define STOP_TIME 120
-#define SHOT_TIME 180
+#define SHOT_TIME 240
 #define BULLET_COUNT 100
 #define BULLET_ACTIVE_RANGE 500.0f
 #define ENEMY_TO_PLAYER 500.0f
