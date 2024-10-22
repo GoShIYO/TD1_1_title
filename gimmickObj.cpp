@@ -138,7 +138,7 @@ void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
 	for (int i = 0; i < BOX_COUNT; i++) {
 		if (gimmickObjs[i].isActive) {
 
-			if (CheckGimmickCollision(gimmickObjs[i], player)) {
+			if (CheckGimmickCollision(gimmickObjs[i], player) && !player.isRotate) {
 
 				Vector2 collisionNormal = { 0.0f, 0.0f };
 

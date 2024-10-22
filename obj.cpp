@@ -606,7 +606,9 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 		player->atTimer = 60;
 		player->attack = false;
 	}
-
+	if (player->health > 3) {
+		player->health = 3;
+	}
 	//Novice::ScreenPrintf(0, 200, "player.iTimer = %d", player->InvincibleTimer);
 
 	for (int i = 0; i < objCount; i++) {

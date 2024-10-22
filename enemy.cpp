@@ -564,12 +564,13 @@ void EnemyRange(Enemy enemy[], Enemy enemy1[]) {
 //
 //}
 
-void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& boss) {
+void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& boss,Obj& player) {
 	if (!enemy[0].isAlive && !keys[0].isHit) {
 		keys[0].isHit = true;
 		keys[0].pos.x = -10000.0f;
 		keys[0].pos.y = -10000.0f;
 		remainingKeys--;
+		player.health++;
 		if (!Novice::IsPlayingAudio(sound.key.play)) {
 			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.2f);
 		}
@@ -580,6 +581,8 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& b
 		keys[1].pos.x = -10000.0f;
 		keys[1].pos.y = -10000.0f;
 		remainingKeys--;
+		player.health++;
+
 		if (!Novice::IsPlayingAudio(sound.key.play)) {
 			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.2f);
 		}
@@ -590,6 +593,8 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& b
 		keys[2].pos.x = -10000.0f;
 		keys[2].pos.y = -10000.0f;
 		remainingKeys--;
+		player.health++;
+
 		if (!Novice::IsPlayingAudio(sound.key.play)) {
 			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.2f);
 		}
@@ -600,6 +605,8 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& b
 		keys[3].pos.x = -10000.0f;
 		keys[3].pos.y = -10000.0f;
 		remainingKeys--;
+		player.health++;
+
 		if (!Novice::IsPlayingAudio(sound.key.play)) {
 			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.2f);
 		}
