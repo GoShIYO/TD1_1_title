@@ -557,8 +557,8 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound, Enemy& bos
 	if (boss.isAlive) {
 
 		if (CheckCircleCollision(boss.pos, player.pos, boss.radius, player.radius) && !player.isCollied) {
-			float dx = player.pos.x - boss.pos.x ;
-			float dy = player.pos.y - boss.pos.y ;
+			float dx = player.pos.x - boss.pos.x + boss.radius;
+			float dy = player.pos.y - boss.pos.y + boss.radius;
 			float angle = atan2f(dy, dx);
 			player.angle += angle;		
 			if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
@@ -722,7 +722,7 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& b
 	if (remainingKeys == 0 && boss.health >= 1) {
 		boss.isAlive = true;
 	}
-	if (boss.health <= 0) {
+	if (boss.health <= 0 && !boss.isAlive) {
 		remainingKeys = keyCount;
 	}
 }
