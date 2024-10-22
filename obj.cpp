@@ -15,7 +15,7 @@ void InitPlayer(Obj* player) {
 	player->width = 32.0f;
 	player->height = 30.0f;
 	player->isRotate = false;
-	player->health = 4;
+	player->health = 5;
 	player->InvincibleTimer = 90;
 	player->attack = false;
 	player->isCollied = false;
@@ -210,19 +210,20 @@ Rect RectRotedPlayer(const Vector2* pos, float width, float height, float angle)
 
 void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle, UI* ui) {
 	static int life = 0;
-	if (player->health == 4) {
+	if (player->health == 5) {
 		life = 0;
 	}
-	else if (player->health == 3) {
+	else if (player->health == 4) {
 		life = 1;
 	}
-	else if (player->health == 2) {
+	else if (player->health == 3) {
 		life = 2;
 	}
-	else if(player->health == 1){
+	else if (player->health == 2) {
 		life = 3;
 	}
-	else if (player->health == 0)life = 4;
+	else if (player->health == 1)life = 4;
+	else if (player->health == 0)life = 5;
 	Rect points = RectRotedPlayer(&player->pos, player->width, player->height, player->angle);
 	Vector2 a = points.a;
 	Vector2 b = points.b;
@@ -282,7 +283,7 @@ void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle, UI* ui) {
 			);
 			Novice::DrawSpriteRect(
 				int(player->pos.x + 50 - scroll->x), int(player->pos.y - 50 - scroll->y),
-				life * 22, 0, 22, 30, handle->life30x22, 1 / 4.0f, 1, 0, ui->lifeColor);
+				life * 22, 0, 22, 30, handle->life30x22, 1 / 5.0f, 1, 0, ui->lifeColor);
 		}
 		if (player->InvincibleTimer % 8 == 0 && player->isCollied) {
 			Novice::DrawQuad(
@@ -614,8 +615,8 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 		player->atTimer = 60;
 		player->attack = false;
 	}
-	if (player->health > 4) {
-		player->health = 4;
+	if (player->health > 5) {
+		player->health = 5;
 	}
 	//Novice::ScreenPrintf(0, 200, "player.iTimer = %d", player->InvincibleTimer);
 
