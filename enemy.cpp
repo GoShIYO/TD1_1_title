@@ -178,7 +178,7 @@ void InitBossKeys(BossKeys keys[], Enemy enemy[]) {
 	}
 }
 
-void InitBoss(Enemy boss) {
+void InitBoss(Enemy& boss) {
 	boss.pos = { 0.0f, -120.0f };
 	boss.velocity.x = 2.0f;
 	boss.velocity.y = 2.0f;
@@ -187,9 +187,13 @@ void InitBoss(Enemy boss) {
 	boss.radius = 75.0f;
 	boss.moveTimer = 0;
 	boss.direction = 0;
-	boss.isAlive = true;
+	boss.colTimer = 0;
+	boss.isAlive = false;
 	boss.isMove = false;
+	boss.isHit = false;
+	boss.isCol = false;
 	boss.health = 5;
+	boss.state = 0;
 	boss.score = 1000;
 	boss.deadTimer = 300;
 	boss.deathAnimationCount = 0;
@@ -238,6 +242,42 @@ void EnemyMove(Enemy enemy[]) {
 				}
 			}
 		}
+	}
+}
+
+void BossUpdate(Enemy& boss, Scene &scene) {
+	if (boss.isHit && !boss.isCol) {
+		boss.health--;
+		boss.isHit = false;
+		boss.isCol = true;
+	}
+
+	if (boss.isCol) {
+		boss.colTimer++;
+	}
+	if (boss.colTimer >= 120) {
+		boss.isCol = false;
+		boss.colTimer = 0;
+	}
+
+	if (boss.health <= 0) {
+		boss.isAlive = false;
+	}
+	if (!boss.isAlive && boss.health <= 0) {
+		scene = CLEAR;
+	}
+	switch (boss.state)
+	{
+	case STAND:
+		
+		break;
+
+	case MOVE:
+
+		break;
+	case TACKLE:
+
+		break;
 	}
 }
 
@@ -347,6 +387,12 @@ void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle) {
 	}
 }
 
+void RenderBoss(Enemy& boss, Vector2 scroll, int handle) {
+	if (boss.isAlive) {
+		Novice::DrawSprite(int(boss.pos.x - scroll.x), int(boss.pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
+	}
+}
+
 void BulletAnim(EnemyBullet bullet[]) {
 	for (int i = 0; i < BULLET_COUNT; i++) {
 		if (bullet[i].isActive) {
@@ -372,7 +418,7 @@ bool CheckCircleCollision(Vector2& a, Vector2& b, const float& radiusA, const fl
 	}
 	return false;
 }
-void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound) {
+void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound, Enemy& boss) {
 	const float r = 50.0f;
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].isAlive) {
@@ -409,6 +455,36 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound) {
 		//Novice::ScreenPrintf(0, 100, "enemy.isAlive : %s", enemy[i].isAlive ? "alive" : "death");
 	}
 
+	if (boss.isAlive) {
+		if (CheckCircleCollision(boss.pos, player.pos, boss.radius + r, player.radius)) {
+			if (!Novice::IsPlayingAudio(sound.explosion.play)) {
+				sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 0, 1.5f);
+			}
+			if (CheckCircleCollision(boss.pos, player.pos, boss.radius, player.radius) && !player.isCollied) {
+				player.isCollied = true;
+				player.health--;
+				if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
+					sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
+				}
+			}
+			if (player.attack) {
+				if (!player.isRotate) {
+					float dx = player.pos.x - boss.pos.x;
+					float dy = player.pos.y - boss.pos.y;
+					float angle = atan2f(dy, dx);
+					player.angle += angle;
+				}
+				boss.isHit=true;
+			} else {
+				if (!player.isRotate) {
+					float dx = player.pos.x - boss.pos.x;
+					float dy = player.pos.y - boss.pos.y;
+					float angle = atan2f(dy, dx);
+					player.angle += angle;
+				}
+			}
+		}
+	}
 }
 
 void UpdatePlayerBulletEvent(Obj& player, EnemyBullet bullet[]) {
@@ -484,7 +560,7 @@ void EnemyRange(Enemy enemy[], Enemy enemy1[]) {
 //
 //}
 
-void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[]) {
+void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& boss) {
 	if (!enemy[0].isAlive && !keys[0].isHit) {
 		keys[0].isHit = true;
 		keys[0].pos.x = -10000.0f;
@@ -524,6 +600,9 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[]) {
 			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.2f);
 		}
 	}
+	if (remainingKeys == 0 && boss.health >= 1) {
+		boss.isAlive = true;
+	}
 }
 
 void RenderKeys(BossKeys keys[], Vector2 scroll, int& handle) {
@@ -544,4 +623,5 @@ void LoadImages(Handle& handle) {
 	handle.enemyShot = Novice::LoadTexture("./Resources/Enemy/enemyShot30.png");
 	handle.bullet = Novice::LoadTexture("./Resources/Enemy/enemyBullet.png");
 	handle.deathEffect = Novice::LoadTexture("./Resources/effect.png");
+	handle.boss = Novice::LoadTexture("./Resources/Enemy/boss130_B.png");
 }

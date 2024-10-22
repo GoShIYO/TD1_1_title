@@ -10,14 +10,6 @@ const char kWindowTitle[] = "5107_イノウエ_カン_ミハラ_リ";
 const int kWindowWidth = 1280;
 const int kWindowHeight = 720;
 
-enum Scene
-{
-	TITLE,
-	HELP,
-	PLAY,
-	GAME_OVER,
-	CLEAR
-};
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ライブラリの初期化
@@ -34,6 +26,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Enemy enemyShot[ENEMY_COUNT];
 
 	BossKeys bossKeys[keyCount];
+	Enemy boss;
 
 	EnemyBullet bullet[BULLET_COUNT];
 
@@ -62,6 +55,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	InitEnemyShot(enemyShot);
 	InitEnemyBullet(bullet);
 	InitBossKeys(bossKeys, enemyShot);
+	InitBoss(boss);
 	InitSystem(&system);
 	initializeResource(&texture);
 	InitGimmickObjs(gimmickObjs);
@@ -178,6 +172,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				InitEnemyShot(enemyShot);
 				InitEnemyBullet(bullet);
 				InitBossKeys(bossKeys, enemyShot);
+				InitBoss(boss);
 				InitSystem(&system);
 				initializeResource(&texture);
 				InitGimmickObjs(gimmickObjs); // ギミックオブジェクトの初期化
@@ -211,14 +206,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			EnemyMove(enemy);
 			EnemyMoveHorming(enemyHorming, player);
 			BulletShot(enemyShot, player, bullet);
+			BossUpdate(boss, scene);
 
 			//敵の移動制限
 			EnemyRange(enemy, enemyHorming);
 
 			//敵の当たり判定
-			UpdatePlayerEnemyEvent(enemy, player, sound);
-			UpdatePlayerEnemyEvent(enemyHorming, player, sound);
-			UpdatePlayerEnemyEvent(enemyShot, player, sound);
+			UpdatePlayerEnemyEvent(enemy, player, sound, boss);
+			UpdatePlayerEnemyEvent(enemyHorming, player, sound, boss);
+			UpdatePlayerEnemyEvent(enemyShot, player, sound, boss);
 
 			//弾のアニメーション
 			BulletAnim(bullet);
@@ -231,7 +227,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//鍵の更新
 			//UpdateKeys(bossKeys, enemyShot);
-			UpdatePlayerKeyEvent(bossKeys, sound, enemyShot);
+			UpdatePlayerKeyEvent(bossKeys, sound, enemyShot, boss);
 
 			if (player.deathTimer <= 0) {
 				scene = GAME_OVER;
@@ -261,6 +257,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y, texture.enemyExplosion50);
 			RenderBullet(bullet, scroll, handle.bullet);
 			RenderKeys(bossKeys, scroll, texture.key18x38);
+			RenderBoss(boss, scroll, handle.boss);
 			//ミニマップ
 			RenderMiniMap(obj, &player);
 			RenderMiniMapEnemy(enemy, enemyHorming, enemyShot);
@@ -317,7 +314,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			break;
 		}
 
-
+		Novice::ScreenPrintf(0, 0, "boss.health : %d", boss.health);
 
 		/// ↑描画処理ここまで
 		/// ---------------------------------------------------------------------
