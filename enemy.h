@@ -73,6 +73,7 @@ void InitEnemyHorming(Enemy enemy[]);
 void InitEnemyShot(Enemy enemy[]);
 void InitEnemyBullet(EnemyBullet bullet[]);
 void InitBossKeys(BossKeys keys[], Enemy enemy[]);
+void InitBoss(Enemy boss);
 
 void LoadImages(Handle& handle);
 
