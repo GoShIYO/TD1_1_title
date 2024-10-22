@@ -15,7 +15,7 @@ void InitPlayer(Obj* player) {
 	player->width = 32.0f;
 	player->height = 30.0f;
 	player->isRotate = false;
-	player->health = 3;
+	player->health = 4;
 	player->InvincibleTimer = 90;
 	player->attack = false;
 	player->isCollied = false;
@@ -210,18 +210,19 @@ Rect RectRotedPlayer(const Vector2* pos, float width, float height, float angle)
 
 void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle, UI* ui) {
 	static int life = 0;
-	if (player->health > 2) {
+	if (player->health == 4) {
 		life = 0;
 	}
-	else if (player->health <= 2 && player->health > 1) {
+	else if (player->health == 3) {
 		life = 1;
 	}
-	else if (player->health == 1) {
+	else if (player->health == 2) {
 		life = 2;
 	}
-	else {
+	else if(player->health == 1){
 		life = 3;
 	}
+	else if (player->health == 0)life = 4;
 	Rect points = RectRotedPlayer(&player->pos, player->width, player->height, player->angle);
 	Vector2 a = points.a;
 	Vector2 b = points.b;
@@ -613,8 +614,8 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 		player->atTimer = 60;
 		player->attack = false;
 	}
-	if (player->health > 3) {
-		player->health = 3;
+	if (player->health > 4) {
+		player->health = 4;
 	}
 	//Novice::ScreenPrintf(0, 200, "player.iTimer = %d", player->InvincibleTimer);
 

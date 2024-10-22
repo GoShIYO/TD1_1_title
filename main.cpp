@@ -249,7 +249,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//鍵の更新
 			//UpdateKeys(bossKeys, enemyShot);
 			UpdatePlayerKeyEvent(bossKeys, sound, enemyShot, boss,player,keysCount);
-			Novice::ScreenPrintf(0, 0, "%d", keysCount);
+			//Novice::ScreenPrintf(0, 0, "%d", keysCount);
 			if (player.deathTimer <= 0) {
 				scene = GAME_OVER;
 			}
