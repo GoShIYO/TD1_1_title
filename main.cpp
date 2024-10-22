@@ -6,7 +6,7 @@
 #include"sound.h"
 #include"number.h"
 
-const char kWindowTitle[] = "5107_イノウエ_カン_ミハラ_リ";
+const char kWindowTitle[] = "5107_ギャラクシーストライカー";
 const int kWindowWidth = 1280;
 const int kWindowHeight = 720;
 
@@ -146,7 +146,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 
-			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN] && !isSceneChange && !isPlayTitleAnimation) {
+			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE] && !isSceneChange && !isPlayTitleAnimation) {
 				isSceneChange = true;
 				startTimer = 0;
 				Novice::StopAudio(sound.title_bgm.play);
@@ -288,14 +288,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			// デバッグ表示
 			viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
 
-			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
+			/*if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
 				isPlayTitleAnimation = true;
 				isSceneChange = false;
 				titleTimer = 0;
 				startTimer = 0;
 
 				scene = TITLE;
-			}
+			}*/
 			break;
 		case GAME_OVER:
 			
@@ -311,7 +311,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			Novice::StopAudio(sound.bgm_game.play);
 
 
-			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
+			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
 				if (scoreBoard.flat == 0) {
 					scoreBoard.flat++;
 				} else {
@@ -335,7 +335,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			Novice::StopAudio(sound.bgm_game.play);
 
 
-			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
+			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
 				if (scoreBoard.flat == 0) {
 					scoreBoard.flat++;
 				} else {
@@ -352,7 +352,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			break;
 		}
 
-		Novice::ScreenPrintf(0, 0, "boss.health : %d", boss.health);
+		//Novice::ScreenPrintf(0, 0, "boss.health : %d", boss.health);
 
 		/// ↑描画処理ここまで
 		/// ---------------------------------------------------------------------
