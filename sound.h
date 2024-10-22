@@ -13,7 +13,7 @@ struct Sound
 	AudioHandle enemy_dead;
 	AudioHandle shield;
 	AudioHandle key;
-	AudioHandle bgm_title;
+	AudioHandle bgm_game;
 };
 
 void InitSound(Sound* sound);
