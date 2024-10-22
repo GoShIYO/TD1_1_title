@@ -260,7 +260,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderGimmickObjs(gimmickObjs, &scroll);
 
 			RenderEnemy(enemy, scroll, handle.enemy, player.pos.x, player.pos.y, texture.enemyExplosion50);
-			RenderEnemy(enemyHorming, scroll, handle.enemyHorming, player.pos.x, player.pos.y, texture.enemyExplosion50);
+			RenderEnemy(enemyHoming, scroll, handle.enemyHoming, player.pos.x, player.pos.y, texture.enemyExplosion50);
 			RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y, texture.enemyExplosion50);
 			RenderBullet(bullet, scroll, handle.bullet);
 			RenderKeys(bossKeys, scroll, texture.key18x38);

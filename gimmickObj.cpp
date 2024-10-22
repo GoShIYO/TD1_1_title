@@ -128,7 +128,7 @@ void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
 	}
 	if (gimmickObjs[6].isActive) {
 
-		gimmickObjs[6].obj.pos.y += 0.25f * gimmickObjs[6].moveDir;
+		gimmickObjs[6].obj.pos.y += 1.0f * gimmickObjs[6].moveDir;
 		if (gimmickObjs[6].obj.pos.y >= -550.0f || gimmickObjs[6].obj.pos.y <= -750.0f) {
 			gimmickObjs[6].moveDir *= -1;
 		}
