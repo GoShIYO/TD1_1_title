@@ -209,8 +209,8 @@ void InitBoss(Enemy& boss) {
 void InitBossBullet(Enemy& boss, EnemyBullet& bullet) {
 	boss.isActive = false;
 	bullet.isActive = false;
-	bullet.pos.x = 0.0f;
-	bullet.pos.y = 0.0f;
+	bullet.pos.x = -10000.0f;
+	bullet.pos.y = -10000.0f;
 	bullet.velocity.x = 5.0f;
 	bullet.velocity.y = 5.0f;
 	bullet.components.x = 0.0f;
@@ -304,13 +304,23 @@ void BossShot(Enemy& boss, EnemyBullet& bullet, Obj& player) {
 	if (bullet.animTimer % 20 == 0) {
 		bullet.moveX += 25;
 	}
-	Novice::ScreenPrintf(0, 0, "bullet.pos.x : %f", bullet.pos.x);
-	Novice::ScreenPrintf(0, 20, "bullet.pos.y : %f", bullet.pos.y);
-	Novice::ScreenPrintf(0, 40, "bullet.moveX : %d", bullet.moveX);
-	Novice::ScreenPrintf(0, 60, "boss.pos.x : %f", boss.pos.x);
 }
 
 void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sound& sound) {
+	float dx = bullet.pos.x - player.pos.x;
+	float dy = bullet.pos.y - player.pos.y;
+	float d = sqrtf(static_cast<float>(pow(dx, 2)) + static_cast<float>(pow(dy, 2)));
+
+	if (d <= boss.radius + player.radius) {
+		player.health--;
+		bullet.pos.x = -10000.0f;
+		bullet.pos.y = -10000.0f;
+		player.isCollied = true;
+		if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
+			sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
+		}
+	}
+
 	if (boss.isHit && !boss.isCol) {
 		boss.health--;
 		boss.isHit = false;
@@ -360,7 +370,7 @@ void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sou
 }
 
 void RenderBossBullet(EnemyBullet& bullet, int handle, Vector2& scroll) {
-	Novice::DrawSpriteRect(int(bullet.pos.x - scroll.x), int(bullet.pos.y - scroll.y), bullet.moveX, 0, 25, 25, handle, 1/12, 1, 0.0f, WHITE);
+	Novice::DrawSpriteRect(int(bullet.pos.x - scroll.x), int(bullet.pos.y - scroll.y), bullet.moveX, 0, 25, 25, handle, (25.0f / 300.0f), 1, 0.0f, WHITE);
 }
 
 void EnemyMoveHorming(Enemy enemy[], Obj& player) {
