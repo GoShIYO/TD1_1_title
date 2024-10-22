@@ -100,8 +100,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		case TITLE:
 			//BGM
 			Novice::StopAudio(sound.bgm_title.play);
-			Novice::StopAudio(sound.player_move.play);
-
 			if (isPlayTitleAnimation) {
 				if (titleTimer < 1.0f) {
 					titleTimer += 0.005f;
@@ -195,7 +193,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//BGM
 
 			if (!Novice::IsPlayingAudio(sound.bgm_title.play)) {
-				sound.bgm_title.play = Novice::PlayAudio(sound.bgm_title.audio, 1, 0.1f);
+				sound.bgm_game.play = Novice::PlayAudio(sound.bgm_game.audio, 1, 0.1f);
 			}
 
 			if (keys[DIK_R] && !preKeys[DIK_R]) {
@@ -289,8 +287,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		case GAME_OVER:
 			Novice::DrawSprite(0, 0, texture.GameOver, 1, 1, 0, WHITE);
 			//BGM
-			Novice::StopAudio(sound.bgm_title.play);
-			Novice::StopAudio(sound.player_move.play);
+			Novice::StopAudio(sound.bgm_game.play);
 
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
 				isPlayTitleAnimation = true;
@@ -304,8 +301,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		case CLEAR:
 			Novice::DrawSprite(0, 0, texture.GameClear, 1, 1, 0, WHITE);
 			//BGM
-			Novice::StopAudio(sound.bgm_title.play);
-			Novice::StopAudio(sound.player_move.play);
+			Novice::StopAudio(sound.bgm_game.play);
 
 
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {

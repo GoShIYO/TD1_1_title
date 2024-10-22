@@ -671,7 +671,6 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 	else {
 		player->pos.x += player->velocity.x * cosf(player->angle);
 		player->pos.y += player->velocity.y * sinf(player->angle);
-		//Novice::StopAudio(sound->player_move.play);
 		if (!Novice::IsPlayingAudio(sound->player_move.play) && !player->isDead) {
 			sound->player_move.play = Novice::PlayAudio(sound->player_move.audio, 1, 0.5f);
 		}
