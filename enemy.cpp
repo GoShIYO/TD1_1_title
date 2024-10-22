@@ -334,21 +334,23 @@ void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sou
 		if (boss.colTimer >= 120) {
 			boss.isCol = false;
 			boss.colTimer = 0;
-		if (boss.health <= 0) {
-		if (boss.deadTimer > 0) {
-			boss.deadTimer--;
-		}
-		if (!Novice::IsPlayingAudio(sound.explosion.play)) {
-			sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 1, 1.0f);
+			if (boss.health <= 0) {
+				if (boss.deadTimer > 0) {
+					boss.deadTimer--;
+				}
+				if (!Novice::IsPlayingAudio(sound.explosion.play)) {
+					sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 1, 1.0f);
+				}
+			}
+			if (boss.deadTimer <= 0) {
+				Novice::StopAudio(sound.explosion.play);
+				boss.isAlive = false;
+				scene = CLEAR;
+			}
+			BossMove(boss);
+			BossShot(boss, bullet, player);
 		}
 	}
-	if (boss.deadTimer <= 0) {
-		Novice::StopAudio(sound.explosion.play);
-		boss.isAlive = false;
-		scene = CLEAR;
-	}
-	BossMove(boss);
-	BossShot(boss, bullet, player);
 }
 
 void RenderBossBullet(EnemyBullet& bullet, int handle, Vector2& scroll) {
