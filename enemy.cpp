@@ -301,7 +301,7 @@ void BossShot(Enemy& boss, EnemyBullet& bullet, Obj& player) {
 		bullet.animTimer = 0;
 		bullet.moveX = 0;
 	}
-	if (bullet.animTimer % 5 == 0) {
+	if (bullet.animTimer % 20 == 0) {
 		bullet.moveX += 25;
 	}
 }
@@ -500,7 +500,7 @@ void BulletAnim(EnemyBullet bullet[]) {
 				bullet[i].animTimer = 0;
 				bullet[i].moveX = 0;
 			}
-			if (bullet[i].animTimer % 5 == 0) {
+			if (bullet[i].animTimer % 20 == 0) {
 				bullet[i].moveX += static_cast<int>(bullet[i].width);
 			}
 		}
