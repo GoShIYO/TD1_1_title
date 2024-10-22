@@ -11,6 +11,9 @@ void InitSound(Sound* sound)
 	sound->key.audio = Novice::LoadAudio("./Resources/Sound/key.wav");
 	sound->bgm_game.audio = Novice::LoadAudio("./Resources/Sound/bgm_game.mp3");
 	sound->explosion.audio = Novice::LoadAudio("./Resources/Sound/explosion.wav");
+	sound->titieFlySound.audio = Novice::LoadAudio("./Resources/Sound/titieFlySound.wav");
+	sound->titieStopFlySound.audio = Novice::LoadAudio("./Resources/Sound/titieStopFlySound.wav");
+	sound->title_bgm.audio = Novice::LoadAudio("./Resources/Sound/title_bgm.mp3");
 
 
 
@@ -21,4 +24,7 @@ void InitSound(Sound* sound)
 	sound->shield.play = -1;
 	sound->key.play = -1;
 	sound->bgm_game.play = -1;
+	sound->titieFlySound.play = -1;
+	sound->titieStopFlySound.play = -1;
+	sound->title_bgm.play = -1;
 }

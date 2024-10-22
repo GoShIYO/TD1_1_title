@@ -103,6 +103,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		case TITLE:
 			//BGM
 			Novice::StopAudio(sound.bgm_game.play);
+			if (!Novice::IsPlayingAudio(sound.title_bgm.play) && sound.title_bgm.play == -1) {
+				sound.title_bgm.play = Novice::PlayAudio(sound.title_bgm.audio, 1, 0.1f);
+			}
 			if (isPlayTitleAnimation) {
 				if (titleTimer < 1.0f) {
 					titleTimer += 0.005f;
@@ -117,11 +120,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				titleParticles.x = EaseOutElastic(1700.0f, 1200.0f, titleTimer);
 				titleParticles.y = EaseOutElastic(1100.0f, 600.0f, titleTimer);
 				textStart.y = EaseOutElastic(940.0f, 540.0f, titleTimer);
+				
 			}
 			else {
 				titleTimer = 0;
 			}
-
+			if (!Novice::IsPlayingAudio(sound.titieStopFlySound.play) && sound.titieStopFlySound.play ==-1) {
+				sound.titieStopFlySound.play = Novice::PlayAudio(sound.titieStopFlySound.audio, 0, 1.5f);
+			}
 			Novice::DrawSprite(0, 0, texture.BG3_3, 1, 1, 0, WHITE);
 			Novice::DrawSprite(int(earthStar.x), int(earthStar.y), texture.earthStar1000, scale / 1000.0f, scale / 1000.0f, titleEarthAngle, WHITE);
 			Novice::DrawSprite(int(title.x), int(title.y), texture.title932x430, 1, 1, 0, WHITE);
@@ -149,6 +155,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN] && !isSceneChange && !isPlayTitleAnimation) {
 				isSceneChange = true;
 				startTimer = 0;
+				Novice::StopAudio(sound.title_bgm.play);
+				if (!Novice::IsPlayingAudio(sound.titieFlySound.play)) {
+					sound.titieFlySound.play = Novice::PlayAudio(sound.titieFlySound.audio, 0, 1.0f);
+				}
 			}
 			if (isSceneChange) {
 				startTimer += 0.01f;
@@ -164,12 +174,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				titleParticles.y = EaseInBounce(600.0f, -200.0f, startTimer);
 				textStart.y = EaseOutCubic(540.0f, 940.0f, startTimer);
 
+				
 				if (startTimer > 1) {
 					isSceneChange = false;
 					scale = 1500.0f;
 					titleEarthAngle = 0;
 					earthStar = { -980.0f,-280.0f };
-
 					scene = PLAY;
 				}
 			}
@@ -186,6 +196,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				initializeResource(&texture);
 				InitGimmickObjs(gimmickObjs); // ギミックオブジェクトの初期化
 				scroll = { 0,0 };
+				sound.title_bgm.play = -1;
+
 			}
 
 			break;

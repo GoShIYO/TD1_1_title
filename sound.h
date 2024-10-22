@@ -15,6 +15,9 @@ struct Sound
 	AudioHandle key;
 	AudioHandle explosion;
 	AudioHandle bgm_game;
+	AudioHandle titieFlySound;
+	AudioHandle titieStopFlySound;
+	AudioHandle title_bgm;
 };
 
 void InitSound(Sound* sound);
