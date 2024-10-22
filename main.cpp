@@ -99,7 +99,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		{
 		case TITLE:
 			//BGM
-			Novice::StopAudio(sound.bgm_title.play);
+			Novice::StopAudio(sound.bgm_game.play);
 			if (isPlayTitleAnimation) {
 				if (titleTimer < 1.0f) {
 					titleTimer += 0.005f;
@@ -192,7 +192,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//BGM
 
-			if (!Novice::IsPlayingAudio(sound.bgm_title.play)) {
+			if (!Novice::IsPlayingAudio(sound.bgm_game.play)) {
 				sound.bgm_game.play = Novice::PlayAudio(sound.bgm_game.audio, 1, 0.1f);
 			}
 
