@@ -35,6 +35,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Handle handle;
 	LoadImages(handle);
 
+
 	System system;
 
 	AllResource texture;
