@@ -14,6 +14,7 @@ struct Sound
 	AudioHandle shield;
 	AudioHandle key;
 	AudioHandle explosion;
+	AudioHandle bgm_title;
 };
 
 void InitSound(Sound* sound);
