@@ -587,6 +587,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 	if (!player->isRotate) {
 		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
 			player->attack = true;
+			Novice::StopAudio(sound->shield.play);
 			if (!Novice::IsPlayingAudio(sound->shield.play) && player->atTimer == 60) {
 				sound->shield.play = Novice::PlayAudio(sound->shield.audio, 0, 1.0f);
 			}
@@ -670,6 +671,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 	else {
 		player->pos.x += player->velocity.x * cosf(player->angle);
 		player->pos.y += player->velocity.y * sinf(player->angle);
+		Novice::StopAudio(sound->player_move.play);
 		if (!Novice::IsPlayingAudio(sound->player_move.play)) {
 			sound->player_move.play = Novice::PlayAudio(sound->player_move.audio, 1, 0.2f);
 		}
