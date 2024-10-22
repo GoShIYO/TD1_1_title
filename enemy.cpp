@@ -401,6 +401,7 @@ void UpdatePlayerBulletEvent(Obj& player, EnemyBullet bullet[]) {
 
 		if (distance <= player.radius + bullet[i].radius) {
 			player.health--;
+			player.isCollied = true;
 			bullet[i].pos.x = -10000.0f;
 			bullet[i].pos.y = -10000.0f;
 			bullet[i].isActive = false;
