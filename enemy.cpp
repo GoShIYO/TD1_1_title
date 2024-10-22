@@ -104,11 +104,11 @@ void InitEnemyHorming(Enemy enemy[]) {
 }
 
 void InitEnemyShot(Enemy enemy[]) {
-	enemy[0].pos = { -1950.0f, -900.0f };
-	enemy[1].pos = { -2000.0f, -500.0f };
+	enemy[0].pos = { -2350.0f, -900.0f };
+	enemy[1].pos = { 2000.0f, 1700.0f };
 	enemy[2].pos = { -1700.0f, -900.0f };
 	enemy[3].pos = { -1650.0f, -500.0f };
-	enemy[4].pos = { -1660.0f, -900.0f };
+	enemy[4].pos = { -1660.0f, 0.0f };
 
 	enemy[5].pos = { 3700.0f, 1700.0f };
 	enemy[6].pos = { 3500.0f, 1100.0f };
@@ -206,6 +206,22 @@ void InitBoss(Enemy& boss) {
 	boss.stateTimer = 0;
 }
 
+void InitBossBullet(Enemy& boss, EnemyBullet& bullet) {
+	boss.isActive = false;
+	bullet.isActive = false;
+	bullet.pos.x = 0.0f;
+	bullet.pos.y = 0.0f;
+	bullet.velocity.x = 5.0f;
+	bullet.velocity.y = 5.0f;
+	bullet.components.x = 0.0f;
+	bullet.components.y = 0.0f;
+	bullet.magnitude = 0.0f;
+	bullet.directions.x = 0.0f;
+	bullet.directions.y = 0.0f;
+	bullet.moveX = 0;
+	bullet.animTimer = 0;
+}
+
 void EnemyMove(Enemy enemy[]) {
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].isAlive) {
@@ -253,13 +269,48 @@ void EnemyMove(Enemy enemy[]) {
 
 void BossMove(Enemy& boss) {
 	static int bossMoveTimer = 0;
-	if (boss.health <= 0)return;
 	bossMoveTimer++;
 	boss.pos.x += boss.velocity.x * sinf(bossMoveTimer * 0.05f);
 	boss.pos.y += boss.velocity.y * cosf(bossMoveTimer * 0.01f);
+	if (boss.health <= 0)return;
 }
 
-void BossUpdate(Enemy& boss, Scene& scene, Sound& sound) {
+void BossShot(Enemy& boss, EnemyBullet& bullet, Obj& player) {
+	boss.shotTimer++;
+	if (boss.shotTimer >= 120 && !boss.isActive) {
+		bullet.pos.x = boss.pos.x;
+		bullet.pos.y = boss.pos.y;
+		bullet.components.x = player.pos.x - bullet.pos.x + bullet.radius;
+		bullet.components.y = player.pos.y - bullet.pos.y + bullet.radius;
+		bullet.magnitude = (float)sqrt(pow(bullet.components.x, 2) + pow(bullet.components.y, 2));
+		bullet.directions.x = bullet.components.x / bullet.magnitude;
+		bullet.directions.y = bullet.components.y / bullet.magnitude;
+		boss.isActive = true;
+	}
+	if (boss.isActive) {
+		bullet.pos.x += bullet.directions.x * bullet.velocity.x;
+		bullet.pos.y += bullet.directions.y * bullet.velocity.y;
+	}
+	if (boss.shotTimer >= 360) {
+		boss.shotTimer = 0;
+		boss.isActive = false;
+	}
+
+	bullet.animTimer++;
+	if (bullet.animTimer >= ANIM_COUNT) {
+		bullet.animTimer = 0;
+		bullet.moveX = 0;
+	}
+	if (bullet.animTimer % 20 == 0) {
+		bullet.moveX += 25;
+	}
+	Novice::ScreenPrintf(0, 0, "bullet.pos.x : %f", bullet.pos.x);
+	Novice::ScreenPrintf(0, 20, "bullet.pos.y : %f", bullet.pos.y);
+	Novice::ScreenPrintf(0, 40, "bullet.moveX : %d", bullet.moveX);
+	Novice::ScreenPrintf(0, 60, "boss.pos.x : %f", boss.pos.x);
+}
+
+void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sound& sound) {
 	if (boss.isHit && !boss.isCol) {
 		boss.health--;
 		boss.isHit = false;
@@ -287,9 +338,29 @@ void BossUpdate(Enemy& boss, Scene& scene, Sound& sound) {
 		boss.isAlive = false;
 		scene = CLEAR;
 	}
-
 	BossMove(boss);
+	BossShot(boss, bullet, player);
+	switch (boss.state)
+	{
+	case STAND:
 
+		break;
+
+	case MOVE:
+
+
+
+		break;
+	case TACKLE:
+
+
+
+		break;
+	}
+}
+
+void RenderBossBullet(EnemyBullet& bullet, int handle, Vector2& scroll) {
+	Novice::DrawSpriteRect(int(bullet.pos.x - scroll.x), int(bullet.pos.y - scroll.y), bullet.moveX, 0, 25, 25, handle, 1/12, 1, 0.0f, WHITE);
 }
 
 void EnemyMoveHorming(Enemy enemy[], Obj& player) {
@@ -500,19 +571,19 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound, Enemy& bos
 			float dy = player.pos.y - boss.pos.y ;
 			float angle = atan2f(dy, dx);
 			player.angle += angle;
-
+			
 			if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
 				sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
 			}
 			if (player.attack) {
 
-				boss.isHit = true;
+			boss.isHit = true;
 			}
 			else {
 				player.isCollied = true;
 				player.health--;
 			}
-		}
+		}		
 	}
 }
 
@@ -688,3 +759,4 @@ void LoadImages(Handle& handle) {
 	handle.boss = Novice::LoadTexture("./Resources/Enemy/boss130_B.png");
 	handle.bossEye = Novice::LoadTexture("./Resources/Enemy/boss34_F.png");
 }
+

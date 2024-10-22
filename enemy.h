@@ -88,10 +88,15 @@ void InitEnemyBullet(EnemyBullet bullet[]);
 void InitBossKeys(BossKeys keys[], Enemy enemy[]);
 void InitBoss(Enemy& boss);
 
+void InitBossBullet(Enemy& boss, EnemyBullet& bullet);
+
+void RenderBossBullet(EnemyBullet& bullet, int handle, Vector2& scroll);
+
 void LoadImages(Handle& handle);
 
 void EnemyMove(Enemy enemy[]);
-void BossUpdate(Enemy& boss, Scene& scene, Sound& sound);
+void BossShot(Enemy& boss, EnemyBullet& bullet, Obj& player);
+void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sound& sound);
 void EnemyMoveHorming(Enemy enemy[], Obj& player);
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]);
 
