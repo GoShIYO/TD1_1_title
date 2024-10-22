@@ -77,6 +77,7 @@ struct Handle {
 	int bullet;
 	int deathEffect;
 	int boss;
+	int bossEye;
 };
 
 void InitEnemyNormal(Enemy enemy[]);
@@ -102,7 +103,7 @@ void EnemyRange(Enemy enemy[], Enemy enemy1[]);
 void RenderEnemy(Enemy enemy[], Vector2& scroll, int handle, float px, float py,int deathHandle);
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle);
 
-void RenderBoss(Enemy& boss, Vector2 scroll, int handle);
+void RenderBoss(Enemy& boss, Vector2 scroll, int handle, int handle2);
 
 void BulletAnim(EnemyBullet bullet[]);
 

@@ -5,7 +5,7 @@
 #include <Novice.h>
 #include <stdlib.h>
 
-int remainingKeys = keyCount;
+int remainingKeys = 0;
 float move = 0.0f;
 float moveSpeed = 0.2f;
 
@@ -387,9 +387,10 @@ void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle) {
 	}
 }
 
-void RenderBoss(Enemy& boss, Vector2 scroll, int handle) {
+void RenderBoss(Enemy& boss, Vector2 scroll, int handle, int handle2) {
 	if (boss.isAlive) {
 		Novice::DrawSprite(int(boss.pos.x - scroll.x), int(boss.pos.y - scroll.y), handle, 1, 1, 0.0f, WHITE);
+		Novice::DrawSprite(int(boss.pos.x - scroll.x), int(boss.pos.y - scroll.y), handle2, 1, 1, 0.0f, WHITE);
 	}
 }
 
@@ -635,4 +636,5 @@ void LoadImages(Handle& handle) {
 	handle.bullet = Novice::LoadTexture("./Resources/Enemy/enemyBullet.png");
 	handle.deathEffect = Novice::LoadTexture("./Resources/effect.png");
 	handle.boss = Novice::LoadTexture("./Resources/Enemy/boss130_B.png");
+	handle.bossEye = Novice::LoadTexture("./Resources/Enemy/boss34_F.png");
 }
