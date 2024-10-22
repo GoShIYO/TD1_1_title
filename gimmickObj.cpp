@@ -86,51 +86,66 @@ float Clamp(float value, float minValue, float maxValue) {
 }
 
 void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
+	if (gimmickObjs[0].isActive) {
+		gimmickObjs[0].obj.pos.x += 1.0f * gimmickObjs[0].moveDir;
+		if (gimmickObjs[0].obj.pos.x >= -1290.0f || gimmickObjs[0].obj.pos.x <= -1790.0f) {
+			gimmickObjs[0].moveDir *= -1;
+		}
+	}
+
+	if (gimmickObjs[1].isActive) {
+
+		gimmickObjs[1].obj.pos.y += 1.0f * gimmickObjs[1].moveDir;
+		if (gimmickObjs[1].obj.pos.y >= 1900.0f || gimmickObjs[1].obj.pos.y <= 1500.0f) {
+			gimmickObjs[1].moveDir *= -1;
+		}
+	}
+	if (gimmickObjs[2].isActive) {
+
+		gimmickObjs[2].obj.pos.x += 1.0f * gimmickObjs[2].moveDir;
+		if (gimmickObjs[2].obj.pos.x >= 2700 || gimmickObjs[2].obj.pos.x <= 2300.0f) {
+			gimmickObjs[2].moveDir *= -1;
+		}
+	}
+	if (gimmickObjs[3].isActive) {
+
+		gimmickObjs[3].obj.pos.y += 1.0f * gimmickObjs[3].moveDir;
+		if (gimmickObjs[3].obj.pos.y >= 1900.0f || gimmickObjs[3].obj.pos.y <= 1400.0f) {
+			gimmickObjs[3].moveDir *= -1;
+		}
+	}
+	if (gimmickObjs[4].isActive) {
+
+		gimmickObjs[4].obj.pos.x -= 1.0f * gimmickObjs[4].moveDir;
+		if (gimmickObjs[4].obj.pos.x >= 3640.0f || gimmickObjs[4].obj.pos.x <= 2840.0f) {
+			gimmickObjs[4].moveDir *= -1;
+		}
+	}
+	if (gimmickObjs[5].isActive) {
+
+		gimmickObjs[5].obj.pos.y -= 1.0f * gimmickObjs[5].moveDir;
+		if (gimmickObjs[5].obj.pos.y >= 1960.0f || gimmickObjs[5].obj.pos.y <= 1700.0f) {
+			gimmickObjs[5].moveDir *= -1;
+		}
+	}
+	if (gimmickObjs[6].isActive) {
+
+		gimmickObjs[6].obj.pos.y += 0.25f * gimmickObjs[6].moveDir;
+		if (gimmickObjs[6].obj.pos.y >= -550.0f || gimmickObjs[6].obj.pos.y <= -750.0f) {
+			gimmickObjs[6].moveDir *= -1;
+		}
+	}
 	for (int i = 0; i < BOX_COUNT; i++) {
 		if (gimmickObjs[i].isActive) {
-			gimmickObjs[0].obj.pos.x += 1.0f * gimmickObjs[0].moveDir;
-			if (gimmickObjs[0].obj.pos.x >= -1290.0f || gimmickObjs[0].obj.pos.x <= -1790.0f) {
-				gimmickObjs[0].moveDir *= -1;
-			}
-
-			gimmickObjs[1].obj.pos.y += 1.0f * gimmickObjs[1].moveDir;
-			if (gimmickObjs[1].obj.pos.y >= 1900.0f || gimmickObjs[1].obj.pos.y <= 1500.0f) {
-				gimmickObjs[1].moveDir *= -1;
-			}
-
-			gimmickObjs[2].obj.pos.x += 1.0f * gimmickObjs[2].moveDir;
-			if (gimmickObjs[2].obj.pos.x >= 2700 || gimmickObjs[2].obj.pos.x <= 2300.0f) {
-				gimmickObjs[2].moveDir *= -1;
-			}
-
-			gimmickObjs[3].obj.pos.y += 1.0f * gimmickObjs[3].moveDir;
-			if (gimmickObjs[3].obj.pos.y >= 1900.0f || gimmickObjs[3].obj.pos.y <= 1400.0f) {
-				gimmickObjs[3].moveDir *= -1;
-			}
-
-			gimmickObjs[4].obj.pos.x -= 1.0f * gimmickObjs[4].moveDir;
-			if (gimmickObjs[4].obj.pos.x >= 3640.0f || gimmickObjs[4].obj.pos.x <= 2840.0f) {
-				gimmickObjs[4].moveDir *= -1;
-			}
-
-			gimmickObjs[5].obj.pos.y -= 1.0f * gimmickObjs[5].moveDir;
-			if (gimmickObjs[5].obj.pos.y >= 1960.0f || gimmickObjs[5].obj.pos.y <= 1700.0f) {
-				gimmickObjs[5].moveDir *= -1;
-			}
-
-			gimmickObjs[6].obj.pos.y += 0.25f * gimmickObjs[6].moveDir;
-			if (gimmickObjs[6].obj.pos.y >= -550.0f || gimmickObjs[6].obj.pos.y <= -750.0f) {
-				gimmickObjs[6].moveDir *= -1;
-			}
 
 			if (CheckGimmickCollision(gimmickObjs[i], player)) {
-			
+
 				Vector2 collisionNormal = { 0.0f, 0.0f };
 
-				float left = gimmickObjs[i].obj.pos.x - gimmickObjs[i].obj.width / 2.0f;
-				float right = gimmickObjs[i].obj.pos.x + gimmickObjs[i].obj.width / 2.0f;
-				float top = gimmickObjs[i].obj.pos.y - gimmickObjs[i].obj.height / 2.0f;
-				float bottom = gimmickObjs[i].obj.pos.y + gimmickObjs[i].obj.height / 2.0f;
+				float left = gimmickObjs[i].obj.pos.x ;
+				float right = gimmickObjs[i].obj.pos.x + gimmickObjs[i].obj.width ;
+				float top = gimmickObjs[i].obj.pos.y ;
+				float bottom = gimmickObjs[i].obj.pos.y + gimmickObjs[i].obj.height ;
 
 				float closestX = Clamp(player.pos.x, left, right);
 				float closestY = Clamp(player.pos.y, top, bottom);
@@ -139,15 +154,16 @@ void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
 				float dy = player.pos.y - closestY;
 
 				if (fabsf(dx) > fabsf(dy)) {
-					
+
 					collisionNormal = { dx > 0 ? 1.0f : -1.0f, 0.0f };
 				}
 				else {
-					
+
 					collisionNormal = { 0.0f, dy > 0 ? 1.0f : -1.0f };
 				}
 
 				ReflectPlayer(player, collisionNormal);
+				break;
 			}
 		}
 	}
@@ -156,10 +172,10 @@ void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
 
 bool CheckGimmickCollision(GimmickObj& gimmick, Obj& player) {
 
-	float left = gimmick.obj.pos.x - gimmick.obj.width / 2.0f;
-	float right = gimmick.obj.pos.x + gimmick.obj.width / 2.0f;
-	float top = gimmick.obj.pos.y - gimmick.obj.height / 2.0f;
-	float bottom = gimmick.obj.pos.y + gimmick.obj.height / 2.0f;
+	float left = gimmick.obj.pos.x;
+	float right = gimmick.obj.pos.x + gimmick.obj.width;
+	float top = gimmick.obj.pos.y;
+	float bottom = gimmick.obj.pos.y + gimmick.obj.height;
 
 	float closestX = Clamp(player.pos.x, left, right);
 	float closestY = Clamp(player.pos.y, top, bottom);
@@ -181,7 +197,7 @@ void NormalizeVector(Vector2& vector) {
 }
 
 void ReflectPlayer(Obj& player, Vector2& normal) {
-	
+
 	Vector2 velocity = {
 		cosf(player.angle) * player.velocity.x,
 		sinf(player.angle) * player.velocity.y

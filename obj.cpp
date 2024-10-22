@@ -455,7 +455,7 @@ void InitParticle(Particle* p, float x, float y, float direction) {
 void EmitParticle(Particle particles[], Obj* player) {
 
 	for (int i = 0; i < MAX_PARTICLES; i++) {
-		if (!particles[i].isActive && !player->isRotate) {
+		if (!particles[i].isActive && !player->isRotate && !player->isDead) {
 
 			InitParticle(
 				&particles[i],
@@ -690,6 +690,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 		if (!Novice::IsPlayingAudio(sound->explosion.play)) {
 			sound->explosion.play = Novice::PlayAudio(sound->explosion.audio, 0, 1.0f);
 		}
+		Novice::StopAudio(sound->player_move.play);
 		player->deathTimer--;
 	}
 	else {
