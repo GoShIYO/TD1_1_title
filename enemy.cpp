@@ -521,7 +521,7 @@ void RenderKeys(BossKeys keys[], Vector2 scroll, int& handle) {
 
 void LoadImages(Handle& handle) {
 	handle.enemy = Novice::LoadTexture("./Resources/Enemy/EnemyStopBoom32.png");
-	handle.enemyHorming = Novice::LoadTexture("./Resources/Enemy/enemyFollow30.png");
+	handle.enemyHoming = Novice::LoadTexture("./Resources/Enemy/enemyFollow30.png");
 	handle.enemyShot = Novice::LoadTexture("./Resources/Enemy/enemyShot30.png");
 	handle.bullet = Novice::LoadTexture("./Resources/Enemy/enemyBullet.png");
 	handle.deathEffect = Novice::LoadTexture("./Resources/effect.png");

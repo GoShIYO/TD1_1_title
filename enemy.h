@@ -54,7 +54,7 @@ struct EnemyBullet {
 	float imageWidth;
 	float imageHeight;
 	float radius;
-	int graphHnadle;
+	int graphHandle;
 	int moveX;
 	int animTimer;
 	bool isActive;
@@ -62,7 +62,7 @@ struct EnemyBullet {
 
 struct Handle {
 	int enemy;
-	int enemyHorming;
+	int enemyHoming;
 	int enemyShot;
 	int bullet;
 	int deathEffect;

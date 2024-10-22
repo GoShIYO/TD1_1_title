@@ -10,7 +10,6 @@ int verticalBoxTexture40_740;
 int verticalBoxTexture40_100;
 
 void InitGimmickObjs(GimmickObj gimmickObjs[]) {
-	boxTexture = Novice::LoadTexture("./Resources/box.png");
 	horizontalBoxTexture100_40 = Novice::LoadTexture("./Resources/horizontalBox100x40.png");
 	horizontalBoxTexture670_40 = Novice::LoadTexture("./Resources/horizontalBox670x40.png");
 	verticalBoxTexture40_740 = Novice::LoadTexture("./Resources/verticalBox40x740.png");
@@ -76,7 +75,6 @@ void InitGimmickObjs(GimmickObj gimmickObjs[]) {
 		gimmickObjs[i].isActive = true;
 		gimmickObjs[i].moveDir = 1;
 	}
-
 }
 
 float Clamp(float value, float minValue, float maxValue) {
@@ -124,7 +122,6 @@ void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
 			}
 
 			if (CheckGimmickCollision(gimmickObjs[i], player)) {
-			
 				Vector2 collisionNormal = { 0.0f, 0.0f };
 
 				float left = gimmickObjs[i].obj.pos.x - gimmickObjs[i].obj.width / 2.0f;
@@ -139,11 +136,9 @@ void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
 				float dy = player.pos.y - closestY;
 
 				if (fabsf(dx) > fabsf(dy)) {
-					
 					collisionNormal = { dx > 0 ? 1.0f : -1.0f, 0.0f };
 				}
 				else {
-					
 					collisionNormal = { 0.0f, dy > 0 ? 1.0f : -1.0f };
 				}
 
@@ -153,9 +148,7 @@ void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
 	}
 }
 
-
 bool CheckGimmickCollision(GimmickObj& gimmick, Obj& player) {
-
 	float left = gimmick.obj.pos.x - gimmick.obj.width / 2.0f;
 	float right = gimmick.obj.pos.x + gimmick.obj.width / 2.0f;
 	float top = gimmick.obj.pos.y - gimmick.obj.height / 2.0f;
@@ -170,8 +163,6 @@ bool CheckGimmickCollision(GimmickObj& gimmick, Obj& player) {
 	return (dx * dx + dy * dy) < (player.radius * player.radius);
 }
 
-
-
 void NormalizeVector(Vector2& vector) {
 	float length = sqrtf(vector.x * vector.x + vector.y * vector.y);
 	if (length != 0) {
@@ -181,7 +172,6 @@ void NormalizeVector(Vector2& vector) {
 }
 
 void ReflectPlayer(Obj& player, Vector2& normal) {
-	
 	Vector2 velocity = {
 		cosf(player.angle) * player.velocity.x,
 		sinf(player.angle) * player.velocity.y
@@ -204,14 +194,10 @@ void ReflectPlayer(Obj& player, Vector2& normal) {
 	player.velocity.y = newVelocityMagnitude;
 }
 
-
-
-
 void RenderGimmickObjs(GimmickObj gimmickObjs[], Vector2* scroll) {
 	int textures[] = {
 		horizontalBoxTexture100_40, horizontalBoxTexture670_40, verticalBoxTexture40_740, verticalBoxTexture40_100
 	};
-
 	for (int i = 0; i < BOX_COUNT; i++) {
 		if (gimmickObjs[i].isActive) {
 			int texture = textures[0];

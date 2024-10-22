@@ -30,7 +30,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Obj obj[objCount];
 
 	Enemy enemy[ENEMY_COUNT];
-	Enemy enemyHorming[ENEMY_COUNT];
+	Enemy enemyHoming[ENEMY_COUNT];
 	Enemy enemyShot[ENEMY_COUNT];
 
 	BossKeys bossKeys[keyCount];
@@ -46,7 +46,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Vector2 scroll = { 0, 0 };
 
-	GimmickObj gimmickObjs[MAX_GIMMICK]; // ギミックオブジェクトの配列
+	GimmickObj gimmickObjs[MAX_GIMMICK];
 
 	Particle particles[MAX_PARTICLES];
 
@@ -58,7 +58,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	InitPlayer(&player);
 	InitObj(obj);
 	InitEnemyNormal(enemy);
-	InitEnemyHorming(enemyHorming);
+	InitEnemyHorming(enemyHoming);
 	InitEnemyShot(enemyShot);
 	InitEnemyBullet(bullet);
 	InitBossKeys(bossKeys, enemyShot);
@@ -175,16 +175,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				InitPlayer(&player);
 				InitObj(obj);
 				InitEnemyNormal(enemy);
-				InitEnemyHorming(enemyHorming);
+				InitEnemyHorming(enemyHoming);
 				InitEnemyShot(enemyShot);
 				InitEnemyBullet(bullet);
 				InitBossKeys(bossKeys, enemyShot);
 				InitSystem(&system);
 				initializeResource(&texture);
-				InitGimmickObjs(gimmickObjs); // ギミックオブジェクトの初期化
+				InitGimmickObjs(gimmickObjs);
 				scroll = { 0,0 };
 			}
-
 			break;
 		case HELP:
 
@@ -196,7 +195,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				player.angle = (float)(M_PI) / 8.0f;
 			}
 
-			UpdatePlayer(&player, obj, keys, preKeys, &sound,&ui);
+			UpdatePlayer(&player, obj, keys, preKeys, &sound, &ui);
 			checkPlayerMoveRange(&player, &sound);
 			EmitParticle(particles, &player);
 			for (int i = 0; i < MAX_PARTICLES; i++) {
@@ -221,15 +220,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//敵の移動処理
 			EnemyMove(enemy);
-			EnemyMoveHorming(enemyHorming, player);
+			EnemyMoveHorming(enemyHoming, player);
 			BulletShot(enemyShot, player, bullet);
 
 			//敵の移動制限
-			EnemyRange(enemy, enemyHorming);
+			EnemyRange(enemy, enemyHoming);
 
 			//敵の当たり判定
 			UpdatePlayerEnemyEvent(enemy, player, sound);
-			UpdatePlayerEnemyEvent(enemyHorming, player, sound);
+			UpdatePlayerEnemyEvent(enemyHoming, player, sound);
 			UpdatePlayerEnemyEvent(enemyShot, player, sound);
 
 			//弾のアニメーション
@@ -243,7 +242,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//鍵の更新
 			//UpdateKeys(bossKeys, enemyShot);
-			UpdatePlayerKeyEvent(bossKeys,sound, enemyShot);
+			UpdatePlayerKeyEvent(bossKeys, sound, enemyShot);
 
 			if (player.deathTimer <= 0) {
 				scene = GAME_OVER;
@@ -258,7 +257,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				-2160 - int(scroll.y * 0.5f),
 				texture.bg7x7, 1, 1, 0, WHITE);
 			RenderObj(obj, &scroll, texture);
-			RenderPlayer(&player, &scroll, &texture,&ui);
+			RenderPlayer(&player, &scroll, &texture, &ui);
 			RenderParticle(particles, &scroll);
 			Novice::DrawSprite(
 				-3 * kWindowWidth - int(scroll.x),
@@ -269,17 +268,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			// ギミックオブジェクトの描画
 			RenderGimmickObjs(gimmickObjs, &scroll);
 
-			RenderEnemy(enemy, scroll, handle.enemy, player.pos.x, player.pos.y,texture.enemyExplosion50);
-			RenderEnemy(enemyHorming, scroll, handle.enemyHorming, player.pos.x, player.pos.y, texture.enemyExplosion50);
+			RenderEnemy(enemy, scroll, handle.enemy, player.pos.x, player.pos.y, texture.enemyExplosion50);
+			RenderEnemy(enemyHoming, scroll, handle.enemyHoming, player.pos.x, player.pos.y, texture.enemyExplosion50);
 			RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y, texture.enemyExplosion50);
 			RenderBullet(bullet, scroll, handle.bullet);
 			RenderKeys(bossKeys, scroll, texture.key18x38);
 			//ミニマップ
 			RenderMiniMap(obj, &player);
-			RenderMiniMapEnemy(enemy, enemyHorming, enemyShot);
+			RenderMiniMapEnemy(enemy, enemyHoming, enemyShot);
 
 			Novice::DrawSprite(10, 675, texture.textScore84_25, 1, 1, 0, WHITE);
-			showNumber(ui.score.x, ui.score.y,5, player.score, 18, 25, texture.textNumber18_25);
+			showNumber(ui.score.x, ui.score.y, 5, player.score, 18, 25, texture.textNumber18_25);
 			//DEBUG INFO
 			Novice::ScreenPrintf(0, 0, "keyCount : %d", remainingKeys);
 			Novice::ScreenPrintf(0, 20, "player.health : %d", player.health);
@@ -324,8 +323,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		default:
 			break;
 		}
-
-
 
 		/// ↑描画処理ここまで
 		/// ---------------------------------------------------------------------
