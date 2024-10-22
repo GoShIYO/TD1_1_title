@@ -29,6 +29,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	BossKeys bossKeys[keyCount];
 	Enemy boss;
+	EnemyBullet bossBullet;
 
 	EnemyBullet bullet[BULLET_COUNT];
 	Handle handle;
@@ -57,6 +58,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	InitEnemyBullet(bullet);
 	InitBossKeys(bossKeys, enemyShot);
 	InitBoss(boss);
+	InitBossBullet(boss, bossBullet);
 	InitSystem(&system);
 	initializeResource(&texture);
 	InitGimmickObjs(gimmickObjs);
@@ -186,6 +188,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				InitEnemyBullet(bullet);
 				InitBossKeys(bossKeys, enemyShot);
 				InitBoss(boss);
+				InitBossBullet(boss, bossBullet);
 				InitSystem(&system);
 				initializeResource(&texture);
 				InitGimmickObjs(gimmickObjs); // ギミックオブジェクトの初期化
@@ -222,7 +225,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			EnemyMoveHorming(enemyHorming, player);
 			BulletShot(enemyShot, player, bullet);
 
-			BossUpdate(boss, scene);
+			BossUpdate(boss, scene, bossBullet, player);
 
 			//敵の移動制限
 			EnemyRange(enemy, enemyHorming);
@@ -271,6 +274,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderEnemy(enemy, scroll, handle.enemy, player.pos.x, player.pos.y, texture.enemyExplosion50);
 			RenderEnemy(enemyHorming, scroll, handle.enemyHorming, player.pos.x, player.pos.y, texture.enemyExplosion50);
 			RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y, texture.enemyExplosion50);
+			RenderBossBullet(bossBullet, handle.bullet, scroll);
 			RenderBullet(bullet, scroll, handle.bullet);
 			RenderKeys(bossKeys, scroll, texture.key18x38);
 			RenderBoss(boss, scroll, handle.boss, handle.bossEye);

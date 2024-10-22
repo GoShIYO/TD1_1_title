@@ -207,6 +207,22 @@ void InitBoss(Enemy& boss) {
 	boss.stateTimer = 0;
 }
 
+void InitBossBullet(Enemy& boss, EnemyBullet& bullet) {
+	boss.isActive = false;
+	bullet.isActive = false;
+	bullet.pos.x = 0.0f;
+	bullet.pos.y = 0.0f;
+	bullet.velocity.x = 5.0f;
+	bullet.velocity.y = 5.0f;
+	bullet.components.x = 0.0f;
+	bullet.components.y = 0.0f;
+	bullet.magnitude = 0.0f;
+	bullet.directions.x = 0.0f;
+	bullet.directions.y = 0.0f;
+	bullet.moveX = 0;
+	bullet.animTimer = 0;
+}
+
 void EnemyMove(Enemy enemy[]) {
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].isAlive) {
@@ -260,7 +276,42 @@ void BossMove(Enemy& boss) {
 	if (boss.health <= 0)return;
 }
 
-void BossUpdate(Enemy& boss, Scene& scene) {
+void BossShot(Enemy& boss, EnemyBullet& bullet, Obj& player) {
+	boss.shotTimer++;
+	if (boss.shotTimer >= 120 && !boss.isActive) {
+		bullet.pos.x = boss.pos.x;
+		bullet.pos.y = boss.pos.y;
+		bullet.components.x = player.pos.x - bullet.pos.x + bullet.radius;
+		bullet.components.y = player.pos.y - bullet.pos.y + bullet.radius;
+		bullet.magnitude = (float)sqrt(pow(bullet.components.x, 2) + pow(bullet.components.y, 2));
+		bullet.directions.x = bullet.components.x / bullet.magnitude;
+		bullet.directions.y = bullet.components.y / bullet.magnitude;
+		boss.isActive = true;
+	}
+	if (boss.isActive) {
+		bullet.pos.x += bullet.directions.x * bullet.velocity.x;
+		bullet.pos.y += bullet.directions.y * bullet.velocity.y;
+	}
+	if (boss.shotTimer >= 360) {
+		boss.shotTimer = 0;
+		boss.isActive = false;
+	}
+
+	bullet.animTimer++;
+	if (bullet.animTimer >= ANIM_COUNT) {
+		bullet.animTimer = 0;
+		bullet.moveX = 0;
+	}
+	if (bullet.animTimer % 20 == 0) {
+		bullet.moveX += 25;
+	}
+	Novice::ScreenPrintf(0, 0, "bullet.pos.x : %f", bullet.pos.x);
+	Novice::ScreenPrintf(0, 20, "bullet.pos.y : %f", bullet.pos.y);
+	Novice::ScreenPrintf(0, 40, "bullet.moveX : %d", bullet.moveX);
+	Novice::ScreenPrintf(0, 60, "boss.pos.x : %f", boss.pos.x);
+}
+
+void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player) {
 	if (boss.isHit && !boss.isCol) {
 		boss.health--;
 		boss.isHit = false;
@@ -282,6 +333,7 @@ void BossUpdate(Enemy& boss, Scene& scene) {
 		scene = CLEAR;
 	}
 	BossMove(boss);
+	BossShot(boss, bullet, player);
 	switch (boss.state)
 	{
 	case STAND:
@@ -299,6 +351,10 @@ void BossUpdate(Enemy& boss, Scene& scene) {
 
 		break;
 	}
+}
+
+void RenderBossBullet(EnemyBullet& bullet, int handle, Vector2& scroll) {
+	Novice::DrawSpriteRect(int(bullet.pos.x - scroll.x), int(bullet.pos.y - scroll.y), bullet.moveX, 0, 25, 25, handle, 1/12, 1, 0.0f, WHITE);
 }
 
 void EnemyMoveHorming(Enemy enemy[], Obj& player) {
