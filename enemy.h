@@ -21,6 +21,12 @@ enum EnemyDirection {
 	LEFT = 3
 };
 
+enum EnemyState {
+	STAND = 0,
+	MOVE = 1,
+	TACKLE = 2
+};
+
 struct Enemy {
 	Vector2 pos;
 	Vector2 velocity;
@@ -35,10 +41,14 @@ struct Enemy {
 	int graphHandle;
 	int direction;
 	int health;
+	int state;
 	int score;
+	int colTimer;
 	bool isAlive;
 	bool isMove;
 	bool isActive;
+	bool isHit;
+	bool isCol;
 	int deadTimer;
 	int deathAnimationCount;
 };
@@ -66,6 +76,7 @@ struct Handle {
 	int enemyShot;
 	int bullet;
 	int deathEffect;
+	int boss;
 };
 
 void InitEnemyNormal(Enemy enemy[]);
@@ -73,15 +84,17 @@ void InitEnemyHorming(Enemy enemy[]);
 void InitEnemyShot(Enemy enemy[]);
 void InitEnemyBullet(EnemyBullet bullet[]);
 void InitBossKeys(BossKeys keys[], Enemy enemy[]);
-void InitBoss(Enemy boss);
+void InitBoss(Enemy& boss);
 
 void LoadImages(Handle& handle);
 
 void EnemyMove(Enemy enemy[]);
+void BossUpdate(Enemy& boss, Scene& scene);
 void EnemyMoveHorming(Enemy enemy[], Obj& player);
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]);
 
-void UpdatePlayerKeyEvent(BossKeys keys[],Sound& sound, Enemy enemy[]);
+//void UpdateKeys(BossKeys keys[], Enemy enemy[]);
+void UpdatePlayerKeyEvent(BossKeys keys[],Sound& sound, Enemy enemy[], Enemy& boss);
 void RenderKeys(BossKeys keys[], Vector2 scroll, int& handle);
 
 void EnemyRange(Enemy enemy[], Enemy enemy1[]);
@@ -89,11 +102,13 @@ void EnemyRange(Enemy enemy[], Enemy enemy1[]);
 void RenderEnemy(Enemy enemy[], Vector2& scroll, int handle, float px, float py,int deathHandle);
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle);
 
+void RenderBoss(Enemy& boss, Vector2 scroll, int handle);
+
 void BulletAnim(EnemyBullet bullet[]);
 
 void EnemyDebug(EnemyBullet bullet[]);
 void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]);
 
-void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player,Sound& sound);
+void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player,Sound& sound, Enemy& boss);
 
 void UpdatePlayerBulletEvent(Obj& player, EnemyBullet bullet[]);

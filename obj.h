@@ -30,6 +30,14 @@ enum StarType
 	WATER = 8,
 	EARTH = 9
 };
+enum Scene
+{
+	TITLE = 0,
+	HELP = 1,
+	PLAY = 2,
+	GAME_OVER = 3,
+	CLEAR = 4
+};
 struct Obj
 {
 	Vector2 pos;
