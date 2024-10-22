@@ -307,49 +307,51 @@ void BossShot(Enemy& boss, EnemyBullet& bullet, Obj& player) {
 }
 
 void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sound& sound) {
-	float dx = bullet.pos.x - player.pos.x;
-	float dy = bullet.pos.y - player.pos.y;
-	float d = sqrtf(static_cast<float>(pow(dx, 2)) + static_cast<float>(pow(dy, 2)));
+	if (boss.isAlive) {
+		float dx = bullet.pos.x - player.pos.x;
+		float dy = bullet.pos.y - player.pos.y;
+		float d = sqrtf(static_cast<float>(pow(dx, 2)) + static_cast<float>(pow(dy, 2)));
 
-	if (d <= boss.radius + player.radius) {
-		player.health--;
-		bullet.pos.x = -10000.0f;
-		bullet.pos.y = -10000.0f;
-		player.isCollied = true;
-		if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
-			sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
+		if (d <= boss.radius + player.radius) {
+			player.health--;
+			bullet.pos.x = -10000.0f;
+			bullet.pos.y = -10000.0f;
+			player.isCollied = true;
+			if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
+				sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
+			}
 		}
-	}
 
-	if (boss.isHit && !boss.isCol) {
-		boss.health--;
-		boss.isHit = false;
-		boss.isCol = true;
-	}
-
-	if (boss.isCol) {
-		boss.colTimer++;
-	}
-	if (boss.colTimer >= 120) {
-		boss.isCol = false;
-		boss.colTimer = 0;
-	}
-
-	if (boss.health <= 0) {
-		if (boss.deadTimer > 0) {
-			boss.deadTimer--;
+		if (boss.isHit && !boss.isCol) {
+			boss.health--;
+			boss.isHit = false;
+			boss.isCol = true;
 		}
-		if (!Novice::IsPlayingAudio(sound.explosion.play)) {
-			sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 1, 1.0f);
+
+		if (boss.isCol) {
+			boss.colTimer++;
 		}
+		if (boss.colTimer >= 120) {
+			boss.isCol = false;
+			boss.colTimer = 0;
+		}
+
+		if (boss.health <= 0) {
+			if (boss.deadTimer > 0) {
+				boss.deadTimer--;
+			}
+			if (!Novice::IsPlayingAudio(sound.explosion.play)) {
+				sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 1, 1.0f);
+			}
+		}
+		if (boss.deadTimer <= 0) {
+			Novice::StopAudio(sound.explosion.play);
+			boss.isAlive = false;
+			scene = CLEAR;
+		}
+		BossMove(boss);
+		BossShot(boss, bullet, player);
 	}
-	if (boss.deadTimer <= 0) {
-		Novice::StopAudio(sound.explosion.play);
-		boss.isAlive = false;
-		scene = CLEAR;
-	}
-	BossMove(boss);
-	BossShot(boss, bullet, player);
 }
 
 void RenderBossBullet(EnemyBullet& bullet, int handle, Vector2& scroll) {
