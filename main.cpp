@@ -29,6 +29,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Obj obj[objCount];
 
+	ScoreBoard scoreBoard;
+
 	Enemy enemy[ENEMY_COUNT];
 	Enemy enemyHorming[ENEMY_COUNT];
 	Enemy enemyShot[ENEMY_COUNT];
@@ -65,6 +67,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	InitSystem(&system);
 	initializeResource(&texture);
 	InitGimmickObjs(gimmickObjs);
+	InitScoreBoard(&scoreBoard);
 
 	UI ui;
 	InitUI(ui);
@@ -171,6 +174,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 			}
 			if (scene == PLAY) {
+				InitScoreBoard(&scoreBoard);
 				InitPlayer(&player);
 				InitObj(obj);
 				InitEnemyNormal(enemy);
@@ -285,32 +289,54 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 			break;
 		case GAME_OVER:
+			
+
 			Novice::DrawSprite(0, 0, texture.GameOver, 1, 1, 0, WHITE);
+			if (scoreBoard.flat == 1) {
+				TimerToMix(&scoreBoard.timer);
+				Novice::DrawSprite(165, int(EaseOutCubic(scoreBoard.pos.y, 63.0f, scoreBoard.timer.clock/ scoreBoard.timer.time)), texture.ScoreBoard950x574, 1, 1, 0, WHITE);
+				showNumber(745.0f, EaseOutCubic(-298.0f, 390.0f, scoreBoard.timer.clock / scoreBoard.timer.time), 5, player.score,53,65, texture.textScores53x65);
+			}
+
 			//BGM
 			Novice::StopAudio(sound.bgm_game.play);
 
-			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
-				isPlayTitleAnimation = true;
-				isSceneChange = false;
-				titleTimer = 0;
-				startTimer = 0;
 
-				scene = TITLE;
+			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
+				if (scoreBoard.flat == 0) {
+					scoreBoard.flat++;
+				} else {
+					isPlayTitleAnimation = true;
+					isSceneChange = false;
+					titleTimer = 0;
+					startTimer = 0;
+
+					scene = TITLE;
+				}
 			}
 			break;
 		case CLEAR:
 			Novice::DrawSprite(0, 0, texture.GameClear, 1, 1, 0, WHITE);
+			if (scoreBoard.flat == 1) {
+				TimerToMix(&scoreBoard.timer);
+				Novice::DrawSprite(165, int(EaseOutCubic(scoreBoard.pos.y, 63.0f, scoreBoard.timer.clock / scoreBoard.timer.time)), texture.ScoreBoard950x574, 1, 1, 0, WHITE);
+				showNumber(745.0f, EaseOutCubic(-298.0f, 390.0f, scoreBoard.timer.clock / scoreBoard.timer.time), 5, player.score, 53, 65, texture.textScores53x65);
+			}
 			//BGM
 			Novice::StopAudio(sound.bgm_game.play);
 
 
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
-				isPlayTitleAnimation = true;
-				isSceneChange = false;
-				titleTimer = 0;
-				startTimer = 0;
+				if (scoreBoard.flat == 0) {
+					scoreBoard.flat++;
+				} else {
+					isPlayTitleAnimation = true;
+					isSceneChange = false;
+					titleTimer = 0;
+					startTimer = 0;
 
-				scene = TITLE;
+					scene = TITLE;
+				}
 			}
 			break;
 		default:

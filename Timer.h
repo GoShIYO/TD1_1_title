@@ -31,3 +31,5 @@ int TimerToFrame(const Timer Timer);
 /// </summary>
 /// <param name="Timer">動画タイマーの関数</param>
 void TimerRunZero(Timer* Timer);
+
+void TimerToMix(Timer* Timer);

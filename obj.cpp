@@ -144,6 +144,12 @@ void InitObj(Obj obj[]) {
 	obj[64].pos = { 3434.0f, 1253.5f };  // 区域 (5, 5)
 }
 
+void InitScoreBoard(ScoreBoard *board) {
+	board->pos = {165 , -625};
+	board->flat = 0;
+	board->timer = { 0,60 };
+}
+
 void InitSystem(System* system) {
 	system->digFlat = 0;
 }
