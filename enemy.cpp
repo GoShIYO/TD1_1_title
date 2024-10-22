@@ -382,30 +382,32 @@ void EnemyMoveHorming(Enemy enemy[], Obj& player) {
 
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]) {
 	for (int i = 0; i < ENEMY_COUNT; i++) {
-		float distanceX = player.pos.x - enemy[i].pos.x ;
-		float distanceY = player.pos.y - enemy[i].pos.y ;
-		float distance = sqrtf(static_cast<float>(pow(distanceX, 2) + static_cast<float>(pow(distanceY, 2))));
+		if (enemy[i].isAlive) {
+			float distanceX = player.pos.x - enemy[i].pos.x;
+			float distanceY = player.pos.y - enemy[i].pos.y;
+			float distance = sqrtf(static_cast<float>(pow(distanceX, 2) + static_cast<float>(pow(distanceY, 2))));
 
-		if (!enemy[i].isActive && enemy[i].isAlive && distance <= BULLET_ACTIVE_RANGE) {
-			enemy[i].shotTimer++;
-			if (enemy[i].shotTimer >= SHOT_TIME) {
-				enemy[i].isActive = true;
+			if (!enemy[i].isActive && enemy[i].isAlive && distance <= BULLET_ACTIVE_RANGE) {
+				enemy[i].shotTimer++;
+				if (enemy[i].shotTimer >= SHOT_TIME) {
+					enemy[i].isActive = true;
+				}
 			}
-		}
-		for (int j = 0; j < BULLET_COUNT; j++) {
-			if (!bullet[j].isActive && enemy[i].isActive) {
-				bullet[j].pos.x = enemy[i].pos.x;
-				bullet[j].pos.y = enemy[i].pos.y;
-				bullet[j].isActive = true;
-				bullet[j].components.x = player.pos.x - bullet[j].pos.x;
-				bullet[j].components.y = player.pos.y - bullet[j].pos.y;
-				bullet[j].magnitude = (float)sqrt(pow(bullet[j].components.x, 2) + pow(bullet[j].components.y, 2));
-				bullet[j].directions.x = bullet[j].components.x / bullet[j].magnitude;
-				bullet[j].directions.y = bullet[j].components.y / bullet[j].magnitude;
-				bullet[j].isActive = true;
-				enemy[i].isActive = false;
-				enemy[i].shotTimer = 0;
-				break;
+			for (int j = 0; j < BULLET_COUNT; j++) {
+				if (!bullet[j].isActive && enemy[i].isActive) {
+					bullet[j].pos.x = enemy[i].pos.x;
+					bullet[j].pos.y = enemy[i].pos.y;
+					bullet[j].isActive = true;
+					bullet[j].components.x = player.pos.x - bullet[j].pos.x;
+					bullet[j].components.y = player.pos.y - bullet[j].pos.y;
+					bullet[j].magnitude = (float)sqrt(pow(bullet[j].components.x, 2) + pow(bullet[j].components.y, 2));
+					bullet[j].directions.x = bullet[j].components.x / bullet[j].magnitude;
+					bullet[j].directions.y = bullet[j].components.y / bullet[j].magnitude;
+					bullet[j].isActive = true;
+					enemy[i].isActive = false;
+					enemy[i].shotTimer = 0;
+					break;
+				}
 			}
 		}
 	}
