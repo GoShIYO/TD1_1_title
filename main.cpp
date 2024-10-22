@@ -48,7 +48,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Sound sound;
 	InitSound(&sound);
 
-	Scene scene = PLAY;
+	Scene scene = TITLE;
 	InitPlayer(&player);
 	InitObj(obj);
 	InitEnemyNormal(enemy);
@@ -276,7 +276,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderBoss(boss, scroll, handle.boss, handle.bossEye,handle.deathEffect);
 			//ミニマップ
 			RenderMiniMap(obj, &player);
-			RenderMiniMapEnemy(enemy, enemyHorming, enemyShot);
+			RenderMiniMapEnemy(enemy, enemyHorming, enemyShot,boss,bossKeys,handle.boss, texture.key18x38);
 
 			Novice::DrawSprite(10, 675, texture.textScore84_25, 1, 1, 0, WHITE);
 			showNumber(ui.score.x, ui.score.y, 5, player.score, 18, 25, texture.textNumber18_25);

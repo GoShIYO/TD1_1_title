@@ -577,6 +577,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 	static int rotateDirection = 1;
 	static Vector2 objPosTmp = { 0 };
 	static float radiusTmp = 0.0f;
+
 	//無敵時間処理
 	if (player->isCollied && player->InvincibleTimer > 0) {
 		player->InvincibleTimer--;
@@ -640,7 +641,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 		player->isRotate = false;
 	}
 
-	if (player->isRotate) {
+	if (player->isRotate && !player->isDead) {
 		//Novice::ScreenPrintf(700, 45, "angle_dif = %.10f", angle_dif);
 		Novice::StopAudio(sound->player_move.play);
 		angle_dif = angle_difference(angleTmp, player->angle);

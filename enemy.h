@@ -10,7 +10,6 @@
 #include "obj.h"
 #include"sound.h"
 
-extern int remainingKeys;
 extern float move;
 extern float moveSpeed;
 
@@ -110,7 +109,7 @@ void RenderBoss(Enemy& boss, Vector2 scroll, int handle, int handle2, int handle
 void BulletAnim(EnemyBullet bullet[]);
 
 void EnemyDebug(EnemyBullet bullet[]);
-void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]);
+void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[], Enemy& boss, BossKeys keys[], int handle1, int handle2);
 
 void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player,Sound& sound, Enemy& boss);
 
