@@ -87,7 +87,7 @@ float Clamp(float value, float minValue, float maxValue) {
 
 void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
 	if (gimmickObjs[0].isActive) {
-		gimmickObjs[0].obj.pos.x += 1.0f * gimmickObjs[0].moveDir;
+		gimmickObjs[0].obj.pos.x += 0.25f * gimmickObjs[0].moveDir;
 		if (gimmickObjs[0].obj.pos.x >= -1290.0f || gimmickObjs[0].obj.pos.x <= -1790.0f) {
 			gimmickObjs[0].moveDir *= -1;
 		}
@@ -95,42 +95,42 @@ void UpdateGimmickObjs(GimmickObj gimmickObjs[], Obj& player) {
 
 	if (gimmickObjs[1].isActive) {
 
-		gimmickObjs[1].obj.pos.y += 1.0f * gimmickObjs[1].moveDir;
+		gimmickObjs[1].obj.pos.y += 0.5f * gimmickObjs[1].moveDir;
 		if (gimmickObjs[1].obj.pos.y >= 1900.0f || gimmickObjs[1].obj.pos.y <= 1500.0f) {
 			gimmickObjs[1].moveDir *= -1;
 		}
 	}
 	if (gimmickObjs[2].isActive) {
 
-		gimmickObjs[2].obj.pos.x += 1.0f * gimmickObjs[2].moveDir;
+		gimmickObjs[2].obj.pos.x += 0.5f * gimmickObjs[2].moveDir;
 		if (gimmickObjs[2].obj.pos.x >= 2700 || gimmickObjs[2].obj.pos.x <= 2300.0f) {
 			gimmickObjs[2].moveDir *= -1;
 		}
 	}
 	if (gimmickObjs[3].isActive) {
 
-		gimmickObjs[3].obj.pos.y += 1.0f * gimmickObjs[3].moveDir;
+		gimmickObjs[3].obj.pos.y += 0.5f * gimmickObjs[3].moveDir;
 		if (gimmickObjs[3].obj.pos.y >= 1900.0f || gimmickObjs[3].obj.pos.y <= 1400.0f) {
 			gimmickObjs[3].moveDir *= -1;
 		}
 	}
 	if (gimmickObjs[4].isActive) {
 
-		gimmickObjs[4].obj.pos.x -= 1.0f * gimmickObjs[4].moveDir;
+		gimmickObjs[4].obj.pos.x -= 0.5f * gimmickObjs[4].moveDir;
 		if (gimmickObjs[4].obj.pos.x >= 3640.0f || gimmickObjs[4].obj.pos.x <= 2840.0f) {
 			gimmickObjs[4].moveDir *= -1;
 		}
 	}
 	if (gimmickObjs[5].isActive) {
 
-		gimmickObjs[5].obj.pos.y -= 1.0f * gimmickObjs[5].moveDir;
+		gimmickObjs[5].obj.pos.y -= 0.5f * gimmickObjs[5].moveDir;
 		if (gimmickObjs[5].obj.pos.y >= 1960.0f || gimmickObjs[5].obj.pos.y <= 1700.0f) {
 			gimmickObjs[5].moveDir *= -1;
 		}
 	}
 	if (gimmickObjs[6].isActive) {
 
-		gimmickObjs[6].obj.pos.y += 0.25f * gimmickObjs[6].moveDir;
+		gimmickObjs[6].obj.pos.y += 0.5f * gimmickObjs[6].moveDir;
 		if (gimmickObjs[6].obj.pos.y >= -550.0f || gimmickObjs[6].obj.pos.y <= -750.0f) {
 			gimmickObjs[6].moveDir *= -1;
 		}

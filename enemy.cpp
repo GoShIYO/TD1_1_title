@@ -105,11 +105,11 @@ void InitEnemyHorming(Enemy enemy[]) {
 }
 
 void InitEnemyShot(Enemy enemy[]) {
-	enemy[0].pos = { -1950.0f, -900.0f };
-	enemy[1].pos = { -2000.0f, -500.0f };
+	enemy[0].pos = { -2350.0f, -900.0f };
+	enemy[1].pos = { 2000.0f, 1700.0f };
 	enemy[2].pos = { -1700.0f, -900.0f };
 	enemy[3].pos = { -1650.0f, -500.0f };
-	enemy[4].pos = { -1660.0f, -900.0f };
+	enemy[4].pos = { -1660.0f, 0.0f };
 
 	enemy[5].pos = { 3700.0f, 1700.0f };
 	enemy[6].pos = { 3500.0f, 1100.0f };
@@ -665,3 +665,4 @@ void LoadImages(Handle& handle) {
 	handle.boss = Novice::LoadTexture("./Resources/Enemy/boss130_B.png");
 	handle.bossEye = Novice::LoadTexture("./Resources/Enemy/boss34_F.png");
 }
+
