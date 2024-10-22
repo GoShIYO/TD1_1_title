@@ -92,7 +92,7 @@ void InitBoss(Enemy& boss);
 void LoadImages(Handle& handle);
 
 void EnemyMove(Enemy enemy[]);
-void BossUpdate(Enemy& boss, Scene& scene);
+void BossUpdate(Enemy& boss, Scene& scene, Sound& sound);
 void EnemyMoveHorming(Enemy enemy[], Obj& player);
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]);
 
@@ -105,7 +105,7 @@ void EnemyRange(Enemy enemy[], Enemy enemy1[]);
 void RenderEnemy(Enemy enemy[], Vector2& scroll, int handle, float px, float py,int deathHandle);
 void RenderBullet(EnemyBullet bullet[], Vector2 scroll, int handle);
 
-void RenderBoss(Enemy& boss, Vector2 scroll, int handle, int handle2);
+void RenderBoss(Enemy& boss, Vector2 scroll, int handle, int handle2, int handle3);
 
 void BulletAnim(EnemyBullet bullet[]);
 
