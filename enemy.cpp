@@ -480,10 +480,6 @@ void EnemyRange(Enemy enemy[], Enemy enemy1[]) {
 	}
 }
 
-//void UpdateKeys(BossKeys keys[], Enemy enemy[]) {
-//
-//}
-
 void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[]) {
 	if (!enemy[0].isAlive && !keys[0].isHit) {
 		keys[0].isHit = true;
