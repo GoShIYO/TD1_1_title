@@ -178,6 +178,25 @@ void InitBossKeys(BossKeys keys[], Enemy enemy[]) {
 	}
 }
 
+void InitBoss(Enemy boss) {
+	boss.pos = { 0.0f, -120.0f };
+
+	boss.velocity.x = 5.0f;
+	boss.velocity.y = 5.0f;
+	boss.width = 32.0f;
+	boss.height = 32.0f;
+	boss.radius = 16.0f;
+	boss.moveTimer = 0;
+	boss.direction = 0;
+	boss.isAlive = true;
+	boss.isMove = false;
+	boss.health = 1;
+	boss.score = 100;
+	boss.deadTimer = 60;
+	boss.deathAnimationCount = 0;
+	
+}
+
 void EnemyMove(Enemy enemy[]) {
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].isAlive) {
