@@ -322,6 +322,8 @@ void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sou
 				sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
 			}
 		}
+		BossMove(boss);
+		BossShot(boss, bullet, player);
 	}
 
 	if (boss.isHit && !boss.isCol) {
@@ -348,10 +350,10 @@ void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sou
 	if (boss.deadTimer <= 0) {
 		Novice::StopAudio(sound.explosion.play);
 		boss.isAlive = false;
+		player.score += boss.score;
 		scene = CLEAR;
 	}
-	BossMove(boss);
-	BossShot(boss, bullet, player);
+
 }
 
 void RenderBossBullet(EnemyBullet& bullet, int handle, Vector2& scroll) {
@@ -552,22 +554,24 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound, Enemy& bos
 	}
 	if (boss.isAlive) {
 
-		if (CheckCircleCollision(boss.pos, player.pos, boss.radius, player.radius) && !player.isCollied) {
+		if (CheckCircleCollision(boss.pos, player.pos, boss.radius, player.radius)) {
 			float dx = player.pos.x - boss.pos.x;
 			float dy = player.pos.y - boss.pos.y;
 			float angle = atan2f(dy, dx);
 			player.angle = angle;
-			if (!Novice::IsPlayingAudio(sound.collision_enemy.play) && sound.collision_enemy.play == -1) {
-				sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
-			}
-			if (player.attack) {
+			if (!player.isCollied) {
+				if (!Novice::IsPlayingAudio(sound.collision_enemy.play) && sound.collision_enemy.play == -1) {
+					sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
+				}
+				if (player.attack) {
 
-				boss.isHit = true;
-			}
-			else {
-				player.isCollied = true;
-				player.health--;
-			}
+					boss.isHit = true;
+				}
+				else {
+					player.isCollied = true;
+					player.health--;
+				}
+			}			
 		}
 	}
 }
