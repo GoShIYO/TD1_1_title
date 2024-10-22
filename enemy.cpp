@@ -193,7 +193,7 @@ void InitBoss(Enemy& boss) {
 	boss.moveTimer = 0;
 	boss.direction = 0;
 	boss.colTimer = 0;
-	boss.isAlive = true;
+	boss.isAlive = false;
 	boss.isMove = false;
 	boss.isHit = false;
 	boss.isCol = false;
@@ -666,7 +666,7 @@ void EnemyRange(Enemy enemy[], Enemy enemy1[]) {
 //
 //}
 
-void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& boss, Obj& player, int remainingKeys) {
+void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& boss, Obj& player, int& remainingKeys) {
 
 
 	if (!enemy[0].isAlive && !keys[0].isHit) {
