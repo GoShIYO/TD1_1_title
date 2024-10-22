@@ -36,6 +36,8 @@
 	texture->textScores53x65 = Novice::LoadTexture("./Resources/UI/textScores53x65.png");
 	texture->playerExplosion60 = Novice::LoadTexture("./Resources/Effect/playerExplosion60.png");
 	texture->enemyExplosion50 = Novice::LoadTexture("./Resources/Effect/enemyExplosion50.png");
+	texture->keyHold_noKey = Novice::LoadTexture("./Resources/UI/keyHold_noKey.png");
+	texture->keyHold_haveKey = Novice::LoadTexture("./Resources/UI/keyHold.png");
 }
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////

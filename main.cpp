@@ -282,6 +282,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderMiniMap(obj, &player);
 			RenderMiniMapEnemy(enemy, enemyHorming, enemyShot,boss,bossKeys,handle.boss, texture.key18x38);
 
+
+			for (int i = 0; i < 4; i++) {
+				if (bossKeys[i].isHit == false) {
+					Novice::DrawSprite(10 + i * 22, 635, texture.keyHold_noKey, 1, 1, 0, WHITE);
+				} else {
+					Novice::DrawSprite(10 + i * 22, 635, texture.keyHold_haveKey, 1, 1, 0, WHITE);
+				}
+			}
 			Novice::DrawSprite(10, 675, texture.textScore84_25, 1, 1, 0, WHITE);
 			showNumber(ui.score.x, ui.score.y, 5, player.score, 18, 25, texture.textNumber18_25);
 			//DEBUG INFO
