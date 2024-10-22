@@ -378,7 +378,7 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound) {
 		if (enemy[i].isAlive) {
 			if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius + r, player.radius)) {
 				if (!Novice::IsPlayingAudio(sound.explosion.play)) {
-					sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 0, 1.0f);
+					sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 0, 1.5f);
 				}
 				if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius, player.radius) && !player.isCollied) {
 					player.isCollied = true;

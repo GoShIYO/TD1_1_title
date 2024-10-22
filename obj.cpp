@@ -671,9 +671,9 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 	else {
 		player->pos.x += player->velocity.x * cosf(player->angle);
 		player->pos.y += player->velocity.y * sinf(player->angle);
-		Novice::StopAudio(sound->player_move.play);
-		if (!Novice::IsPlayingAudio(sound->player_move.play)) {
-			sound->player_move.play = Novice::PlayAudio(sound->player_move.audio, 1, 0.2f);
+		//Novice::StopAudio(sound->player_move.play);
+		if (!Novice::IsPlayingAudio(sound->player_move.play) && !player->isDead) {
+			sound->player_move.play = Novice::PlayAudio(sound->player_move.audio, 1, 0.5f);
 		}
 	}
 	if (player->health <= 0 && !player->isDead) {
@@ -683,7 +683,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 	}
 	if (player->isDead && player->deathTimer>0) {
 		if (!Novice::IsPlayingAudio(sound->explosion.play)) {
-			sound->explosion.play = Novice::PlayAudio(sound->explosion.audio, 0, 0.5f);
+			sound->explosion.play = Novice::PlayAudio(sound->explosion.audio, 0, 1.0f);
 		}
 		player->deathTimer--;
 	}

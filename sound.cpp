@@ -20,4 +20,5 @@ void InitSound(Sound* sound)
 	sound->player_move.play = -1;
 	sound->shield.play = -1;
 	sound->key.play = -1;
+	sound->bgm_title.play = -1;
 }
