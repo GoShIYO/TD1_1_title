@@ -261,7 +261,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y, texture.enemyExplosion50);
 			RenderBullet(bullet, scroll, handle.bullet);
 			RenderKeys(bossKeys, scroll, texture.key18x38);
-			RenderBoss(boss, scroll, handle.boss);
+			RenderBoss(boss, scroll, handle.boss, handle.bossEye);
 			//ミニマップ
 			RenderMiniMap(obj, &player);
 			RenderMiniMapEnemy(enemy, enemyHorming, enemyShot);
