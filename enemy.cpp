@@ -423,9 +423,7 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound, Enemy& bos
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].isAlive) {
 			if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius + r, player.radius)) {
-				if (!Novice::IsPlayingAudio(sound.explosion.play)) {
-					sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 0, 1.5f);
-				}
+				
 				if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius, player.radius) && !player.isCollied) {
 					player.isCollied = true;
 					player.health--;
@@ -440,8 +438,12 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound, Enemy& bos
 						float angle = atan2f(dy, dx);
 						player.angle += angle;
 					}
+					if (!Novice::IsPlayingAudio(sound.explosion.play)) {
+						sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 0, 1.5f);
+					}
 					enemy[i].health--;
 					player.score += enemy[i].score;
+
 				}
 			}
 		}
@@ -494,8 +496,10 @@ void UpdatePlayerBulletEvent(Obj& player, EnemyBullet bullet[]) {
 		float distance = sqrtf(static_cast<float>(pow(distanceX, 2) + static_cast<float>(pow(distanceY, 2))));
 
 		if (distance <= player.radius + bullet[i].radius) {
-			player.health--;
-			player.isCollied = true;
+			if (!player.attack) {
+				player.health--;
+				player.isCollied = true;
+			}		
 			bullet[i].pos.x = -10000.0f;
 			bullet[i].pos.y = -10000.0f;
 			bullet[i].isActive = false;

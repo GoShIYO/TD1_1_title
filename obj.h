@@ -5,6 +5,7 @@
 #include"texture.h"
 #include"sound.h"
 #include"number.h"
+#include"timer.h"
 #define MAX_PARTICLES 1000
 
 extern const int kWindowWidth;
@@ -74,6 +75,11 @@ struct Particle {
 	int color;
 };
 
+struct ScoreBoard {
+	Vector2 pos;
+	int flat;
+	Timer timer;
+};
 
 //struct Triangle {
 //	Vector2 a;
@@ -109,6 +115,8 @@ void InitObj(Obj obj[]);
 /// </summary>
 /// <param name="system"></param>
 void InitSystem(System* system);
+
+void InitScoreBoard(ScoreBoard* board);
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////
 
