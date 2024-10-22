@@ -360,13 +360,13 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound) {
 		if (enemy[i].isAlive) {
 			if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius + r, player.radius)) {
 				if (!Novice::IsPlayingAudio(sound.explosion.play)) {
-					sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 0, 0.5f);
+					sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 0, 1.0f);
 				}
 				if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius, player.radius) && !player.isCollied) {
 					player.isCollied = true;
 					player.health--;
 					if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
-						sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 1.0f);
+						sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0,0.7f);
 					}
 				}
 				if (player.attack) {
@@ -473,7 +473,7 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[]) {
 		keys[0].pos.y = -10000.0f;
 		remainingKeys--;
 		if (!Novice::IsPlayingAudio(sound.key.play)) {
-			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
+			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.2f);
 		}
 	}
 
@@ -483,7 +483,7 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[]) {
 		keys[1].pos.y = -10000.0f;
 		remainingKeys--;
 		if (!Novice::IsPlayingAudio(sound.key.play)) {
-			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
+			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.2f);
 		}
 	}
 
@@ -493,7 +493,7 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[]) {
 		keys[2].pos.y = -10000.0f;
 		remainingKeys--;
 		if (!Novice::IsPlayingAudio(sound.key.play)) {
-			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
+			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.2f);
 		}
 	}
 
@@ -503,7 +503,7 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[]) {
 		keys[3].pos.y = -10000.0f;
 		remainingKeys--;
 		if (!Novice::IsPlayingAudio(sound.key.play)) {
-			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.5f);
+			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.2f);
 		}
 	}
 }

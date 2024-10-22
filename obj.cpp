@@ -725,8 +725,8 @@ void UpdateScroll(Obj* player, Vector2* scroll) {
 	float mapHeightMin = -2.0f * kWindowHeight;
 
 	//スクロール発生ターゲット
-	float rightScrollTrigger = scroll->x + kWindowWidth * 3.0f / 4.0f;
-	float leftScrollTrigger = scroll->x + kWindowWidth * 1.0f / 4.0f;
+	float rightScrollTrigger = scroll->x + kWindowWidth * 2.0f / 3.0f;
+	float leftScrollTrigger = scroll->x + kWindowWidth * 1.0f / 3.0f;
 
 	float topScrollTrigger = scroll->y + kWindowHeight * 1.0f / 3.0f;
 	float bottomScrollTrigger = scroll->y + kWindowHeight * 2.0f / 3.0f;
