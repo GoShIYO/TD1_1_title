@@ -496,11 +496,11 @@ void BulletAnim(EnemyBullet bullet[]) {
 	for (int i = 0; i < BULLET_COUNT; i++) {
 		if (bullet[i].isActive) {
 			bullet[i].animTimer++;
-			if (bullet[i].animTimer >= ANIM_COUNT) {
+			if (bullet[i].animTimer >= 55) {
 				bullet[i].animTimer = 0;
 				bullet[i].moveX = 0;
 			}
-			if (bullet[i].animTimer % 20 == 0) {
+			if (bullet[i].animTimer % 5 == 0) {
 				bullet[i].moveX += static_cast<int>(bullet[i].width);
 			}
 		}
