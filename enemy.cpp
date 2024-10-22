@@ -5,7 +5,7 @@
 #include <Novice.h>
 #include <stdlib.h>
 
-int remainingKeys = 0;
+int remainingKeys = keyCount;
 float move = 0.0f;
 float moveSpeed = 0.2f;
 
