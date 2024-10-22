@@ -79,6 +79,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	float titleEarthAngle = 0;
 	bool isPlayTitleAnimation = true;
 	bool isSceneChange = false;
+	int keysCount = 4;
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
@@ -194,7 +195,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				InitGimmickObjs(gimmickObjs); // ギミックオブジェクトの初期化
 				scroll = { 0,0 };
 				sound.title_bgm.play = -1;
-
+				keysCount = 4;
 			}
 
 			break;
@@ -246,7 +247,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//鍵の更新
 			//UpdateKeys(bossKeys, enemyShot);
-			UpdatePlayerKeyEvent(bossKeys, sound, enemyShot, boss,player);
+			UpdatePlayerKeyEvent(bossKeys, sound, enemyShot, boss,player,keysCount);
 
 			if (player.deathTimer <= 0) {
 				scene = GAME_OVER;

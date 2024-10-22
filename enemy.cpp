@@ -269,10 +269,10 @@ void EnemyMove(Enemy enemy[]) {
 
 void BossMove(Enemy& boss) {
 	static int bossMoveTimer = 0;
+	if (boss.health <= 0)return;
 	bossMoveTimer++;
 	boss.pos.x += boss.velocity.x * sinf(bossMoveTimer * 0.05f);
 	boss.pos.y += boss.velocity.y * cosf(bossMoveTimer * 0.01f);
-	if (boss.health <= 0)return;
 }
 
 void BossShot(Enemy& boss, EnemyBullet& bullet, Obj& player) {
@@ -347,6 +347,7 @@ void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sou
 		Novice::StopAudio(sound.explosion.play);
 		boss.isAlive = false;
 		scene = CLEAR;
+		player.score += 1000;
 	}
 	BossMove(boss);
 	BossShot(boss, bullet, player);
@@ -477,8 +478,8 @@ void RenderBoss(Enemy& boss, Vector2 scroll, int handle, int handle2, int handle
 		}
 		if (timer > 12) {
 			timer = 0;
-			randX = rand() % 50 - 20;
-			randY = rand() % 50 - 20;
+			randX = rand() % 50 - 50;
+			randY = rand() % 50 - 50;
 		}
 		Novice::DrawSpriteRect(
 			int(boss.pos.x + boss.radius + randX - scroll.x),
@@ -497,7 +498,7 @@ void BulletAnim(EnemyBullet bullet[]) {
 				bullet[i].animTimer = 0;
 				bullet[i].moveX = 0;
 			}
-			if (bullet[i].animTimer % 20 == 0) {
+			if (bullet[i].animTimer % 5 == 0) {
 				bullet[i].moveX += static_cast<int>(bullet[i].width);
 			}
 		}
@@ -518,7 +519,6 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound, Enemy& bos
 
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].isAlive) {
-
 
 			if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius, player.radius) && !player.isCollied) {
 				
@@ -541,27 +541,19 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound, Enemy& bos
 					player.health--;					
 				}
 			}
-			
-
 		}
-
 		if (enemy[i].health <= 0) {
 			enemy[i].isAlive = false;
 		}
-
-		//Novice::ScreenPrintf(0, 60, "player.health : %d", player.health);
-		//Novice::ScreenPrintf(0, 80, "enemy.health : %d", enemy[i].health);
-		//Novice::ScreenPrintf(0, 100, "enemy.isAlive : %s", enemy[i].isAlive ? "alive" : "death");
 	}
-
 	if (boss.isAlive) {
 
 		if (CheckCircleCollision(boss.pos, player.pos, boss.radius, player.radius) && !player.isCollied) {
-			float dx = player.pos.x - boss.pos.x + boss.radius;
-			float dy = player.pos.y - boss.pos.y + boss.radius;
+			float dx = player.pos.x - boss.pos.x;
+			float dy = player.pos.y - boss.pos.y;
 			float angle = atan2f(dy, dx);
 			player.angle += angle;		
-			if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
+			if (!Novice::IsPlayingAudio(sound.collision_enemy.play) && sound.collision_enemy.play == -1) {
 				sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
 			}
 			if (player.attack) {
@@ -666,8 +658,8 @@ void EnemyRange(Enemy enemy[], Enemy enemy1[]) {
 //
 //}
 
-void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& boss, Obj& player) {
-	static int remainingKeys = keyCount;
+void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& boss, Obj& player,int remainingKeys) {
+	
 
 	if (!enemy[0].isAlive && !keys[0].isHit) {
 		keys[0].isHit = true;
@@ -721,9 +713,6 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& b
 	}
 	if (remainingKeys == 0 && boss.health >= 1) {
 		boss.isAlive = true;
-	}
-	if (boss.health <= 0 && !boss.isAlive) {
-		remainingKeys = keyCount;
 	}
 }
 
