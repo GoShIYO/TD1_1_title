@@ -311,7 +311,7 @@ void BossShot(Enemy& boss, EnemyBullet& bullet, Obj& player) {
 	Novice::ScreenPrintf(0, 60, "boss.pos.x : %f", boss.pos.x);
 }
 
-void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player) {
+void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sound& sound) {
 	if (boss.isHit && !boss.isCol) {
 		boss.health--;
 		boss.isHit = false;
