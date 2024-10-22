@@ -10,6 +10,8 @@ void InitSound(Sound* sound)
 	sound->shield.audio = Novice::LoadAudio("./Resources/Sound/shield.wav");
 	sound->key.audio = Novice::LoadAudio("./Resources/Sound/key.wav");
 	sound->bgm_game.audio = Novice::LoadAudio("./Resources/Sound/bgm_game.mp3");
+	sound->explosion.audio = Novice::LoadAudio("./Resources/Sound/explosion.wav");
+
 
 
 	sound->collision_enemy.play = -1;

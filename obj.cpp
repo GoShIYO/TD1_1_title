@@ -15,7 +15,7 @@ void InitPlayer(Obj* player) {
 	player->width = 32.0f;
 	player->height = 30.0f;
 	player->isRotate = false;
-	player->health = 3;
+	player->health = 10000;
 	player->InvincibleTimer = 90;
 	player->attack = false;
 	player->isCollied = false;
@@ -671,9 +671,8 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 	else {
 		player->pos.x += player->velocity.x * cosf(player->angle);
 		player->pos.y += player->velocity.y * sinf(player->angle);
-		Novice::StopAudio(sound->player_move.play);
-		if (!Novice::IsPlayingAudio(sound->player_move.play)) {
-			sound->player_move.play = Novice::PlayAudio(sound->player_move.audio, 1, 0.2f);
+		if (!Novice::IsPlayingAudio(sound->player_move.play) && !player->isDead) {
+			sound->player_move.play = Novice::PlayAudio(sound->player_move.audio, 1, 0.5f);
 		}
 	}
 	if (player->health <= 0 && !player->isDead) {
@@ -682,6 +681,9 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 		player->isDead = true;
 	}
 	if (player->isDead && player->deathTimer>0) {
+		if (!Novice::IsPlayingAudio(sound->explosion.play)) {
+			sound->explosion.play = Novice::PlayAudio(sound->explosion.audio, 0, 1.0f);
+		}
 		player->deathTimer--;
 	}
 	else {
@@ -724,8 +726,8 @@ void UpdateScroll(Obj* player, Vector2* scroll) {
 	float mapHeightMin = -2.0f * kWindowHeight;
 
 	//スクロール発生ターゲット
-	float rightScrollTrigger = scroll->x + kWindowWidth * 3.0f / 4.0f;
-	float leftScrollTrigger = scroll->x + kWindowWidth * 1.0f / 4.0f;
+	float rightScrollTrigger = scroll->x + kWindowWidth * 2.0f / 3.0f;
+	float leftScrollTrigger = scroll->x + kWindowWidth * 1.0f / 3.0f;
 
 	float topScrollTrigger = scroll->y + kWindowHeight * 1.0f / 3.0f;
 	float bottomScrollTrigger = scroll->y + kWindowHeight * 2.0f / 3.0f;
