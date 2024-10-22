@@ -304,6 +304,7 @@ void BossShot(Enemy& boss, EnemyBullet& bullet, Obj& player) {
 	if (bullet.animTimer % 20 == 0) {
 		bullet.moveX += 25;
 	}
+	Novice::ScreenPrintf(0, 0, "%d", bullet.animTimer);
 }
 
 void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sound& sound) {
@@ -354,7 +355,7 @@ void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sou
 }
 
 void RenderBossBullet(EnemyBullet& bullet, int handle, Vector2& scroll) {
-	Novice::DrawSpriteRect(int(bullet.pos.x - scroll.x), int(bullet.pos.y - scroll.y), bullet.moveX, 0, 25, 25, handle, (25.0f / 300.0f), 1, 0.0f, WHITE);
+	Novice::DrawSpriteRect(int(bullet.pos.x - scroll.x), int(bullet.pos.y - scroll.y), bullet.moveX, 0, 25, 25, handle, 1 / 12.0f, 1, 0.0f, WHITE);
 }
 
 void EnemyMoveHorming(Enemy enemy[], Obj& player) {
