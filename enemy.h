@@ -51,6 +51,8 @@ struct Enemy {
 	bool isCol;
 	int deadTimer;
 	int deathAnimationCount;
+	int color;
+	int stateTimer;
 };
 
 struct EnemyBullet {

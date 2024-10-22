@@ -31,7 +31,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Enemy boss;
 
 	EnemyBullet bullet[BULLET_COUNT];
-
 	Handle handle;
 	LoadImages(handle);
 
@@ -49,7 +48,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Sound sound;
 	InitSound(&sound);
 
-	Scene scene = TITLE;
+	Scene scene = PLAY;
 	InitPlayer(&player);
 	InitObj(obj);
 	InitEnemyNormal(enemy);
@@ -222,6 +221,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			EnemyMove(enemy);
 			EnemyMoveHorming(enemyHorming, player);
 			BulletShot(enemyShot, player, bullet);
+
 			BossUpdate(boss, scene);
 
 			//敵の移動制限
@@ -234,9 +234,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//弾のアニメーション
 			BulletAnim(bullet);
-
 			//プレイヤーと弾の当たり判定
 			UpdatePlayerBulletEvent(player, bullet);
+
 
 			// ギミックオブジェクトの更新
 			UpdateGimmickObjs(gimmickObjs, player);

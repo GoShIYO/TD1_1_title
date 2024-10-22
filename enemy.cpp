@@ -1,9 +1,15 @@
-#define _USE_MATH_DEFINES
+﻿#define _USE_MATH_DEFINES
 #define ANIM_COUNT 240
 #include "enemy.h"
 #include <math.h>
 #include <Novice.h>
 #include <stdlib.h>
+
+#define BOSS_STAND_TIME 180   // 待機时间(frame)
+#define BOSS_MOVE_TIME 120    // 移動时间(frame)
+#define BOSS_ATTACK_TIME 150  // 攻撃时间(frame)
+#define BOSS_SPEED 3.0f       // 移動速度
+#define BOSS_ATTACK_INTERVAL 60 // 攻撃cooldown
 
 int remainingKeys = keyCount;
 float move = 0.0f;
@@ -179,25 +185,26 @@ void InitBossKeys(BossKeys keys[], Enemy enemy[]) {
 }
 
 void InitBoss(Enemy& boss) {
-	boss.pos = { 0.0f, -120.0f };
+	boss.pos = { 675, 0 };
 	boss.velocity.x = 2.0f;
-	boss.velocity.y = 2.0f;
+	boss.velocity.y = 1.0f;
 	boss.width = 130.0f;
 	boss.height = 130.0f;
 	boss.radius = 75.0f;
 	boss.moveTimer = 0;
 	boss.direction = 0;
 	boss.colTimer = 0;
-	boss.isAlive = false;
+	boss.isAlive = true;
 	boss.isMove = false;
 	boss.isHit = false;
 	boss.isCol = false;
 	boss.health = 5;
-	boss.state = 0;
+	boss.state = STAND;
 	boss.score = 1000;
 	boss.deadTimer = 300;
 	boss.deathAnimationCount = 0;
-	
+	boss.color = WHITE;
+	boss.stateTimer = 0;
 }
 
 void EnemyMove(Enemy enemy[]) {
@@ -246,6 +253,7 @@ void EnemyMove(Enemy enemy[]) {
 }
 
 void BossUpdate(Enemy& boss, Scene &scene) {
+	static int bossMoveTimer = 0;
 	if (boss.isHit && !boss.isCol) {
 		boss.health--;
 		boss.isHit = false;
@@ -266,6 +274,9 @@ void BossUpdate(Enemy& boss, Scene &scene) {
 	if (!boss.isAlive && boss.health <= 0) {
 		scene = CLEAR;
 	}
+	bossMoveTimer++;
+	boss.pos.x += boss.velocity.x * sinf(bossMoveTimer * 0.05f);
+	boss.pos.y += boss.velocity.y * cosf(bossMoveTimer * 0.01f);
 	switch (boss.state)
 	{
 	case STAND:
@@ -274,9 +285,13 @@ void BossUpdate(Enemy& boss, Scene &scene) {
 
 	case MOVE:
 
+		
+
 		break;
 	case TACKLE:
 
+
+	
 		break;
 	}
 }
@@ -572,6 +587,7 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& b
 		keys[0].pos.y = -10000.0f;
 		remainingKeys--;
 		player.health++;
+		player.isCollied = true;
 		if (!Novice::IsPlayingAudio(sound.key.play)) {
 			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.2f);
 		}
@@ -583,6 +599,7 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& b
 		keys[1].pos.y = -10000.0f;
 		remainingKeys--;
 		player.health++;
+		player.isCollied = true;
 
 		if (!Novice::IsPlayingAudio(sound.key.play)) {
 			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.2f);
@@ -595,6 +612,7 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& b
 		keys[2].pos.y = -10000.0f;
 		remainingKeys--;
 		player.health++;
+		player.isCollied = true;
 
 		if (!Novice::IsPlayingAudio(sound.key.play)) {
 			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.2f);
@@ -607,6 +625,7 @@ void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& b
 		keys[3].pos.y = -10000.0f;
 		remainingKeys--;
 		player.health++;
+		player.isCollied = true;
 
 		if (!Novice::IsPlayingAudio(sound.key.play)) {
 			sound.key.play = Novice::PlayAudio(sound.key.audio, 0, 0.2f);
