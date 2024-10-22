@@ -340,23 +340,6 @@ void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sou
 	}
 	BossMove(boss);
 	BossShot(boss, bullet, player);
-	switch (boss.state)
-	{
-	case STAND:
-
-		break;
-
-	case MOVE:
-
-
-
-		break;
-	case TACKLE:
-
-
-
-		break;
-	}
 }
 
 void RenderBossBullet(EnemyBullet& bullet, int handle, Vector2& scroll) {
@@ -545,10 +528,7 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound, Enemy& bos
 						player.angle += angle;
 					}
 					player.isCollied = true;
-					player.health--;
-					if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
-						sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
-					}
+					player.health--;					
 				}
 			}
 			
@@ -570,8 +550,7 @@ void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound, Enemy& bos
 			float dx = player.pos.x - boss.pos.x ;
 			float dy = player.pos.y - boss.pos.y ;
 			float angle = atan2f(dy, dx);
-			player.angle += angle;
-			
+			player.angle += angle;		
 			if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
 				sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
 			}

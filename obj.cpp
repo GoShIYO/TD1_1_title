@@ -144,8 +144,8 @@ void InitObj(Obj obj[]) {
 	obj[64].pos = { 3434.0f, 1253.5f };  // 区域 (5, 5)
 }
 
-void InitScoreBoard(ScoreBoard *board) {
-	board->pos = {165 , -625};
+void InitScoreBoard(ScoreBoard* board) {
+	board->pos = { 165 , -625 };
 	board->flat = 0;
 	board->timer = { 0,60 };
 }
@@ -208,7 +208,7 @@ Rect RectRotedPlayer(const Vector2* pos, float width, float height, float angle)
 	return points;
 }
 
-void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle,UI* ui) {
+void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle, UI* ui) {
 	static int life = 0;
 	if (player->health > 2) {
 		life = 0;
@@ -297,7 +297,7 @@ void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle,UI* ui) {
 	else {
 		static int count = 0;
 		if (player->deathTimer % 5 == 0) {
-			count++;			
+			count++;
 		}
 		if (player->deathTimer <= 0) {
 			count = 0;
@@ -305,7 +305,7 @@ void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle,UI* ui) {
 		Novice::DrawSpriteRect(
 			int(player->deathPosTmp.x - player->width / 2.0f - scroll->x),
 			int(player->deathPosTmp.y - player->height / 2.0f - scroll->y),
-			count * 60, 0, 60, 60, handle->playerExplosion60, 1 / 12.0f, 1, 0, WHITE);		
+			count * 60, 0, 60, 60, handle->playerExplosion60, 1 / 12.0f, 1, 0, WHITE);
 	}
 }
 void RenderObj(Obj obj[], Vector2* scroll, AllResource& texture) {
@@ -562,7 +562,7 @@ void RenderParticle(Particle particles[], Vector2* scroll) {
 	}
 }
 
-void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* sound,UI*ui) {
+void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* sound, UI* ui) {
 	assert(player != nullptr);
 	assert(obj != nullptr);
 	assert(keys != nullptr);
@@ -580,16 +580,22 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 
 	//無敵時間処理
 	if (player->isCollied && player->InvincibleTimer > 0) {
+		if (!Novice::IsPlayingAudio(sound->collision_enemy.play) && sound->collision_enemy.play == -1) {
+			sound->collision_enemy.play = Novice::PlayAudio(sound->collision_enemy.audio, 0, 0.7f);
+		}
+
 		player->InvincibleTimer--;
-		ui->damageShieldColor = RgbaAnimation(WHITE,1 - float(player->InvincibleTimer / 90.0f));
+		ui->damageShieldColor = RgbaAnimation(WHITE, 1 - float(player->InvincibleTimer / 90.0f));
 		ui->lifeColor = RgbaAnimation(WHITE, 1 - float(player->InvincibleTimer / 90.0f));
+
 	}
 	else {
+		sound->collision_enemy.play = -1;
 		player->InvincibleTimer = 90;
 		player->isCollied = false;
 		ui->damageShieldColor = WHITE;
 	}
-	
+
 	//攻撃処理
 	if (!player->isRotate) {
 		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
@@ -689,7 +695,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 		player->deathPosTmp = player->pos;
 		player->isDead = true;
 	}
-	if (player->isDead && player->deathTimer>0) {
+	if (player->isDead && player->deathTimer > 0) {
 		if (!Novice::IsPlayingAudio(sound->explosion.play)) {
 			sound->explosion.play = Novice::PlayAudio(sound->explosion.audio, 0, 1.0f);
 		}
