@@ -88,7 +88,7 @@ void InitEnemyBullet(EnemyBullet bullet[]);
 void InitBossKeys(BossKeys keys[], Enemy enemy[]);
 void InitBoss(Enemy& boss);
 
-void InitBossBullet(Enemy& boss, EnemyBullet& bullet);
+void InitBossBullet(EnemyBullet& bullet);
 
 void RenderBossBullet(EnemyBullet& bullet, int handle, Vector2& scroll);
 

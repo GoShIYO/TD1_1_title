@@ -204,10 +204,11 @@ void InitBoss(Enemy& boss) {
 	boss.deathAnimationCount = 0;
 	boss.color = WHITE;
 	boss.stateTimer = 0;
+	boss.isActive = false;
+	boss.shotTimer = 0;
 }
 
-void InitBossBullet(Enemy& boss, EnemyBullet& bullet) {
-	boss.isActive = false;
+void InitBossBullet( EnemyBullet& bullet) {
 	bullet.isActive = false;
 	bullet.pos.x = -10000.0f;
 	bullet.pos.y = -10000.0f;
@@ -278,10 +279,10 @@ void BossMove(Enemy& boss) {
 void BossShot(Enemy& boss, EnemyBullet& bullet, Obj& player) {
 	boss.shotTimer++;
 	if (boss.shotTimer >= 120 && !boss.isActive) {
-		bullet.pos.x = boss.pos.x;
-		bullet.pos.y = boss.pos.y;
-		bullet.components.x = player.pos.x - bullet.pos.x + bullet.radius;
-		bullet.components.y = player.pos.y - bullet.pos.y + bullet.radius;
+		bullet.pos.x = boss.pos.x + boss.radius;
+		bullet.pos.y = boss.pos.y + boss.radius;
+		bullet.components.x = player.pos.x - bullet.pos.x ;
+		bullet.components.y = player.pos.y - bullet.pos.y ;
 		bullet.magnitude = (float)sqrt(pow(bullet.components.x, 2) + pow(bullet.components.y, 2));
 		bullet.directions.x = bullet.components.x / bullet.magnitude;
 		bullet.directions.y = bullet.components.y / bullet.magnitude;
@@ -304,7 +305,6 @@ void BossShot(Enemy& boss, EnemyBullet& bullet, Obj& player) {
 	if (bullet.animTimer % 20 == 0) {
 		bullet.moveX += 25;
 	}
-	Novice::ScreenPrintf(0, 0, "%d", bullet.animTimer);
 }
 
 void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sound& sound) {
@@ -323,7 +323,7 @@ void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sou
 			}
 		}
 	}
-	
+
 	if (boss.isHit && !boss.isCol) {
 		boss.health--;
 		boss.isHit = false;

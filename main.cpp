@@ -59,7 +59,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	InitEnemyBullet(bullet);
 	InitBossKeys(bossKeys, enemyShot);
 	InitBoss(boss);
-	InitBossBullet(boss, bossBullet);
+	InitBossBullet(bossBullet);
 	InitSystem(&system);
 	initializeResource(&texture);
 	InitGimmickObjs(gimmickObjs);
@@ -190,7 +190,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				InitEnemyBullet(bullet);
 				InitBossKeys(bossKeys, enemyShot);
 				InitBoss(boss);
-				InitBossBullet(boss, bossBullet);
+				InitBossBullet(bossBullet);
 				InitSystem(&system);
 				initializeResource(&texture);
 				InitGimmickObjs(gimmickObjs); // ギミックオブジェクトの初期化
@@ -228,6 +228,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			BulletShot(enemyShot, player, bullet);
 
 			BossUpdate(boss, scene, bossBullet, player, sound);
+			Novice::ScreenPrintf(0, 0, "%.2f %.2f", bossBullet.pos.x,bossBullet.pos.y);
 
 			//敵の移動制限
 			EnemyRange(enemy, enemyHorming);
