@@ -24,3 +24,9 @@ void TimerRunZero(Timer* Timer) {
 		Timer->clock = 0;
 	};
 }
+
+void TimerToMix(Timer* Timer) {
+	if (Timer->clock < Timer->time) {
+		Timer->clock++;
+	}
+}

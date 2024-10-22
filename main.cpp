@@ -29,6 +29,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Obj obj[objCount];
 
+	ScoreBoard scoreBoard;
+
 	Enemy enemy[ENEMY_COUNT];
 	Enemy enemyHoming[ENEMY_COUNT];
 	Enemy enemyShot[ENEMY_COUNT];
@@ -65,6 +67,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	InitSystem(&system);
 	initializeResource(&texture);
 	InitGimmickObjs(gimmickObjs);
+	InitScoreBoard(&scoreBoard);
 
 	UI ui;
 	InitUI(ui);
@@ -98,6 +101,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		switch (scene)
 		{
 		case TITLE:
+			//BGM
+			Novice::StopAudio(sound.bgm_game.play);
 			if (isPlayTitleAnimation) {
 				if (titleTimer < 1.0f) {
 					titleTimer += 0.005f;
@@ -116,8 +121,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			else {
 				titleTimer = 0;
 			}
-
-			Novice::ScreenPrintf(0, 0, "%.04f %.04f", earthStar.x, earthStar.y);
 
 			Novice::DrawSprite(0, 0, texture.BG3_3, 1, 1, 0, WHITE);
 			Novice::DrawSprite(int(earthStar.x), int(earthStar.y), texture.earthStar1000, scale / 1000.0f, scale / 1000.0f, titleEarthAngle, WHITE);
@@ -148,7 +151,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				startTimer = 0;
 			}
 			if (isSceneChange) {
-				Novice::ScreenPrintf(0, 20, "%.04f", startTimer);
 				startTimer += 0.01f;
 				earthStar.x = EaseOutCubic(-480.0f, obj[0].pos.x - 66, startTimer);
 				earthStar.y = EaseOutCubic(-280.0f, obj[0].pos.y - 66, startTimer);
@@ -172,6 +174,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 			}
 			if (scene == PLAY) {
+				InitScoreBoard(&scoreBoard);
 				InitPlayer(&player);
 				InitObj(obj);
 				InitEnemyNormal(enemy);
@@ -190,32 +193,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			break;
 		case PLAY:
 
+			//BGM
+
+			if (!Novice::IsPlayingAudio(sound.bgm_game.play)) {
+				sound.bgm_game.play = Novice::PlayAudio(sound.bgm_game.audio, 1, 0.1f);
+			}
+
 			if (keys[DIK_R] && !preKeys[DIK_R]) {
 				player.pos = { 200.0f, 100.0f };
 				player.angle = (float)(M_PI) / 8.0f;
 			}
-
 			UpdatePlayer(&player, obj, keys, preKeys, &sound, &ui);
 			checkPlayerMoveRange(&player, &sound);
 			EmitParticle(particles, &player);
 			for (int i = 0; i < MAX_PARTICLES; i++) {
 				UpdateParticle(&particles[i]);
-			}
-
-			if (keys[DIK_UP]) {
-				scroll.y -= 10;
-			}
-			if (keys[DIK_DOWN]) {
-				scroll.y += 10;
-
-			}
-			if (keys[DIK_LEFT]) {
-				scroll.x -= 10;
-
-			}
-			if (keys[DIK_RIGHT]) {
-				scroll.x += 10;
-
 			}
 
 			//敵の移動処理
@@ -251,7 +243,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			/// ---------------------------------------------------------------------
 			/// ↓描画処理ここから
 			UpdateScroll(&player, &scroll);
-			//Novice::DrawBox(0, 0, kWindowWidth, kWindowHeight, 0, 0x002222FF, kFillModeSolid);
 			Novice::DrawSprite(
 				-3840 - int(scroll.x * 0.5f),
 				-2160 - int(scroll.y * 0.5f),
@@ -269,7 +260,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderGimmickObjs(gimmickObjs, &scroll);
 
 			RenderEnemy(enemy, scroll, handle.enemy, player.pos.x, player.pos.y, texture.enemyExplosion50);
-			RenderEnemy(enemyHoming, scroll, handle.enemyHoming, player.pos.x, player.pos.y, texture.enemyExplosion50);
+			RenderEnemy(enemyHorming, scroll, handle.enemyHorming, player.pos.x, player.pos.y, texture.enemyExplosion50);
 			RenderEnemy(enemyShot, scroll, handle.enemyShot, player.pos.x, player.pos.y, texture.enemyExplosion50);
 			RenderBullet(bullet, scroll, handle.bullet);
 			RenderKeys(bossKeys, scroll, texture.key18x38);
@@ -280,9 +271,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			Novice::DrawSprite(10, 675, texture.textScore84_25, 1, 1, 0, WHITE);
 			showNumber(ui.score.x, ui.score.y, 5, player.score, 18, 25, texture.textNumber18_25);
 			//DEBUG INFO
-			Novice::ScreenPrintf(0, 0, "keyCount : %d", remainingKeys);
-			Novice::ScreenPrintf(0, 20, "player.health : %d", player.health);
-			Novice::ScreenPrintf(0, 40, "moveX : %d", bullet[0].moveX);
+			//Novice::ScreenPrintf(0, 0, "keyCount : %d", remainingKeys);
+			//Novice::ScreenPrintf(0, 20, "player.health : %d", player.health);
+			//Novice::ScreenPrintf(0, 40, "moveX : %d", bullet[0].moveX);
 
 			// デバッグ表示
 			viewDig(&system.digFlat, keys[DIK_P], preKeys[DIK_P], keys[DIK_LBRACKET], preKeys[DIK_LBRACKET], keys[DIK_RBRACKET], preKeys[DIK_RBRACKET]);
@@ -297,27 +288,54 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 			break;
 		case GAME_OVER:
+			
+
 			Novice::DrawSprite(0, 0, texture.GameOver, 1, 1, 0, WHITE);
+			if (scoreBoard.flat == 1) {
+				TimerToMix(&scoreBoard.timer);
+				Novice::DrawSprite(165, int(EaseOutCubic(scoreBoard.pos.y, 63.0f, scoreBoard.timer.clock/ scoreBoard.timer.time)), texture.ScoreBoard950x574, 1, 1, 0, WHITE);
+				showNumber(745.0f, EaseOutCubic(-298.0f, 390.0f, scoreBoard.timer.clock / scoreBoard.timer.time), 5, player.score,53,65, texture.textScores53x65);
+			}
+
+			//BGM
+			Novice::StopAudio(sound.bgm_game.play);
+
 
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
-				isPlayTitleAnimation = true;
-				isSceneChange = false;
-				titleTimer = 0;
-				startTimer = 0;
+				if (scoreBoard.flat == 0) {
+					scoreBoard.flat++;
+				} else {
+					isPlayTitleAnimation = true;
+					isSceneChange = false;
+					titleTimer = 0;
+					startTimer = 0;
 
-				scene = TITLE;
+					scene = TITLE;
+				}
 			}
 			break;
 		case CLEAR:
 			Novice::DrawSprite(0, 0, texture.GameClear, 1, 1, 0, WHITE);
+			if (scoreBoard.flat == 1) {
+				TimerToMix(&scoreBoard.timer);
+				Novice::DrawSprite(165, int(EaseOutCubic(scoreBoard.pos.y, 63.0f, scoreBoard.timer.clock / scoreBoard.timer.time)), texture.ScoreBoard950x574, 1, 1, 0, WHITE);
+				showNumber(745.0f, EaseOutCubic(-298.0f, 390.0f, scoreBoard.timer.clock / scoreBoard.timer.time), 5, player.score, 53, 65, texture.textScores53x65);
+			}
+			//BGM
+			Novice::StopAudio(sound.bgm_game.play);
+
 
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
-				isPlayTitleAnimation = true;
-				isSceneChange = false;
-				titleTimer = 0;
-				startTimer = 0;
+				if (scoreBoard.flat == 0) {
+					scoreBoard.flat++;
+				} else {
+					isPlayTitleAnimation = true;
+					isSceneChange = false;
+					titleTimer = 0;
+					startTimer = 0;
 
-				scene = TITLE;
+					scene = TITLE;
+				}
 			}
 			break;
 		default:

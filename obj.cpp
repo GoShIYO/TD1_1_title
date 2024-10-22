@@ -15,7 +15,7 @@ void InitPlayer(Obj* player) {
 	player->width = 32.0f;
 	player->height = 30.0f;
 	player->isRotate = false;
-	player->health = 10000;
+	player->health = 3;
 	player->InvincibleTimer = 90;
 	player->attack = false;
 	player->isCollied = false;
@@ -142,6 +142,12 @@ void InitObj(Obj obj[]) {
 	obj[62].pos = { 3382.8f, 890.3f };   // 区域 (5, 4)
 	obj[63].pos = { 3258.8f, -69.1f };   // 区域 (5, 2)
 	obj[64].pos = { 3434.0f, 1253.5f };  // 区域 (5, 5)
+}
+
+void InitScoreBoard(ScoreBoard *board) {
+	board->pos = {165 , -625};
+	board->flat = 0;
+	board->timer = { 0,60 };
 }
 
 void InitSystem(System* system) {
@@ -449,7 +455,7 @@ void InitParticle(Particle* p, float x, float y, float direction) {
 void EmitParticle(Particle particles[], Obj* player) {
 
 	for (int i = 0; i < MAX_PARTICLES; i++) {
-		if (!particles[i].isActive && !player->isRotate) {
+		if (!particles[i].isActive && !player->isRotate && !player->isDead) {
 
 			InitParticle(
 				&particles[i],
@@ -587,6 +593,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 	if (!player->isRotate) {
 		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
 			player->attack = true;
+			Novice::StopAudio(sound->shield.play);
 			if (!Novice::IsPlayingAudio(sound->shield.play) && player->atTimer == 60) {
 				sound->shield.play = Novice::PlayAudio(sound->shield.audio, 0, 1.0f);
 			}
@@ -670,8 +677,8 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 	else {
 		player->pos.x += player->velocity.x * cosf(player->angle);
 		player->pos.y += player->velocity.y * sinf(player->angle);
-		if (!Novice::IsPlayingAudio(sound->player_move.play)) {
-			sound->player_move.play = Novice::PlayAudio(sound->player_move.audio, 1, 0.2f);
+		if (!Novice::IsPlayingAudio(sound->player_move.play) && !player->isDead) {
+			sound->player_move.play = Novice::PlayAudio(sound->player_move.audio, 1, 0.5f);
 		}
 	}
 	if (player->health <= 0 && !player->isDead) {
@@ -681,8 +688,9 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 	}
 	if (player->isDead && player->deathTimer>0) {
 		if (!Novice::IsPlayingAudio(sound->explosion.play)) {
-			sound->explosion.play = Novice::PlayAudio(sound->explosion.audio, 0, 0.5f);
+			sound->explosion.play = Novice::PlayAudio(sound->explosion.audio, 0, 1.0f);
 		}
+		Novice::StopAudio(sound->player_move.play);
 		player->deathTimer--;
 	}
 	else {
@@ -725,8 +733,8 @@ void UpdateScroll(Obj* player, Vector2* scroll) {
 	float mapHeightMin = -2.0f * kWindowHeight;
 
 	//スクロール発生ターゲット
-	float rightScrollTrigger = scroll->x + kWindowWidth * 3.0f / 4.0f;
-	float leftScrollTrigger = scroll->x + kWindowWidth * 1.0f / 4.0f;
+	float rightScrollTrigger = scroll->x + kWindowWidth * 2.0f / 3.0f;
+	float leftScrollTrigger = scroll->x + kWindowWidth * 1.0f / 3.0f;
 
 	float topScrollTrigger = scroll->y + kWindowHeight * 1.0f / 3.0f;
 	float bottomScrollTrigger = scroll->y + kWindowHeight * 2.0f / 3.0f;
