@@ -11,7 +11,6 @@
 #define BOSS_SPEED 3.0f       // 移動速度
 #define BOSS_ATTACK_INTERVAL 60 // 攻撃cooldown
 
-int remainingKeys = keyCount;
 float move = 0.0f;
 float moveSpeed = 0.2f;
 
@@ -84,8 +83,8 @@ void InitEnemyHorming(Enemy enemy[]) {
 	enemy[19].pos = { -1500.0f, 720.0f };
 
 	for (int i = 0; i < ENEMY_COUNT; i++) {
-		enemy[i].velocity.x = 2.0f;
-		enemy[i].velocity.y = 2.0f;
+		enemy[i].velocity.x = 1.0f;
+		enemy[i].velocity.y = 1.0f;
 		enemy[i].components.x = 0.0f;
 		enemy[i].components.y = 0.0f;
 		enemy[i].directions.x = 0.0f;
@@ -93,7 +92,7 @@ void InitEnemyHorming(Enemy enemy[]) {
 		enemy[i].magnitude = 0.0f;
 		enemy[i].width = 30.0f;
 		enemy[i].height = 30.0f;
-		enemy[i].radius = 16.0f;
+		enemy[i].radius = 15.0f;
 		enemy[i].direction = 0;
 		enemy[i].isAlive = true;
 		enemy[i].isMove = false;
@@ -132,7 +131,7 @@ void InitEnemyShot(Enemy enemy[]) {
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		enemy[i].width = 30.0f;
 		enemy[i].height = 30.0f;
-		enemy[i].radius = 16.0f;
+		enemy[i].radius = 15.0f;
 		enemy[i].shotTimer = 0;
 		enemy[i].isAlive = true;
 		enemy[i].isActive = false;
@@ -148,8 +147,8 @@ void InitEnemyBullet(EnemyBullet bullet[]) {
 	for (int i = 0; i < BULLET_COUNT; i++) {
 		bullet[i].pos.x = -10000.0f;
 		bullet[i].pos.y = -10000.0f;
-		bullet[i].velocity.x = 5.0f;
-		bullet[i].velocity.y = 5.0f;
+		bullet[i].velocity.x = 4.0f;
+		bullet[i].velocity.y = 4.0f;
 		bullet[i].components.x = 0.0f;
 		bullet[i].components.y = 0.0f;
 		bullet[i].directions.x = 0.0f;
@@ -194,21 +193,22 @@ void InitBoss(Enemy& boss) {
 	boss.moveTimer = 0;
 	boss.direction = 0;
 	boss.colTimer = 0;
-	boss.isAlive = true;
+	boss.isAlive = false;
 	boss.isMove = false;
 	boss.isHit = false;
 	boss.isCol = false;
-	boss.health = 1;
+	boss.health = 3;
 	boss.state = STAND;
 	boss.score = 1000;
 	boss.deadTimer = 300;
 	boss.deathAnimationCount = 0;
 	boss.color = WHITE;
 	boss.stateTimer = 0;
+	boss.isActive = false;
+	boss.shotTimer = 0;
 }
 
-void InitBossBullet(Enemy& boss, EnemyBullet& bullet) {
-	boss.isActive = false;
+void InitBossBullet( EnemyBullet& bullet) {
 	bullet.isActive = false;
 	bullet.pos.x = -10000.0f;
 	bullet.pos.y = -10000.0f;
@@ -270,19 +270,19 @@ void EnemyMove(Enemy enemy[]) {
 
 void BossMove(Enemy& boss) {
 	static int bossMoveTimer = 0;
+	if (boss.health <= 0)return;
 	bossMoveTimer++;
 	boss.pos.x += boss.velocity.x * sinf(bossMoveTimer * 0.05f);
 	boss.pos.y += boss.velocity.y * cosf(bossMoveTimer * 0.01f);
-	if (boss.health <= 0)return;
 }
 
 void BossShot(Enemy& boss, EnemyBullet& bullet, Obj& player) {
 	boss.shotTimer++;
 	if (boss.shotTimer >= 120 && !boss.isActive) {
-		bullet.pos.x = boss.pos.x;
-		bullet.pos.y = boss.pos.y;
-		bullet.components.x = player.pos.x - bullet.pos.x + bullet.radius;
-		bullet.components.y = player.pos.y - bullet.pos.y + bullet.radius;
+		bullet.pos.x = boss.pos.x + boss.radius;
+		bullet.pos.y = boss.pos.y + boss.radius;
+		bullet.components.x = player.pos.x - bullet.pos.x ;
+		bullet.components.y = player.pos.y - bullet.pos.y ;
 		bullet.magnitude = (float)sqrt(pow(bullet.components.x, 2) + pow(bullet.components.y, 2));
 		bullet.directions.x = bullet.components.x / bullet.magnitude;
 		bullet.directions.y = bullet.components.y / bullet.magnitude;
@@ -308,18 +308,22 @@ void BossShot(Enemy& boss, EnemyBullet& bullet, Obj& player) {
 }
 
 void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sound& sound) {
-	float dx = bullet.pos.x - player.pos.x;
-	float dy = bullet.pos.y - player.pos.y;
-	float d = sqrtf(static_cast<float>(pow(dx, 2)) + static_cast<float>(pow(dy, 2)));
+	if (boss.isAlive) {
+		float dx = bullet.pos.x - player.pos.x;
+		float dy = bullet.pos.y - player.pos.y;
+		float d = sqrtf(static_cast<float>(pow(dx, 2)) + static_cast<float>(pow(dy, 2)));
 
-	if (d <= boss.radius + player.radius) {
-		player.health--;
-		bullet.pos.x = -10000.0f;
-		bullet.pos.y = -10000.0f;
-		player.isCollied = true;
-		if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
-			sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
+		if (d <= boss.radius + player.radius) {
+			player.health--;
+			bullet.pos.x = -10000.0f;
+			bullet.pos.y = -10000.0f;
+			player.isCollied = true;
+			if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
+				sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
+			}
 		}
+		BossMove(boss);
+		BossShot(boss, bullet, player);
 	}
 
 	if (boss.isHit && !boss.isCol) {
@@ -335,7 +339,6 @@ void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sou
 		boss.isCol = false;
 		boss.colTimer = 0;
 	}
-
 	if (boss.health <= 0) {
 		if (boss.deadTimer > 0) {
 			boss.deadTimer--;
@@ -347,31 +350,14 @@ void BossUpdate(Enemy& boss, Scene& scene, EnemyBullet& bullet, Obj& player, Sou
 	if (boss.deadTimer <= 0) {
 		Novice::StopAudio(sound.explosion.play);
 		boss.isAlive = false;
+		player.score += boss.score;
 		scene = CLEAR;
 	}
-	BossMove(boss);
-	BossShot(boss, bullet, player);
-	switch (boss.state)
-	{
-	case STAND:
 
-		break;
-
-	case MOVE:
-
-
-
-		break;
-	case TACKLE:
-
-
-
-		break;
-	}
 }
 
 void RenderBossBullet(EnemyBullet& bullet, int handle, Vector2& scroll) {
-	Novice::DrawSpriteRect(int(bullet.pos.x - scroll.x), int(bullet.pos.y - scroll.y), bullet.moveX, 0, 25, 25, handle, (25.0f / 300.0f), 1, 0.0f, WHITE);
+	Novice::DrawSpriteRect(int(bullet.pos.x - scroll.x), int(bullet.pos.y - scroll.y), bullet.moveX, 0, 25, 25, handle, 1 / 12.0f, 1, 0.0f, WHITE);
 }
 
 void EnemyMoveHorming(Enemy enemy[], Obj& player) {
@@ -398,30 +384,32 @@ void EnemyMoveHorming(Enemy enemy[], Obj& player) {
 
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]) {
 	for (int i = 0; i < ENEMY_COUNT; i++) {
-		float distanceX = player.pos.x - enemy[i].pos.x + enemy[i].radius;
-		float distanceY = player.pos.y - enemy[i].pos.y + enemy[i].radius;
-		float distance = sqrtf(static_cast<float>(pow(distanceX, 2) + static_cast<float>(pow(distanceY, 2))));
+		if (enemy[i].isAlive) {
+			float distanceX = player.pos.x - enemy[i].pos.x;
+			float distanceY = player.pos.y - enemy[i].pos.y;
+			float distance = sqrtf(static_cast<float>(pow(distanceX, 2) + static_cast<float>(pow(distanceY, 2))));
 
-		if (!enemy[i].isActive && enemy[i].isAlive && distance <= BULLET_ACTIVE_RANGE) {
-			enemy[i].shotTimer++;
-			if (enemy[i].shotTimer >= SHOT_TIME) {
-				enemy[i].isActive = true;
+			if (!enemy[i].isActive && enemy[i].isAlive && distance <= BULLET_ACTIVE_RANGE) {
+				enemy[i].shotTimer++;
+				if (enemy[i].shotTimer >= SHOT_TIME) {
+					enemy[i].isActive = true;
+				}
 			}
-		}
-		for (int j = 0; j < BULLET_COUNT; j++) {
-			if (!bullet[j].isActive && enemy[i].isActive) {
-				bullet[j].pos.x = enemy[i].pos.x;
-				bullet[j].pos.y = enemy[i].pos.y;
-				bullet[j].isActive = true;
-				bullet[j].components.x = player.pos.x - bullet[j].pos.x;
-				bullet[j].components.y = player.pos.y - bullet[j].pos.y;
-				bullet[j].magnitude = (float)sqrt(pow(bullet[j].components.x, 2) + pow(bullet[j].components.y, 2));
-				bullet[j].directions.x = bullet[j].components.x / bullet[j].magnitude;
-				bullet[j].directions.y = bullet[j].components.y / bullet[j].magnitude;
-				bullet[j].isActive = true;
-				enemy[i].isActive = false;
-				enemy[i].shotTimer = 0;
-				break;
+			for (int j = 0; j < BULLET_COUNT; j++) {
+				if (!bullet[j].isActive && enemy[i].isActive) {
+					bullet[j].pos.x = enemy[i].pos.x;
+					bullet[j].pos.y = enemy[i].pos.y;
+					bullet[j].isActive = true;
+					bullet[j].components.x = player.pos.x - bullet[j].pos.x;
+					bullet[j].components.y = player.pos.y - bullet[j].pos.y;
+					bullet[j].magnitude = (float)sqrt(pow(bullet[j].components.x, 2) + pow(bullet[j].components.y, 2));
+					bullet[j].directions.x = bullet[j].components.x / bullet[j].magnitude;
+					bullet[j].directions.y = bullet[j].components.y / bullet[j].magnitude;
+					bullet[j].isActive = true;
+					enemy[i].isActive = false;
+					enemy[i].shotTimer = 0;
+					break;
+				}
 			}
 		}
 	}
@@ -495,8 +483,8 @@ void RenderBoss(Enemy& boss, Vector2 scroll, int handle, int handle2, int handle
 		}
 		if (timer > 12) {
 			timer = 0;
-			randX = rand() % 50 - 20;
-			randY = rand() % 50 - 20;
+			randX = rand() % 50 - 50;
+			randY = rand() % 50 - 50;
 		}
 		Novice::DrawSpriteRect(
 			int(boss.pos.x + boss.radius + randX - scroll.x),
@@ -511,11 +499,11 @@ void BulletAnim(EnemyBullet bullet[]) {
 	for (int i = 0; i < BULLET_COUNT; i++) {
 		if (bullet[i].isActive) {
 			bullet[i].animTimer++;
-			if (bullet[i].animTimer >= ANIM_COUNT) {
+			if (bullet[i].animTimer >= 55) {
 				bullet[i].animTimer = 0;
 				bullet[i].moveX = 0;
 			}
-			if (bullet[i].animTimer % 20 == 0) {
+			if (bullet[i].animTimer % 5 == 0) {
 				bullet[i].moveX += static_cast<int>(bullet[i].width);
 			}
 		}
@@ -533,64 +521,58 @@ bool CheckCircleCollision(Vector2& a, Vector2& b, const float& radiusA, const fl
 	return false;
 }
 void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player, Sound& sound, Enemy& boss) {
-	const float r = 50.0f;
+
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].isAlive) {
-			if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius + r, player.radius)) {
 
-				if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius, player.radius) && !player.isCollied) {
-					player.isCollied = true;
-					player.health--;
-					if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
-						sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
+			if (CheckCircleCollision(enemy[i].pos, player.pos, enemy[i].radius, player.radius) && !player.isCollied) {
+
+				if (player.attack || (player.InvincibleTimer > 0 && player.InvincibleTimer < 90)) {
+
+					enemy[i].health--;
+					player.score += enemy[i].score;
+					if (!Novice::IsPlayingAudio(sound.explosion.play)) {
+						sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 0, 1.5f);
 					}
 				}
-				if (player.attack) {
+				else {
 					if (!player.isRotate) {
 						float dx = player.pos.x - enemy[i].pos.x;
 						float dy = player.pos.y - enemy[i].pos.y;
 						float angle = atan2f(dy, dx);
 						player.angle += angle;
 					}
-					if (!Novice::IsPlayingAudio(sound.explosion.play)) {
-						sound.explosion.play = Novice::PlayAudio(sound.explosion.audio, 0, 1.5f);
-					}
-					enemy[i].health--;
-					player.score += enemy[i].score;
-
+					player.isCollied = true;
+					player.health--;
 				}
 			}
-		}
 
+		}
 		if (enemy[i].health <= 0) {
 			enemy[i].isAlive = false;
 		}
-
-		//Novice::ScreenPrintf(0, 60, "player.health : %d", player.health);
-		//Novice::ScreenPrintf(0, 80, "enemy.health : %d", enemy[i].health);
-		//Novice::ScreenPrintf(0, 100, "enemy.isAlive : %s", enemy[i].isAlive ? "alive" : "death");
 	}
-
 	if (boss.isAlive) {
 
-		if (CheckCircleCollision(boss.pos, player.pos, boss.radius, player.radius) && !player.isCollied) {
+		if (CheckCircleCollision(boss.pos, player.pos, boss.radius, player.radius)) {
 			float dx = player.pos.x - boss.pos.x;
 			float dy = player.pos.y - boss.pos.y;
 			float angle = atan2f(dy, dx);
-			player.angle += angle;
-			
-			if (!Novice::IsPlayingAudio(sound.collision_enemy.play)) {
-				sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
-			}
-			if (player.attack) {
+			player.angle = angle;
+			if (!player.isCollied) {
+				if (!Novice::IsPlayingAudio(sound.collision_enemy.play) && sound.collision_enemy.play == -1) {
+					sound.collision_enemy.play = Novice::PlayAudio(sound.collision_enemy.audio, 0, 0.7f);
+				}
+				if (player.attack) {
 
-			boss.isHit = true;
-			}
-			else {
-				player.isCollied = true;
-				player.health--;
-			}
-		}		
+					boss.isHit = true;
+				}
+				else {
+					player.isCollied = true;
+					player.health--;
+				}
+			}			
+		}
 	}
 }
 
@@ -612,7 +594,7 @@ void UpdatePlayerBulletEvent(Obj& player, EnemyBullet bullet[]) {
 	}
 }
 
-void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {
+void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[], Enemy& boss, BossKeys keys[], int handle1, int handle2) {
 
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		if (enemy[i].isAlive) {
@@ -632,6 +614,21 @@ void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]) {
 				int(enemy2[i].pos.x / 20 + kWindowWidth * 5 / 6.0f), int(enemy2[i].pos.y / 20 + kWindowHeight / 8.0f),
 				int(enemy2[i].radius / 8), int(enemy2[i].radius / 8),
 				0.0f, 0x55FF55FF, kFillModeSolid);
+		}
+	}
+	if (boss.isAlive) {
+		Novice::DrawSprite(
+			int(boss.pos.x / 20 + kWindowWidth * 5 / 6.0f),
+			int(boss.pos.y / 20 + kWindowHeight / 8.0f), handle1,
+			1 / 8.0f, 1 / 8.0f,
+			0.0f, WHITE);
+	}
+	for (int i = 0; i < keyCount; i++) {
+		if (!keys[i].isHit) {
+			Novice::DrawSprite(
+				int(keys[i].pos.x / 20 + kWindowWidth * 5 / 6.0f),
+				int(keys[i].pos.y / 20 + kWindowHeight / 8.0f),
+				handle2, 1 / 3.0f, 1 / 3.0f, 0.0f, WHITE);
 		}
 	}
 }
@@ -669,7 +666,9 @@ void EnemyRange(Enemy enemy[], Enemy enemy1[]) {
 //
 //}
 
-void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& boss, Obj& player) {
+void UpdatePlayerKeyEvent(BossKeys keys[], Sound& sound, Enemy enemy[], Enemy& boss, Obj& player, int& remainingKeys) {
+
+
 	if (!enemy[0].isAlive && !keys[0].isHit) {
 		keys[0].isHit = true;
 		keys[0].pos.x = -10000.0f;

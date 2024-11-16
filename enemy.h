@@ -1,7 +1,7 @@
 ﻿#pragma once
 #define MOVE_TIME 60
 #define STOP_TIME 120
-#define SHOT_TIME 180
+#define SHOT_TIME 240
 #define BULLET_COUNT 100
 #define BULLET_ACTIVE_RANGE 500.0f
 #define ENEMY_TO_PLAYER 500.0f
@@ -10,7 +10,6 @@
 #include "obj.h"
 #include"sound.h"
 
-extern int remainingKeys;
 extern float move;
 extern float moveSpeed;
 
@@ -89,7 +88,7 @@ void InitEnemyBullet(EnemyBullet bullet[]);
 void InitBossKeys(BossKeys keys[], Enemy enemy[]);
 void InitBoss(Enemy& boss);
 
-void InitBossBullet(Enemy& boss, EnemyBullet& bullet);
+void InitBossBullet(EnemyBullet& bullet);
 
 void RenderBossBullet(EnemyBullet& bullet, int handle, Vector2& scroll);
 
@@ -102,7 +101,7 @@ void EnemyMoveHorming(Enemy enemy[], Obj& player);
 void BulletShot(Enemy enemy[], Obj player, EnemyBullet bullet[]);
 
 //void UpdateKeys(BossKeys keys[], Enemy enemy[]);
-void UpdatePlayerKeyEvent(BossKeys keys[],Sound& sound, Enemy enemy[], Enemy& boss,Obj& player);
+void UpdatePlayerKeyEvent(BossKeys keys[],Sound& sound, Enemy enemy[], Enemy& boss,Obj& player, int& remainingKeys);
 void RenderKeys(BossKeys keys[], Vector2 scroll, int& handle);
 
 void EnemyRange(Enemy enemy[], Enemy enemy1[]);
@@ -115,7 +114,7 @@ void RenderBoss(Enemy& boss, Vector2 scroll, int handle, int handle2, int handle
 void BulletAnim(EnemyBullet bullet[]);
 
 void EnemyDebug(EnemyBullet bullet[]);
-void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[]);
+void RenderMiniMapEnemy(Enemy enemy[], Enemy enemy1[], Enemy enemy2[], Enemy& boss, BossKeys keys[], int handle1, int handle2);
 
 void UpdatePlayerEnemyEvent(Enemy enemy[], Obj& player,Sound& sound, Enemy& boss);
 

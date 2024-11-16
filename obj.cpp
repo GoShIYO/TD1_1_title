@@ -15,7 +15,7 @@ void InitPlayer(Obj* player) {
 	player->width = 32.0f;
 	player->height = 30.0f;
 	player->isRotate = false;
-	player->health = 3;
+	player->health = 5;
 	player->InvincibleTimer = 90;
 	player->attack = false;
 	player->isCollied = false;
@@ -144,8 +144,8 @@ void InitObj(Obj obj[]) {
 	obj[64].pos = { 3434.0f, 1253.5f };  // 区域 (5, 5)
 }
 
-void InitScoreBoard(ScoreBoard *board) {
-	board->pos = {165 , -625};
+void InitScoreBoard(ScoreBoard* board) {
+	board->pos = { 165 , -625 };
 	board->flat = 0;
 	board->timer = { 0,60 };
 }
@@ -208,20 +208,22 @@ Rect RectRotedPlayer(const Vector2* pos, float width, float height, float angle)
 	return points;
 }
 
-void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle,UI* ui) {
+void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle, UI* ui) {
 	static int life = 0;
-	if (player->health > 2) {
+	if (player->health == 5) {
 		life = 0;
 	}
-	else if (player->health <= 2 && player->health > 1) {
+	else if (player->health == 4) {
 		life = 1;
 	}
-	else if (player->health == 1) {
+	else if (player->health == 3) {
 		life = 2;
 	}
-	else {
+	else if (player->health == 2) {
 		life = 3;
 	}
+	else if (player->health == 1)life = 4;
+	else if (player->health == 0)life = 5;
 	Rect points = RectRotedPlayer(&player->pos, player->width, player->height, player->angle);
 	Vector2 a = points.a;
 	Vector2 b = points.b;
@@ -281,7 +283,7 @@ void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle,UI* ui) {
 			);
 			Novice::DrawSpriteRect(
 				int(player->pos.x + 50 - scroll->x), int(player->pos.y - 50 - scroll->y),
-				life * 22, 0, 22, 30, handle->life30x22, 1 / 4.0f, 1, 0, ui->lifeColor);
+				life * 22, 0, 22, 30, handle->life30x22, 1 / 5.0f, 1, 0, ui->lifeColor);
 		}
 		if (player->InvincibleTimer % 8 == 0 && player->isCollied) {
 			Novice::DrawQuad(
@@ -297,7 +299,7 @@ void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle,UI* ui) {
 	else {
 		static int count = 0;
 		if (player->deathTimer % 5 == 0) {
-			count++;			
+			count++;
 		}
 		if (player->deathTimer <= 0) {
 			count = 0;
@@ -305,7 +307,7 @@ void RenderPlayer(Obj* player, Vector2* scroll, AllResource* handle,UI* ui) {
 		Novice::DrawSpriteRect(
 			int(player->deathPosTmp.x - player->width / 2.0f - scroll->x),
 			int(player->deathPosTmp.y - player->height / 2.0f - scroll->y),
-			count * 60, 0, 60, 60, handle->playerExplosion60, 1 / 12.0f, 1, 0, WHITE);		
+			count * 60, 0, 60, 60, handle->playerExplosion60, 1 / 12.0f, 1, 0, WHITE);
 	}
 }
 void RenderObj(Obj obj[], Vector2* scroll, AllResource& texture) {
@@ -562,7 +564,7 @@ void RenderParticle(Particle particles[], Vector2* scroll) {
 	}
 }
 
-void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* sound,UI*ui) {
+void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* sound, UI* ui) {
 	assert(player != nullptr);
 	assert(obj != nullptr);
 	assert(keys != nullptr);
@@ -577,18 +579,25 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 	static int rotateDirection = 1;
 	static Vector2 objPosTmp = { 0 };
 	static float radiusTmp = 0.0f;
+
 	//無敵時間処理
 	if (player->isCollied && player->InvincibleTimer > 0) {
+		if (!Novice::IsPlayingAudio(sound->collision_enemy.play) && sound->collision_enemy.play == -1) {
+			sound->collision_enemy.play = Novice::PlayAudio(sound->collision_enemy.audio, 0, 0.7f);
+		}
+
 		player->InvincibleTimer--;
-		ui->damageShieldColor = RgbaAnimation(WHITE,1 - float(player->InvincibleTimer / 90.0f));
+		ui->damageShieldColor = RgbaAnimation(WHITE, 1 - float(player->InvincibleTimer / 90.0f));
 		ui->lifeColor = RgbaAnimation(WHITE, 1 - float(player->InvincibleTimer / 90.0f));
+
 	}
 	else {
+		sound->collision_enemy.play = -1;
 		player->InvincibleTimer = 90;
 		player->isCollied = false;
 		ui->damageShieldColor = WHITE;
 	}
-	
+
 	//攻撃処理
 	if (!player->isRotate) {
 		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
@@ -606,8 +615,8 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 		player->atTimer = 60;
 		player->attack = false;
 	}
-	if (player->health > 3) {
-		player->health = 3;
+	if (player->health > 5) {
+		player->health = 5;
 	}
 	//Novice::ScreenPrintf(0, 200, "player.iTimer = %d", player->InvincibleTimer);
 
@@ -640,7 +649,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 		player->isRotate = false;
 	}
 
-	if (player->isRotate) {
+	if (player->isRotate && !player->isDead) {
 		//Novice::ScreenPrintf(700, 45, "angle_dif = %.10f", angle_dif);
 		Novice::StopAudio(sound->player_move.play);
 		angle_dif = angle_difference(angleTmp, player->angle);
@@ -688,7 +697,7 @@ void UpdatePlayer(Obj* player, Obj obj[], char keys[], char preKeys[], Sound* so
 		player->deathPosTmp = player->pos;
 		player->isDead = true;
 	}
-	if (player->isDead && player->deathTimer>0) {
+	if (player->isDead && player->deathTimer > 0) {
 		if (!Novice::IsPlayingAudio(sound->explosion.play)) {
 			sound->explosion.play = Novice::PlayAudio(sound->explosion.audio, 0, 1.0f);
 		}

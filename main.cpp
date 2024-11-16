@@ -35,6 +35,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Handle handle;
 	LoadImages(handle);
 
+
 	System system;
 
 	AllResource texture;
@@ -49,7 +50,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Sound sound;
 	InitSound(&sound);
 
-	Scene scene = PLAY;
+	Scene scene = TITLE;
 	InitPlayer(&player);
 	InitObj(obj);
 	InitEnemyNormal(enemy);
@@ -58,7 +59,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	InitEnemyBullet(bullet);
 	InitBossKeys(bossKeys, enemyShot);
 	InitBoss(boss);
-	InitBossBullet(boss, bossBullet);
+	InitBossBullet(bossBullet);
 	InitSystem(&system);
 	initializeResource(&texture);
 	InitGimmickObjs(gimmickObjs);
@@ -79,6 +80,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	float titleEarthAngle = 0;
 	bool isPlayTitleAnimation = true;
 	bool isSceneChange = false;
+	int keysCount = 4;
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
@@ -188,13 +190,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				InitEnemyBullet(bullet);
 				InitBossKeys(bossKeys, enemyShot);
 				InitBoss(boss);
-				InitBossBullet(boss, bossBullet);
+				InitBossBullet(bossBullet);
 				InitSystem(&system);
 				initializeResource(&texture);
 				InitGimmickObjs(gimmickObjs); // ギミックオブジェクトの初期化
 				scroll = { 0,0 };
 				sound.title_bgm.play = -1;
-
+				keysCount = 4;
 			}
 
 			break;
@@ -226,7 +228,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			BulletShot(enemyShot, player, bullet);
 
 			BossUpdate(boss, scene, bossBullet, player, sound);
-
+			
 			//敵の移動制限
 			EnemyRange(enemy, enemyHorming);
 
@@ -246,8 +248,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//鍵の更新
 			//UpdateKeys(bossKeys, enemyShot);
-			UpdatePlayerKeyEvent(bossKeys, sound, enemyShot, boss,player);
-
+			UpdatePlayerKeyEvent(bossKeys, sound, enemyShot, boss,player,keysCount);
+			//Novice::ScreenPrintf(0, 0, "%d", keysCount);
 			if (player.deathTimer <= 0) {
 				scene = GAME_OVER;
 			}
@@ -280,8 +282,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			RenderBoss(boss, scroll, handle.boss, handle.bossEye,handle.deathEffect);
 			//ミニマップ
 			RenderMiniMap(obj, &player);
-			RenderMiniMapEnemy(enemy, enemyHorming, enemyShot);
+			RenderMiniMapEnemy(enemy, enemyHorming, enemyShot,boss,bossKeys,handle.boss, texture.key18x38);
 
+
+			for (int i = 0; i < 4; i++) {
+				if (bossKeys[i].isHit == false) {
+					Novice::DrawSprite(10 + i * 22, 635, texture.keyHold_noKey, 1, 1, 0, WHITE);
+				} else {
+					Novice::DrawSprite(10 + i * 22, 635, texture.keyHold_haveKey, 1, 1, 0, WHITE);
+				}
+			}
 			Novice::DrawSprite(10, 675, texture.textScore84_25, 1, 1, 0, WHITE);
 			showNumber(ui.score.x, ui.score.y, 5, player.score, 18, 25, texture.textNumber18_25);
 			//DEBUG INFO
